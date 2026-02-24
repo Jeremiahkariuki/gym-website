@@ -1,0 +1,26 @@
+{% block content %}
+
+<h2>Membership Plans</h2>
+<a href="{% url 'dashboard' %}">⬅ Back to Dashboard</a>
+<hr>
+
+<!-- Subheading Row -->
+<div class="plan-headings">
+    <div>Plan</div>
+    <div>Price</div>
+    <div>Duration</div>
+</div>
+
+<div class="plans-container">
+    {% for p in plans %}
+        <div class="plan-card">
+            <div>{{ p.name }}</div>
+            <div>KES {{ p.price }}</div>
+            <div>{{ p.duration_days }} Days</div>
+        </div>
+    {% empty %}
+        <p>No plans available yet</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

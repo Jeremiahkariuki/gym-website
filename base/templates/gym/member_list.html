@@ -1,0 +1,26 @@
+<h1>Members</h1>
+
+<p><a href="{% url 'dashboard' %}">⬅ Back to Dashboard </a></p>
+
+<a href="{% url 'member_create' %}">+ Add Member</a>
+
+{% for m in members %}
+<li>
+    {{ m.full_name}}
+
+    <a href="{% url 'mark_present' m.id %}">Mark Present</a>
+</li>
+{% endfor %}
+<hr>
+
+<ul>
+    {% for m in members %}
+        <li>{{ m.full_name }} - {{ m.phone }} (Joined: {{m.joined_on }})</li>
+    {% empty %}
+        <li>No members yet.</li>
+    {% endfor %}
+</ul>
+<form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>

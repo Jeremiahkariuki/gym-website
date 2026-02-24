@@ -1,0 +1,26 @@
+<h1> Dashboard</h1>
+
+<a href="{% url 'plan_list' %}">View Membership Plans</a>
+
+<p><strong> Today:</strong> {{ today }}</p>
+<p><strong> Month:</strong> {{ this_month }}</p>
+<p><strong> Members:</strong> {{ total_members }}</p>
+<p><strong> Enrolled Today:</strong> {{ members_joined_today }}</p>
+<p><strong> Attedance Today</strong> {{today_attedance }}</p>
+
+<hr>
+<h3>Present Today</h3>
+<ul>
+    {% for a in present_today %}
+        <li>{{ a.member.full_name }} - {{ a.member.phone }}</li>
+        {% empty %}
+            <li>No one present yet</li>
+        {% endfor %}
+</ul>
+
+<a href="{% url 'member_list' %}">View Members</a>
+
+<form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
