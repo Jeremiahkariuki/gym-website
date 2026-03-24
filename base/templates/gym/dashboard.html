@@ -1,26 +1,73 @@
-<h1> Dashboard</h1>
+{% extends 'gym/base.html' %}
 
-<a href="{% url 'plan_list' %}">View Membership Plans</a>
+{% block title %}Dashboard - Gym Management{% endblock %}
 
-<p><strong> Today:</strong> {{ today }}</p>
-<p><strong> Month:</strong> {{ this_month }}</p>
-<p><strong> Members:</strong> {{ total_members }}</p>
-<p><strong> Enrolled Today:</strong> {{ members_joined_today }}</p>
-<p><strong> Attedance Today</strong> {{today_attedance }}</p>
+{% block content %}
+    <h1>📊 Dashboard</h1>
 
-<hr>
-<h3>Present Today</h3>
-<ul>
-    {% for a in present_today %}
-        <li>{{ a.member.full_name }} - {{ a.member.phone }}</li>
-        {% empty %}
-            <li>No one present yet</li>
-        {% endfor %}
-</ul>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+        <div class="card">
+            <h3>Total Members</h3>
+            <div style="font-size: 2.5rem; color: #3498db; font-weight: bold;">{{ total_members }}</div>
+        </div>
+        <div class="card">
+            <h3>New Members Today</h3>
+            <div style="font-size: 2.5rem; color: #27ae60; font-weight: bold;">{{ members_joined_today }}</div>
+        </div>
+        <div class="card">
+            <h3>Attendance Today</h3>
+            <div style="font-size: 2.5rem; color: #e74c3c; font-weight: bold;">{{ today_attedance }}</div>
+        </div>
+    </div>
 
-<a href="{% url 'member_list' %}">View Members</a>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div>
+            <h2>📅 Today's Date</h2>
+            <div class="card">
+                <p style="font-size: 1.3rem;"><strong>{{ today|date:"l, F d, Y" }}</strong></p>
+            </div>
+        </div>
+        <div>
+            <h2>⚡ Quick Actions</h2>
+            <div class="card">
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <a href="{% url 'member_list' %}" class="btn">View Members</a>
+                    <a href="{% url 'plan_list' %}" class="btn">View Plans</a>
+                    <a href="{% url 'member_create' %}" class="btn btn-success">Add New Member</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-</form>
+    <h2 style="margin-top: 2rem;">📊 Reports</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <a href="{% url 'attendance_report' %}" class="btn" style="display: block; text-align: center; padding: 1rem;">👥 Attendance Report</a>
+        <a href="{% url 'revenue_report' %}" class="btn" style="display: block; text-align: center; padding: 1rem;">💰 Revenue Report</a>
+    </div>
+
+    <h2 style="margin-top: 2rem;">👥 Present Today</h2>
+    {% if present_today %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Member Name</th>
+                    <th>Phone</th>
+                    <th>Check-in Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in present_today %}
+                    <tr>
+                        <td>{{ a.member.full_name }}</td>
+                        <td>{{ a.member.phone }}</td>
+                        <td>{{ a.date|time:"H:i" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="card">
+            <p>No one has checked in yet today.</p>
+        </div>
+    {% endif %}
+{% endblock %}

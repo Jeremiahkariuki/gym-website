@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
-from django. shortcuts import render
 
 class Member(models.Model):
     full_name = models.CharField(max_length=120)
@@ -50,12 +49,12 @@ class Payment(models.Model):
     date = models.DateField(default=timezone.now)
 
     def __str__(self):
-        return  f"(self.member) - (self.amount)"
+        return f"{self.member} - {self.amount}"
     
 class Attedance(models.Model):
     member = models.ForeignKey("Member", on_delete=models.CASCADE)
     date = models.DateTimeField(default=timezone.now)
 
-    class meta:
-        unique_together = ("member", "date")  #one check-in per day 
+    class Meta:
+        unique_together = ("member", "date")  # one check-in per day
 

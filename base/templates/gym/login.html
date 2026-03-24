@@ -1,7 +1,99 @@
-<h2>Login</h2>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Pro System</title>
+    <link rel="stylesheet" href="{% static 'expenses/css/style.css' %}">
+    <style>
+        /* Specific adjustments for standalone auth pages */
+        body {
+            background-color: var(--background-color, #f8f9fa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .standalone-auth {
+            width: 100%;
+            max-width: 400px;
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .standalone-auth h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .standalone-auth h3 {
+            margin-bottom: 24px;
+            color: var(--primary-color, #007bff);
+        }
+
+        .standalone-auth form {
+            box-shadow: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .standalone-auth label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .standalone-auth .btn {
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px;
+            font-size: 1.1rem;
+        }
+
+        .auth-links {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .auth-links a {
+            color: var(--primary-color, #007bff);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="standalone-auth">
+        <h2>Gym Pro System</h2>
+        <h3>Login</h3>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn">Login</button>
+        </form>
+
+        <p class="auth-links">
+            Don't have an account? <br><br>
+            <a href="{% url 'register' %}">Register now</a>
+        </p>
+    </div>
+
+</body>
+
+</html>

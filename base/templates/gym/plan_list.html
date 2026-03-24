@@ -1,26 +1,44 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Membership Plans - Gym Management{% endblock %}
+
 {% block content %}
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1>Membership Plans ({{ plans.count }})</h1>
+        <a href="{% url 'plan_create' %}" class="btn btn-success">+ Add Plan</a>
+    </div>
 
-<h2>Membership Plans</h2>
-<a href="{% url 'dashboard' %}">⬅ Back to Dashboard</a>
-<hr>
+    <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
 
-<!-- Subheading Row -->
-<div class="plan-headings">
-    <div>Plan</div>
-    <div>Price</div>
-    <div>Duration</div>
-</div>
-
-<div class="plans-container">
-    {% for p in plans %}
-        <div class="plan-card">
-            <div>{{ p.name }}</div>
-            <div>KES {{ p.price }}</div>
-            <div>{{ p.duration_days }} Days</div>
+    {% if plans %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Plan Name</th>
+                    <th>Price (KES)</th>
+                    <th>Duration (Days)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in plans %}
+                    <tr>
+                        <td><strong>{{ p.name }}</strong></td>
+                        <td>{{ p.price }}</td>
+                        <td>{{ p.duration_days }}</td>
+                        <td>
+                            <div class="actions">
+                                <a href="{% url 'plan_list' %}" class="btn">Edit</a>
+                                <a href="{% url 'plan_list' %}" class="btn btn-danger">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="card">
+            <p>No plans available yet. <a href="{% url 'plan_create' %}">Create the first plan</a></p>
         </div>
-    {% empty %}
-        <p>No plans available yet</p>
-    {% endfor %}
-</div>
-
+    {% endif %}
 {% endblock %}

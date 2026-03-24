@@ -1,0 +1,51 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Attendance Report - Gym Management{% endblock %}
+
+{% block content %}
+    <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+
+    <h1>📊 Attendance Report</h1>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+        <div class="card">
+            <h3>Total Check-ins</h3>
+            <div style="font-size: 2.5rem; color: #3498db; font-weight: bold;">{{ total_attendance }}</div>
+        </div>
+        <div class="card">
+            <h3>Unique Members</h3>
+            <div style="font-size: 2.5rem; color: #27ae60; font-weight: bold;">{{ unique_members }}</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📅 Period</h3>
+        <p><strong>{{ period }}</strong></p>
+    </div>
+
+    <h2 style="margin-top: 2rem;">👥 Top Members (Last 7 Days)</h2>
+    {% if attendance_data %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Member Name</th>
+                    <th>Check-ins</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in attendance_data %}
+                    <tr>
+                        <td>{{ record.member__full_name }}</td>
+                        <td>
+                            <strong>{{ record.count }}</strong>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="card">
+            <p>No attendance records for this period.</p>
+        </div>
+    {% endif %}
+{% endblock %}

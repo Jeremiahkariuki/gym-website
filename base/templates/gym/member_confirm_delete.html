@@ -1,0 +1,20 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Delete Member - Gym Management{% endblock %}
+
+{% block content %}
+    <a href="{% url 'member_list' %}" class="back-link">← Back to Members</a>
+
+    <h1>Delete Member</h1>
+
+    <div class="card">
+        <p>Are you sure you want to delete <strong>{{ member.full_name }}</strong>?</p>
+        <p style="color: #e74c3c; font-weight: bold;">⚠️ This action cannot be undone.</p>
+
+        <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete Member</button>
+        </form>
+        <a href="{% url 'member_list' %}" class="btn">Cancel</a>
+    </div>
+{% endblock %}
