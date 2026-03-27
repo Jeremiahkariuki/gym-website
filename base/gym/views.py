@@ -197,12 +197,14 @@ def record_payment(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     
     if request.method == "POST":
-        form = PaymentForm(request.POST)
+        form = PaymentForm(request.POST, member=member)
         if form.is_valid():
-            form.save()
+            payment = form.save(commit=False)
+            payment.member = member
+            payment.save()
             return redirect("member_detail", member_id=member.id)
     else:
-        form = PaymentForm(initial={"member": member})
+        form = PaymentForm(member=member)
     
     return render(request, "gym/payment_form.html", {"form": form, "member": member})
 
@@ -248,10 +250,26 @@ def revenue_report(request):
         total=models.Sum("amount"), 
         count=models.Count("id")
     )
+
+    # Fetch all members and determine their payment status for this month
+    members = Member.objects.all().prefetch_related('payments', 'memberships__plan')
+    member_status = []
+    
+    for member in members:
+        has_paid = member.payments.filter(date__gte=this_month).exists()
+        active_membership = member.memberships.filter(is_active=True).first()
+        plan_name = active_membership.plan.name if active_membership else "No Active Plan"
+        
+        member_status.append({
+            'member': member,
+            'has_paid': has_paid,
+            'plan_name': plan_name,
+        })
     
     return render(request, "gym/revenue_report.html", {
         "total_revenue": total_revenue,
         "monthly_revenue": monthly_revenue,
         "payment_methods": payment_methods,
         "month": this_month.strftime("%B %Y"),
+        "member_status": member_status,
     })

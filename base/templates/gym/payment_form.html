@@ -3,36 +3,45 @@
 {% block title %}Record Payment - Gym Management{% endblock %}
 
 {% block content %}
-    <a href="{% url 'member_detail' member.id %}" class="back-link">← Back to {{ member.full_name }}</a>
+<a href="{% url 'member_detail' member.id %}" class="back-link">← Back to {{ member.full_name }}</a>
 
-    <h1>Record Payment for {{ member.full_name }}</h1>
+<h1>Record Payment for {{ member.full_name }}</h1>
 
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="{{ form.amount.id_for_label }}">{{ form.amount.label }}</label>
-            {{ form.amount }}
-            {% if form.amount.errors %}
-                <small style="color: red;">{{ form.amount.errors }}</small>
-            {% endif %}
-        </div>
+<form method="post">
+    {% csrf_token %}
 
-        <div class="form-group">
-            <label for="{{ form.method.id_for_label }}">{{ form.method.label }}</label>
-            {{ form.method }}
-            {% if form.method.errors %}
-                <small style="color: red;">{{ form.method.errors }}</small>
-            {% endif %}
-        </div>
+    <div class="form-group">
+        <label for="{{ form.Membership.id_for_label }}">{{ form.Membership.label }}</label>
+        {{ form.Membership }}
+        {% if form.Membership.errors %}
+        <small style="color: red;">{{ form.Membership.errors }}</small>
+        {% endif %}
+    </div>
 
-        <div class="form-group">
-            <label for="{{ form.reference.id_for_label }}">{{ form.reference.label }} (Optional)</label>
-            {{ form.reference }}
-            {% if form.reference.errors %}
-                <small style="color: red;">{{ form.reference.errors }}</small>
-            {% endif %}
-        </div>
+    <div class="form-group">
+        <label for="{{ form.amount.id_for_label }}">{{ form.amount.label }}</label>
+        {{ form.amount }}
+        {% if form.amount.errors %}
+        <small style="color: red;">{{ form.amount.errors }}</small>
+        {% endif %}
+    </div>
 
-        <button type="submit" class="btn btn-success">Record Payment</button>
-    </form>
+    <div class="form-group">
+        <label for="{{ form.method.id_for_label }}">{{ form.method.label }}</label>
+        {{ form.method }}
+        {% if form.method.errors %}
+        <small style="color: red;">{{ form.method.errors }}</small>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.reference.id_for_label }}">{{ form.reference.label }} (Optional)</label>
+        {{ form.reference }}
+        {% if form.reference.errors %}
+        <small style="color: red;">{{ form.reference.errors }}</small>
+        {% endif %}
+    </div>
+
+    <button type="submit" class="btn btn-success">Record Payment</button>
+</form>
 {% endblock %}

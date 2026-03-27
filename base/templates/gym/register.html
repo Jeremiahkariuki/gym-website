@@ -6,37 +6,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gym Pro | Member Registration</title>
+    <!-- Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Premium CSS -->
     <link rel="stylesheet" href="{% static 'gym/css/register.css' %}">
 </head>
 
-<body>
+<body class="login-body">
 
-    <div class="standalone-auth">
-        <h2>Gym Pro System</h2>
-        <h3>Create an Account</h3>
-
-        <form method="post">
-            {% csrf_token %}
-
-            {% for field in form %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                <div class="errorlist">
-                    {{ field.errors }}
-                </div>
-                {% endif %}
+    <div class="login-page">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>Gym Pro System</h1>
+                <p>Create your member account today!</p>
             </div>
-            {% endfor %}
 
-            <button type="submit" class="btn">Register</button>
-        </form>
+            <form method="post" class="login-form">
+                {% csrf_token %}
 
-        <p class="auth-links">
-            Already have an account? <br><br>
-            <a href="{% url 'login' %}">Login here</a>
-        </p>
+                {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="input-wrapper">
+                        {{ field }}
+                        {% if field.help_text %}
+                        <div class="help-text-tooltip">
+                            <i class="info-icon">i</i>
+                            <span class="tooltip-content">{{ field.help_text }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% if field.errors %}
+                    <div class="error-list" style="color: #ffcccc; font-size: 0.8rem; margin-top: 0.5rem;">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="login-btn">Register</button>
+            </form>
+
+            <p class="auth-links" style="margin-top: 2rem; color: rgba(255, 255, 255, 0.7); text-align: center;">
+                Already have an account?
+                <a href="{% url 'login' %}" class="register-link">Login here</a>
+            </p>
+        </div>
     </div>
 
 </body>

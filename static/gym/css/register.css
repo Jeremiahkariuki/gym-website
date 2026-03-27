@@ -1,110 +1,260 @@
-body {
-    background-color: var(--background-color, #f8f9fa);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 20px;
+:root {
+    --primary-blue: #3498db;
+    --secondary-blue: #2980b9;
+    --dark-bg: rgba(0, 0, 0, 0.6);
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+}
+
+* {
+    box-sizing: border-box;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-.standalone-auth {
-    width: 100%;
-    max-width: 400px;
-    background: #fff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-.standalone-auth h2 {
-    margin-bottom: 10px;
-    color: #1a1a1a;
-    font-weight: 700;
-}
-
-.standalone-auth h3 {
-    margin-bottom: 24px;
-    color: #3498db;
-    font-weight: 600;
-}
-
-.standalone-auth form {
-    box-shadow: none;
+body.login-body {
+    margin: 0;
     padding: 0;
-    text-align: left;
+    overflow-x: hidden;
 }
 
-.standalone-auth label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #444;
+.login-page {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('../img/login_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
-.standalone-auth input {
+.login-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 3rem;
     width: 100%;
-    padding: 12px;
-    margin-bottom: 16px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
-}
-
-.standalone-auth input:focus {
-    border-color: #3498db;
-    outline: none;
-}
-
-.standalone-auth .btn {
-    width: 100%;
-    margin-top: 8px;
-    padding: 14px;
-    font-size: 1.1rem;
-    background-color: #3498db;
+    max-width: 440px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+    animation: fadeInScale 0.6s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.login-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.login-header p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.95rem;
+    font-weight: 400;
+}
+
+.login-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 0.6rem;
     font-weight: 600;
-    transition: background-color 0.3s ease;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.standalone-auth .btn:hover {
-    background-color: #2980b9;
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.auth-links {
-    margin-top: 24px;
-    font-size: 0.95em;
-    color: #666;
-    line-height: 1.6;
+.login-form input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 0.9rem 1.2rem;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 0;
+    /* Override any defaults */
 }
 
-.auth-links a {
-    color: #3498db;
-    text-decoration: none;
-    font-weight: bold;
+/* Specific fix for Django generated inputs */
+.login-form input[type="text"],
+.login-form input[type="password"],
+.login-form input[type="email"] {
+    margin-bottom: 0;
 }
 
-.auth-links a:hover {
-    text-decoration: underline;
+.login-form input:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary-blue);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
 }
 
-/* Django form errors styling */
-.errorlist {
-    color: #e74c3c;
+.login-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+    filter: brightness(1.1);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.error-message {
+    background: rgba(231, 76, 60, 0.15);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    color: #ffcccc;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.error-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 1rem 0;
-    font-size: 0.9rem;
+    margin: 0;
 }
 
-.errorlist li {
-    margin-bottom: 5px;
+.register-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid transparent;
+}
+
+.register-link:hover {
+    color: white;
+    border-bottom: 1px solid white;
+}
+
+/* Tooltip Styles */
+.help-text-tooltip {
+    position: absolute;
+    right: 15px;
+    z-index: 2;
+    cursor: help;
+}
+
+.info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    font-size: 12px;
+    font-style: normal;
+    color: white;
+    font-weight: 800;
+    transition: background 0.3s;
+}
+
+.info-icon:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.tooltip-content {
+    visibility: hidden;
+    width: 200px;
+    background-color: rgba(0, 0, 0, 0.95);
+    color: #fff;
+    text-align: left;
+    border-radius: 8px;
+    padding: 12px;
+    position: absolute;
+    z-index: 3;
+    bottom: calc(100% + 15px);
+    right: -10px;
+    opacity: 0;
+    transition: all 0.3s;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.4;
+    pointer-events: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tooltip-content::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 15px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.95) transparent transparent transparent;
+}
+
+.help-text-tooltip:hover .tooltip-content {
+    visibility: visible;
+    opacity: 1;
+    bottom: calc(100% + 10px);
+}
+
+::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 2rem;
+    }
+
+    .login-header h1 {
+        font-size: 1.6rem;
+    }
 }
