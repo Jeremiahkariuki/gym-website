@@ -4,8 +4,9 @@ from django.utils import timezone
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout 
+from django.contrib import messages
 from django.db import models
-from .forms import PlanForm
+from .forms import PlanForm, MembershipForm, PaymentForm
 from datetime import timedelta
 
 class MemberForm(forms.ModelForm):
@@ -13,17 +14,6 @@ class MemberForm(forms.ModelForm):
         model = Member
         fields = ["full_name", "phone", "email", "address"]
 
-
-class MembershipForm(forms.ModelForm):
-    class Meta:
-        model = Membership
-        fields = ["member", "plan", "start_date"]
-
-
-class PaymentForm(forms.ModelForm):
-    class Meta:
-        model = Payment
-        fields = ["member", "Membership", "amount", "method", "reference"]
 
 @login_required
 def member_list(request):
@@ -124,8 +114,8 @@ def dashboard(request):
 
     total_members= Member.objects.count()
     members_joined_today = Member.objects.filter(joined_on=today).count()
-    today_attedance = Attedance.objects.filter(date=today).count()
-    present_today = Attedance.objects.filter(date=today).select_related("member")
+    today_attedance = Attedance.objects.filter(date__date=today).count()
+    present_today = Attedance.objects.filter(date__date=today).select_related("member")
 
     return render(request, "gym/dashboard.html", {
         "today" : today,
@@ -141,7 +131,10 @@ def mark_present(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     today = timezone.now().date()
 
-    Attedance.objects.get_or_create(member=member, date=today)
+    # Only create if they haven't checked in today yet
+    if not Attedance.objects.filter(member=member, date__date=today).exists():
+        Attedance.objects.create(member=member, date=timezone.now())
+        
     return redirect("dashboard")
 
 def plan_list(request):
@@ -178,13 +171,23 @@ def member_detail(request, member_id):
 @login_required
 def assign_membership(request, member_id):
     member = get_object_or_404(Member, id=member_id)
+
+    # Prevent a member from receiving a second active membership
+    if request.method == "GET" and member.memberships.filter(is_active=True).exists():
+        messages.error(request, "This member already has an active membership.")
+        return redirect("member_detail", member_id=member.id)
     
     if request.method == "POST":
+        if member.memberships.filter(is_active=True).exists():
+            messages.error(request, "This member already has an active membership.")
+            return redirect("member_detail", member_id=member.id)
+            
         form = MembershipForm(request.POST)
         if form.is_valid():
             membership = form.save(commit=False)
             membership.member = member
             membership.save()
+            messages.success(request, "Membership assigned successfully.")
             return redirect("member_detail", member_id=member.id)
     else:
         form = MembershipForm(initial={"member": member})
@@ -201,7 +204,20 @@ def record_payment(request, member_id):
         if form.is_valid():
             payment = form.save(commit=False)
             payment.member = member
+            
+            # Automatically link to or activate the selected plan
+            plan = form.cleaned_data.get('plan')
+            if plan:
+                membership, created = Membership.objects.get_or_create(
+                    member=member,
+                    plan=plan,
+                    is_active=True,
+                    defaults={'start_date': timezone.now()}
+                )
+                payment.Membership = membership
+                
             payment.save()
+            messages.success(request, "Payment recorded successfully.")
             return redirect("member_detail", member_id=member.id)
     else:
         form = PaymentForm(member=member)
@@ -273,3 +289,71 @@ def revenue_report(request):
         "month": this_month.strftime("%B %Y"),
         "member_status": member_status,
     })
+
+@login_required
+def membership_edit(request, pk):
+    membership = get_object_or_404(Membership, pk=pk)
+    member = membership.member
+    next_url = request.POST.get("next_url") or request.GET.get("next") or request.META.get("HTTP_REFERER", "")
+    
+    if request.method == "POST":
+        form = MembershipForm(request.POST, instance=membership)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Membership updated successfully.")
+            return redirect(next_url) if next_url else redirect("member_detail", member_id=member.id)
+    else:
+        form = MembershipForm(instance=membership)
+    return render(request, "gym/membership_form.html", {"form": form, "member": member, "next_url": next_url})
+
+@login_required
+def membership_delete(request, pk):
+    membership = get_object_or_404(Membership, pk=pk)
+    member = membership.member
+    if request.method == "POST":
+        membership.delete()
+        messages.success(request, "Membership deleted successfully.")
+        return redirect("member_detail", member_id=member.id)
+    return render(request, "gym/membership_confirm_delete.html", {"membership": membership, "member": member})
+
+@login_required
+def payment_edit(request, pk):
+    payment = get_object_or_404(Payment, pk=pk)
+    member = payment.member
+    if request.method == "POST":
+        form = PaymentForm(request.POST, instance=payment)
+        if form.is_valid():
+            payment = form.save(commit=False)
+            
+            # Automatically link to or activate the newly selected plan if changed
+            plan = form.cleaned_data.get('plan')
+            if plan:
+                membership, created = Membership.objects.get_or_create(
+                    member=member,
+                    plan=plan,
+                    is_active=True,
+                    defaults={'start_date': timezone.now()}
+                )
+                payment.Membership = membership
+                
+            payment.save()
+            messages.success(request, "Payment updated successfully.")
+            return redirect("member_detail", member_id=member.id)
+    else:
+        # Pre-fill the dropdown with their actual assigned plan instead of blank
+        initial_data = {}
+        if payment.Membership and payment.Membership.plan:
+            initial_data['plan'] = payment.Membership.plan.id
+        form = PaymentForm(instance=payment, initial=initial_data)
+        
+    return render(request, "gym/payment_form.html", {"form": form, "member": member})
+
+@login_required
+def payment_delete(request, pk):
+    payment = get_object_or_404(Payment, pk=pk)
+    member = payment.member
+    if request.method == "POST":
+        payment.delete()
+        messages.success(request, "Payment deleted successfully.")
+        return redirect("member_detail", member_id=member.id)
+    return render(request, "gym/payment_confirm_delete.html", {"payment": payment, "member": member})

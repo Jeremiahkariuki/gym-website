@@ -3,117 +3,142 @@
 {% block title %}Member Details - Gym Management{% endblock %}
 
 {% block content %}
-    <a href="{% url 'member_list' %}" class="back-link">← Back to Members</a>
+<a href="{% url 'member_list' %}" class="back-link">← Back to Members</a>
 
-    <h1>{{ member.full_name }}</h1>
+<h1>{{ member.full_name }}</h1>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-        <div class="card">
-            <h3>📋 Member Information</h3>
-            <p><strong>Phone:</strong> {{ member.phone }}</p>
-            <p><strong>Email:</strong> {{ member.email|default:"N/A" }}</p>
-            <p><strong>Address:</strong> {{ member.address|default:"N/A" }}</p>
-            <p><strong>Joined:</strong> {{ member.joined_on|date:"d/m/Y" }}</p>
-            <p><strong>Current Plan:</strong> {{ member.membership_Plan|default:"None" }}</p>
-            <div class="actions" style="margin-top: 1rem;">
-                <a href="{% url 'member_edit' member.id %}" class="btn">Edit</a>
-                <a href="{% url 'member_delete' member.id %}" class="btn btn-danger">Delete</a>
-            </div>
-        </div>
-
-        <div class="card">
-            <h3>⚡ Quick Actions</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <a href="{% url 'mark_present' member.id %}" class="btn btn-success">✓ Check In Today</a>
-                <a href="{% url 'assign_membership' member.id %}" class="btn">Assign Membership</a>
-                <a href="{% url 'record_payment' member.id %}" class="btn">Record Payment</a>
-            </div>
+<div
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="card">
+        <h3>📋 Member Information</h3>
+        <p><strong>Phone:</strong> {{ member.phone }}</p>
+        <p><strong>Email:</strong> {{ member.email|default:"N/A" }}</p>
+        <p><strong>Address:</strong> {{ member.address|default:"N/A" }}</p>
+        <p><strong>Joined:</strong> {{ member.joined_on|date:"d/m/Y" }}</p>
+        <p><strong>Current Plan:</strong> {{ member.membership_Plan|default:"None" }}</p>
+        <div class="actions" style="margin-top: 1rem;">
+            <a href="{% url 'member_edit' member.id %}" class="btn">Edit</a>
+            <a href="{% url 'member_delete' member.id %}" class="btn btn-danger">Delete</a>
         </div>
     </div>
 
-    <h2>📅 Active Memberships</h2>
-    {% if memberships %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Plan</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for m in memberships %}
-                    <tr>
-                        <td>{{ m.plan.name }}</td>
-                        <td>{{ m.start_date|date:"d/m/Y" }}</td>
-                        <td>{{ m.end_date|date:"d/m/Y" }}</td>
-                        <td>
-                            {% if m.is_active %}
-                                <span style="color: #27ae60; font-weight: bold;">✓ Active</span>
-                            {% else %}
-                                <span style="color: #e74c3c;">Inactive</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <div class="card">
-            <p>No active memberships. <a href="{% url 'assign_membership' member.id %}">Assign one now</a></p>
+    <div class="card">
+        <h3>⚡ Quick Actions</h3>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="{% url 'mark_present' member.id %}" class="btn btn-success">✓ Check In Today</a>
+            <a href="{% url 'assign_membership' member.id %}" class="btn">Assign Membership</a>
+            <a href="{% url 'record_payment' member.id %}" class="btn">Record Payment</a>
         </div>
-    {% endif %}
+    </div>
+</div>
 
-    <h2 style="margin-top: 2rem;">💳 Payment History</h2>
-    {% if payments %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Amount (KES)</th>
-                    <th>Method</th>
-                    <th>Reference</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for p in payments %}
-                    <tr>
-                        <td>{{ p.date|date:"d/m/Y" }}</td>
-                        <td>{{ p.amount }}</td>
-                        <td>{{ p.method }}</td>
-                        <td>{{ p.reference|default:"N/A" }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <div class="card">
-            <p>No payments recorded. <a href="{% url 'record_payment' member.id %}">Record a payment</a></p>
-        </div>
-    {% endif %}
+<h2>📅 Active Memberships</h2>
+{% if memberships %}
+<table>
+    <thead>
+        <tr>
+            <th>Plan</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in memberships %}
+        <tr>
+            <td>{{ m.plan.name }}</td>
+            <td>{{ m.start_date|date:"d/m/Y" }}</td>
+            <td>{{ m.end_date|date:"d/m/Y" }}</td>
+            <td>
+                {% if m.is_active %}
+                <span style="color: #27ae60; font-weight: bold;">✓ Active</span>
+                {% else %}
+                <span style="color: #e74c3c;">Inactive</span>
+                {% endif %}
+            </td>
+            <td>
+                <div class="actions">
+                    <a href="{% url 'membership_edit' m.id %}" class="btn">Edit</a>
+                    <a href="{% url 'membership_delete' m.id %}" class="btn btn-danger">Delete</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="card">
+    <p>No active memberships. <a href="{% url 'assign_membership' member.id %}">Assign one now</a></p>
+</div>
+{% endif %}
 
-    <h2 style="margin-top: 2rem;">👣 Recent Attendance (Last 30 days)</h2>
-    {% if attendance %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Check-in Time</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for a in attendance %}
-                    <tr>
-                        <td>{{ a.date|date:"d/m/Y" }}</td>
-                        <td>{{ a.date|time:"H:i" }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <div class="card">
-            <p>No attendance records yet.</p>
-        </div>
-    {% endif %}
+<h2 style="margin-top: 2rem;">💳 Payment History</h2>
+{% if payments %}
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Plan</th>
+            <th>Amount (KES)</th>
+            <th>Balance</th>
+            <th>Method</th>
+            <th>Reference</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in payments %}
+        <tr>
+            <td>{{ p.date|date:"d/m/Y" }}</td>
+            <td>{{ p.plan_name }}</td>
+            <td>{{ p.amount }}</td>
+            <td>
+                {% if p.balance > 0 %}
+                <span style="color: #e74c3c; font-weight: bold;">{{ p.balance }}</span>
+                {% else %}
+                <span style="color: #27ae60; font-weight: bold;">{{ p.balance }}</span>
+                {% endif %}
+            </td>
+            <td>{{ p.method }}</td>
+            <td>{{ p.reference|default:"N/A" }}</td>
+            <td>
+                <div class="actions">
+                    <a href="{% url 'payment_edit' p.id %}" class="btn">Edit</a>
+                    <a href="{% url 'payment_delete' p.id %}" class="btn btn-danger">Delete</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="card">
+    <p>No payments recorded. <a href="{% url 'record_payment' member.id %}">Record a payment</a></p>
+</div>
+{% endif %}
+
+<h2 style="margin-top: 2rem;">👣 Recent Attendance (Last 30 days)</h2>
+{% if attendance %}
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Check-in Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in attendance %}
+        <tr>
+            <td>{{ a.date|date:"d/m/Y" }}</td>
+            <td>{{ a.date|time:"H:i" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="card">
+    <p>No attendance records yet.</p>
+</div>
+{% endif %}
 {% endblock %}

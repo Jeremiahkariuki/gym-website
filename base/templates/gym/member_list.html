@@ -3,47 +3,49 @@
 {% block title %}Members - Gym Management{% endblock %}
 
 {% block content %}
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1>Members ({{ members.count }})</h1>
-        <a href="{% url 'member_create' %}" class="btn btn-success">+ Add Member</a>
-    </div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>Members ({{ members.count }})</h1>
+    <a href="{% url 'member_create' %}" class="btn btn-success">+ Add Member</a>
+</div>
 
-    <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+<a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
 
-    {% if members %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Joined On</th>
-                    <th>Plan</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for m in members %}
-                    <tr>
-                        <td>{{ m.full_name }}</td>
-                        <td>{{ m.phone }}</td>
-                        <td>{{ m.email|default:"N/A" }}</td>
-                        <td>{{ m.joined_on|date:"d/m/Y" }}</td>
-                        <td>{{ m.membership_Plan|default:"None" }}</td>
-                        <td>
-                            <div class="actions">
-                                <a href="{% url 'mark_present' m.id %}" class="btn btn-success">✓ Check In</a>
-                                <a href="{% url 'member_edit' m.id %}" class="btn">Edit</a>
-                                <a href="{% url 'member_delete' m.id %}" class="btn btn-danger">Delete</a>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <div class="card">
-            <p>No members yet. <a href="{% url 'member_create' %}">Add the first member</a></p>
-        </div>
-    {% endif %}
+{% if members %}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Joined On</th>
+            <th>Plan</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in members %}
+        <tr>
+            <td>{{ m.full_name }}</td>
+            <td>{{ m.phone }}</td>
+            <td>{{ m.email|default:"N/A" }}</td>
+            <td>{{ m.joined_on|date:"d/m/Y" }}</td>
+            <td>{{ m.membership_Plan|default:"None" }}</td>
+            <td>
+                <div class="actions">
+                    <a href="{% url 'member_detail' m.id %}" class="btn"
+                        style="background-color: var(--primary-bg, #3498db); color: white;">👁 View Details</a>
+                    <a href="{% url 'mark_present' m.id %}" class="btn btn-success">✓ Check In</a>
+                    <a href="{% url 'member_edit' m.id %}" class="btn">Edit</a>
+                    <a href="{% url 'member_delete' m.id %}" class="btn btn-danger">Delete</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="card">
+    <p>No members yet. <a href="{% url 'member_create' %}">Add the first member</a></p>
+</div>
+{% endif %}
 {% endblock %}

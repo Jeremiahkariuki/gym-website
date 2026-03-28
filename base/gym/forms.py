@@ -10,28 +10,29 @@ class PlanForm(forms.ModelForm):
 class MembershipForm(forms.ModelForm):
     class Meta:
         model = Membership
-        fields = ["member", "plan", "start_date"]
+        fields = ["plan", "start_date", "end_date"]
         widgets = {
             "start_date": forms.DateInput(attrs={"type": "date"}),
+            "end_date": forms.DateInput(attrs={"type": "date"}),
         }
 
 
 class PaymentForm(forms.ModelForm):
+    plan = forms.ModelChoiceField(
+        queryset=MembershipPlan.objects.all(),
+        label="Plan / Membership",
+        required=False,
+        empty_label="--- Select a Plan ---"
+    )
+
     class Meta:
         model = Payment
-        fields = ["Membership", "amount", "method", "reference"]
+        fields = ["amount", "method", "reference"]
         widgets = {
             "method": forms.TextInput(attrs={"placeholder": "e.g., Cash, M-Pesa, Bank"}),
             "reference": forms.TextInput(attrs={"placeholder": "e.g., Transaction ID"}),
-        }
-        labels = {
-            "Membership": "Plan / Membership"
         }
 
     def __init__(self, *args, **kwargs):
         member = kwargs.pop('member', None)
         super().__init__(*args, **kwargs)
-        if member:
-            self.fields['Membership'].queryset = Membership.objects.filter(member=member)
-        else:
-            self.fields['Membership'].queryset = Membership.objects.none()

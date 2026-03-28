@@ -48,6 +48,23 @@ class Payment(models.Model):
     reference = models.CharField(max_length=60, blank=True)
     date = models.DateField(default=timezone.now)
 
+    @property
+    def plan_name(self):
+        if self.Membership and self.Membership.plan:
+            return self.Membership.plan.name
+        return "N/A"
+
+    @property
+    def balance(self):
+        if self.Membership and self.Membership.plan:
+            # Calculate total amount paid for this specific membership up to this payment
+            total_paid = Payment.objects.filter(
+                Membership=self.Membership,
+                id__lte=self.id
+            ).aggregate(total=models.Sum('amount'))['total'] or 0
+            return self.Membership.plan.price - total_paid
+        return 0
+
     def __str__(self):
         return f"{self.member} - {self.amount}"
     

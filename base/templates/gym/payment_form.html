@@ -7,14 +7,37 @@
 
 <h1>Record Payment for {{ member.full_name }}</h1>
 
+{% for m in member.memberships.all %}
+{% if m.is_active %}
+<div
+    style="background: #e8f4fd; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+    <h4 style="margin: 0 0 5px 0; color: #2c3e50;">Active Payment Plan</h4>
+    <p style="margin: 0; font-size: 14px; color: #34495e;">
+        <strong>{{ m.plan.name }}</strong> — KES {{ m.plan.price }}<br>
+        <span style="color: #7f8c8d;">Valid: {{ m.start_date|date:"d/m/Y" }} to {{ m.end_date|date:"d/m/Y" }}</span>
+    </p>
+</div>
+{% endif %}
+{% empty %}
+{% if member.membership_Plan %}
+<div
+    style="background: #e8f4fd; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+    <h4 style="margin: 0 0 5px 0; color: #2c3e50;">Assigned Plan (No Active Membership)</h4>
+    <p style="margin: 0; font-size: 14px; color: #34495e;">
+        <strong>{{ member.membership_Plan.name }}</strong> — KES {{ member.membership_Plan.price }}
+    </p>
+</div>
+{% endif %}
+{% endfor %}
+
 <form method="post">
     {% csrf_token %}
 
     <div class="form-group">
-        <label for="{{ form.Membership.id_for_label }}">{{ form.Membership.label }}</label>
-        {{ form.Membership }}
-        {% if form.Membership.errors %}
-        <small style="color: red;">{{ form.Membership.errors }}</small>
+        <label for="{{ form.plan.id_for_label }}">{{ form.plan.label }}</label>
+        {{ form.plan }}
+        {% if form.plan.errors %}
+        <small style="color: red;">{{ form.plan.errors }}</small>
         {% endif %}
     </div>
 

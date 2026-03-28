@@ -32,8 +32,13 @@ urlpatterns = [
     
     # Membership
     path("members/<int:member_id>/membership/", views.assign_membership, name="assign_membership"),
+    path("memberships/<int:pk>/edit/", views.membership_edit, name="membership_edit"),
+    path("memberships/<int:pk>/delete/", views.membership_delete, name="membership_delete"),
     
     # Payments
     path("members/<int:member_id>/payment/", views.record_payment, name="record_payment"),
+    path("payments/<int:pk>/edit/", views.payment_edit, name="payment_edit"),
+    path("payments/<int:pk>/delete/", views.payment_delete, name="payment_delete"),
+    
     path("revenue-report/", views.revenue_report, name="revenue_report"),
 ]

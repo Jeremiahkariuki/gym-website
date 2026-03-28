@@ -1,0 +1,21 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Delete Membership - Gym Management{% endblock %}
+
+{% block content %}
+<a href="{% url 'member_detail' member.id %}" class="back-link">← Back to {{ member.full_name }}</a>
+
+<h1>Delete Membership Record</h1>
+
+<div class="card">
+    <p>Are you sure you want to delete the <strong>{{ membership.plan.name }}</strong> membership starting on {{
+        membership.start_date|date:"d/m/Y" }}?</p>
+    <p style="color: #e74c3c; font-weight: bold;">⚠️ This action cannot be undone.</p>
+
+    <form method="post" style="display: inline; padding: 0; background: transparent; box-shadow: none;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete Membership</button>
+    </form>
+    <a href="{% url 'member_detail' member.id %}" class="btn">Cancel</a>
+</div>
+{% endblock %}
