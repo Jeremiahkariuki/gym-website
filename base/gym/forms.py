@@ -1,5 +1,5 @@
 from django import forms
-from .models import MembershipPlan, Membership, Payment, Member
+from .models import MembershipPlan, Membership, Payment, Member, Expense
 
 class PlanForm(forms.ModelForm):
     class Meta:
@@ -36,3 +36,12 @@ class PaymentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         member = kwargs.pop('member', None)
         super().__init__(*args, **kwargs)
+
+class ExpenseForm(forms.ModelForm):
+    class Meta:
+        model = Expense
+        fields = ["date", "amount", "category", "description"]
+        widgets = {
+            "date": forms.DateInput(attrs={"type": "date"}),
+            "description": forms.Textarea(attrs={"rows": 3}),
+        }

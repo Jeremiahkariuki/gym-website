@@ -1,0 +1,31 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}{% if form.instance.id %}Edit Expense{% else %}Record Expense{% endif %} - Gym Management{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2>{% if form.instance.id %}Edit Expense{% else %}Record New Expense{% endif %}</h2>
+    <form method="post" class="auth-form" style="margin-top: 1rem;">
+        {% csrf_token %}
+        <div class="form-group" style="margin-bottom: 1rem;">
+            {{ form.date.label_tag }}
+            {{ form.date }}
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+            {{ form.category.label_tag }}
+            {{ form.category }}
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+            {{ form.amount.label_tag }}
+            {{ form.amount }}
+        </div>
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+            {{ form.description.label_tag }}
+            {{ form.description }}
+        </div>
+        <button type="submit" class="btn btn-success" style="width: 100%;">Save Expense</button>
+        <a href="{% url 'expense_list' %}" class="btn"
+            style="display: block; text-align: center; margin-top: 1rem;">Cancel</a>
+    </form>
+</div>
+{% endblock %}

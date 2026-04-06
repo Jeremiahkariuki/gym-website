@@ -40,5 +40,10 @@ urlpatterns = [
     path("payments/<int:pk>/edit/", views.payment_edit, name="payment_edit"),
     path("payments/<int:pk>/delete/", views.payment_delete, name="payment_delete"),
     
-    path("revenue-report/", views.revenue_report, name="revenue_report"),
+    # Expenses & Revenue
+    path("expenses/", views.expense_list, name="expense_list"),
+    path("expenses/new/", views.expense_create, name="expense_create"),
+    path("expenses/<int:pk>/edit/", views.expense_edit, name="expense_edit"),
+    path("expenses/<int:pk>/delete/", views.expense_delete, name="expense_delete"),
+    path("financial-report/", views.revenue_report, name="revenue_report"),
 ]

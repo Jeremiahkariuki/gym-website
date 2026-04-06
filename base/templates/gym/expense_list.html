@@ -1,0 +1,44 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Expenses - Gym Management{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>💸 Expenses</h1>
+    <a href="{% url 'expense_create' %}" class="btn btn-success">+ Add Expense</a>
+</div>
+
+<div class="card">
+    {% if expenses %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense.date }}</td>
+                <td>{{ expense.category }}</td>
+                <td>{{ expense.description|default:"-" }}</td>
+                <td style="font-weight: bold; color: #e74c3c;">${{ expense.amount }}</td>
+                <td>
+                    <a href="{% url 'expense_edit' expense.id %}" class="btn"
+                        style="padding: 0.3rem 0.6rem; font-size: 0.9rem;">Edit</a>
+                    <a href="{% url 'expense_delete' expense.id %}" class="btn btn-danger"
+                        style="padding: 0.3rem 0.6rem; font-size: 0.9rem;">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No expenses recorded yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Member, Attedance, MembershipPlan, Membership, Payment
+from .models import Member, Attedance, MembershipPlan, Membership, Payment, Expense
 from django.utils import timezone
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib import messages
 from django.db import models
-from .forms import PlanForm, MembershipForm, PaymentForm
+from .forms import PlanForm, MembershipForm, PaymentForm, ExpenseForm
 from datetime import timedelta
 
 class MemberForm(forms.ModelForm):
@@ -262,6 +262,9 @@ def revenue_report(request):
         total=models.Sum("amount")
     )["total"] or 0
     
+    total_expenses = Expense.objects.aggregate(total=models.Sum("amount"))["total"] or 0
+    monthly_expenses = Expense.objects.filter(date__gte=this_month).aggregate(total=models.Sum("amount"))["total"] or 0
+
     payment_methods = Payment.objects.values("method").annotate(
         total=models.Sum("amount"), 
         count=models.Count("id")
@@ -285,6 +288,10 @@ def revenue_report(request):
     return render(request, "gym/revenue_report.html", {
         "total_revenue": total_revenue,
         "monthly_revenue": monthly_revenue,
+        "total_expenses": total_expenses,
+        "monthly_expenses": monthly_expenses,
+        "monthly_profit": monthly_revenue - monthly_expenses,
+        "total_profit": total_revenue - total_expenses,
         "payment_methods": payment_methods,
         "month": this_month.strftime("%B %Y"),
         "member_status": member_status,
@@ -357,3 +364,43 @@ def payment_delete(request, pk):
         messages.success(request, "Payment deleted successfully.")
         return redirect("member_detail", member_id=member.id)
     return render(request, "gym/payment_confirm_delete.html", {"payment": payment, "member": member})
+
+
+@login_required
+def expense_list(request):
+    expenses = Expense.objects.all().order_by("-date")
+    return render(request, "gym/expense_list.html", {"expenses": expenses})
+
+@login_required
+def expense_create(request):
+    if request.method == "POST":
+        form = ExpenseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Expense added successfully.")
+            return redirect("expense_list")
+    else:
+        form = ExpenseForm()
+    return render(request, "gym/expense_form.html", {"form": form})
+
+@login_required
+def expense_edit(request, pk):
+    expense = get_object_or_404(Expense, pk=pk)
+    if request.method == "POST":
+        form = ExpenseForm(request.POST, instance=expense)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Expense updated successfully.")
+            return redirect("expense_list")
+    else:
+        form = ExpenseForm(instance=expense)
+    return render(request, "gym/expense_form.html", {"form": form})
+
+@login_required
+def expense_delete(request, pk):
+    expense = get_object_or_404(Expense, pk=pk)
+    if request.method == "POST":
+        expense.delete()
+        messages.success(request, "Expense deleted successfully.")
+        return redirect("expense_list")
+    return render(request, "gym/expense_confirm_delete.html", {"expense": expense})

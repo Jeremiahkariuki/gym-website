@@ -1,0 +1,17 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Confirm Delete - Gym Management{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 500px; margin: 0 auto; text-align: center;">
+    <h2 style="color: #e74c3c;">Delete Expense</h2>
+    <p>Are you sure you want to delete the expense: <strong>{{ expense.category }} - ${{ expense.amount }}</strong>
+        recorded on {{ expense.date }}?</p>
+
+    <form method="post" style="margin-top: 2rem;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete Expense</button>
+        <a href="{% url 'expense_list' %}" class="btn" style="margin-left: 1rem;">Cancel</a>
+    </form>
+</div>
+{% endblock %}
