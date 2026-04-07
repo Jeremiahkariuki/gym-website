@@ -1,0 +1,57 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Workout Plan - {{ member.full_name }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'member_detail' member.id %}" class="back-link">← Back to {{ member.full_name }}</a>
+
+<h1>{{ workout.name }} <span style="font-size:1rem; color:var(--text-muted);">- {{ member.full_name }}</span></h1>
+
+<div style="margin-bottom: 2rem;">
+    <p><strong>Starts:</strong> {{ workout.start_date|date:"d/m/Y" }}</p>
+    <p><strong>Status:</strong> {% if workout.is_active %}<span style="color:#27ae60;">Active</span>{% else %}<span
+            style="color:#e74c3c;">Inactive</span>{% endif %}</p>
+    <div style="margin-top: 1rem;">
+        <a href="{% url 'exercise_create' workout.id %}" class="btn btn-primary">Add Exercise</a>
+    </div>
+</div>
+
+<div class="workout-days" style="display: flex; flex-direction: column; gap: 1.5rem;">
+    {% for day_num, day_data in days_dict.items %}
+    <div class="card">
+        <h3>{{ day_data.name }}</h3>
+        {% if day_data.exercises %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Exercise</th>
+                    <th>Sets</th>
+                    <th>Reps</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ex in day_data.exercises %}
+                <tr>
+                    <td>{{ ex.order }}</td>
+                    <td><strong>{{ ex.name }}</strong></td>
+                    <td>{{ ex.sets }}</td>
+                    <td>{{ ex.reps }}</td>
+                    <td>
+                        <div class="actions">
+                            <a href="{% url 'exercise_delete' ex.id %}" class="btn btn-danger">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No exercises logged. <a href="{% url 'exercise_create' workout.id %}?day={{ day_num }}">Add routine now</a>
+        </p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

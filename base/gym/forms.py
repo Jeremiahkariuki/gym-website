@@ -1,5 +1,5 @@
 from django import forms
-from .models import MembershipPlan, Membership, Payment, Member, Expense
+from .models import MembershipPlan, Membership, Payment, Member, Expense, MeasurementLog, DietPlan, WorkoutPlan, Exercise
 
 class PlanForm(forms.ModelForm):
     class Meta:
@@ -45,3 +45,32 @@ class ExpenseForm(forms.ModelForm):
             "date": forms.DateInput(attrs={"type": "date"}),
             "description": forms.Textarea(attrs={"rows": 3}),
         }
+
+class MeasurementLogForm(forms.ModelForm):
+    class Meta:
+        model = MeasurementLog
+        fields = ["date", "weight", "height", "body_fat"]
+        widgets = {
+            "date": forms.DateInput(attrs={"type": "date"}),
+        }
+
+class DietPlanForm(forms.ModelForm):
+    class Meta:
+        model = DietPlan
+        fields = ["calories", "protein", "carbs", "fats", "notes"]
+        widgets = {
+            "notes": forms.Textarea(attrs={"rows": 3}),
+        }
+
+class WorkoutPlanForm(forms.ModelForm):
+    class Meta:
+        model = WorkoutPlan
+        fields = ["name", "start_date", "is_active"]
+        widgets = {
+            "start_date": forms.DateInput(attrs={"type": "date"}),
+        }
+
+class ExerciseForm(forms.ModelForm):
+    class Meta:
+        model = Exercise
+        fields = ["day", "name", "sets", "reps", "order"]

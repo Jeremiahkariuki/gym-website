@@ -46,4 +46,14 @@ urlpatterns = [
     path("expenses/<int:pk>/edit/", views.expense_edit, name="expense_edit"),
     path("expenses/<int:pk>/delete/", views.expense_delete, name="expense_delete"),
     path("financial-report/", views.revenue_report, name="revenue_report"),
+    
+    # Health Tracking
+    path("members/<int:member_id>/measurements/new/", views.measurement_create, name="measurement_create"),
+    path("measurements/<int:pk>/delete/", views.measurement_delete, name="measurement_delete"),
+    path("members/<int:member_id>/diet-plan/", views.diet_plan_edit, name="diet_plan_edit"),
+    path("members/<int:member_id>/workouts/new/", views.workout_plan_create, name="workout_plan_create"),
+    path("workouts/<int:pk>/", views.workout_plan_detail, name="workout_plan_detail"),
+    path("workouts/<int:pk>/delete/", views.workout_plan_delete, name="workout_plan_delete"),
+    path("workouts/<int:workout_id>/exercises/new/", views.exercise_create, name="exercise_create"),
+    path("exercises/<int:pk>/delete/", views.exercise_delete, name="exercise_delete"),
 ]

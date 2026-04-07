@@ -118,6 +118,93 @@
 </div>
 {% endif %}
 
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+    <div class="card">
+        <h3>🍽️ Diet Plan</h3>
+        {% if diet_plan %}
+        <p><strong>Calories:</strong> {{ diet_plan.calories }}</p>
+        <p><strong>Protein:</strong> {{ diet_plan.protein|default:"-" }}g</p>
+        <p><strong>Carbs:</strong> {{ diet_plan.carbs|default:"-" }}g</p>
+        <p><strong>Fats:</strong> {{ diet_plan.fats|default:"-" }}g</p>
+        {% if diet_plan.notes %}
+        <p><strong>Notes:</strong> {{ diet_plan.notes }}</p>
+        {% endif %}
+        <div class="actions" style="margin-top: 1rem;">
+            <a href="{% url 'diet_plan_edit' member.id %}" class="btn">Edit Diet Plan</a>
+        </div>
+        {% else %}
+        <p>No diet plan assigned.</p>
+        <a href="{% url 'diet_plan_edit' member.id %}" class="btn">Add Diet Plan</a>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h3>🏋️ Workout Plans</h3>
+        {% if workout_plans %}
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+            {% for wp in workout_plans %}
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px;">
+                <span>
+                    <strong>{{ wp.name }}</strong>
+                    <span style="font-size: 0.8em; color: var(--text-muted);">
+                        {% if wp.is_active %}<span style="color:#27ae60;">(Active)</span>{% else %}(Inactive){% endif %}
+                    </span>
+                </span>
+                <div class="actions">
+                    <a href="{% url 'workout_plan_detail' wp.id %}" class="btn">View</a>
+                    <a href="{% url 'workout_plan_delete' wp.id %}" class="btn btn-danger">Del</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="{% url 'workout_plan_create' member.id %}" class="btn">Add New Workout Plan</a>
+        {% else %}
+        <p>No workout plans assigned.</p>
+        <a href="{% url 'workout_plan_create' member.id %}" class="btn">Add Workout Plan</a>
+        {% endif %}
+    </div>
+</div>
+
+<h2 style="margin-top: 2rem;">📏 Body Measurements Logging</h2>
+{% if measurements %}
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Weight (kg)</th>
+            <th>Height (cm)</th>
+            <th>Body Fat (%)</th>
+            <th>BMI</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in measurements %}
+        <tr>
+            <td>{{ m.date|date:"d/m/Y" }}</td>
+            <td>{{ m.weight }}</td>
+            <td>{{ m.height|default:"-" }}</td>
+            <td>{{ m.body_fat|default:"-" }}</td>
+            <td>{{ m.bmi|default:"-" }}</td>
+            <td>
+                <div class="actions">
+                    <a href="{% url 'measurement_delete' m.id %}" class="btn btn-danger">Delete</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div style="margin-top: 1rem;">
+    <a href="{% url 'measurement_create' member.id %}" class="btn">Log New Measurement</a>
+</div>
+{% else %}
+<div class="card">
+    <p>No body measurements recorded. <a href="{% url 'measurement_create' member.id %}">Log one now</a></p>
+</div>
+{% endif %}
+
 <h2 style="margin-top: 2rem;">👣 Recent Attendance (Last 30 days)</h2>
 {% if attendance %}
 <table>

@@ -1,0 +1,21 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Delete Workout Plan{% endblock %}
+
+{% block content %}
+<a href="{% url 'member_detail' member.id %}" class="back-link">← Back to {{ member.full_name }}</a>
+
+<div class="card" style="max-width: 600px; margin: 0 auto; text-align: center;">
+    <h2 style="color: var(--danger-color);">Delete Workout Plan</h2>
+    <p>Are you sure you want to delete the workout plan "<strong>{{ workout.name }}</strong>"?</p>
+    <p>All exercises within this plan will also be deleted.</p>
+
+    <form method="POST" style="margin-top: 2rem;">
+        {% csrf_token %}
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a href="{% url 'member_detail' member.id %}" class="btn">Cancel</a>
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
