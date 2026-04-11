@@ -26,7 +26,7 @@ class MemberForm(forms.ModelForm):
 
 @login_required
 def member_list(request):
-    members = Member.objects.all().order_by("-joined_on")
+    members = Member.objects.select_related("diet_plan").prefetch_related("memberships__plan").all().order_by("-joined_on")
     return render(request, "gym/member_list.html", {"members": members})
 
 @login_required

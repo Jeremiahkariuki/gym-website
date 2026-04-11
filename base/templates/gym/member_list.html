@@ -19,6 +19,7 @@
             <th>Email</th>
             <th>Joined On</th>
             <th>Plan</th>
+            <th>Diet Plan</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -30,6 +31,13 @@
             <td>{{ m.email|default:"N/A" }}</td>
             <td>{{ m.joined_on|date:"d/m/Y" }}</td>
             <td>{{ m.active_plan_name|default:"None" }}</td>
+            <td>
+                {% if m.diet_plan %}
+                {{ m.diet_plan.calories }} kcal
+                {% else %}
+                None
+                {% endif %}
+            </td>
             <td>
                 <div class="actions"
                     style="display: flex; flex-wrap: nowrap; gap: 6px; justify-content: flex-start; align-items: center;">

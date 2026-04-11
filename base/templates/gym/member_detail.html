@@ -119,22 +119,59 @@
 {% endif %}
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
-    <div class="card">
+    <div class="card" style="display: flex; flex-direction: column;">
         <h3>🍽️ Diet Plan</h3>
         {% if diet_plan %}
-        <p><strong>Calories:</strong> {{ diet_plan.calories }}</p>
-        <p><strong>Protein:</strong> {{ diet_plan.protein|default:"-" }}g</p>
-        <p><strong>Carbs:</strong> {{ diet_plan.carbs|default:"-" }}g</p>
-        <p><strong>Fats:</strong> {{ diet_plan.fats|default:"-" }}g</p>
+        <div
+            style="background: linear-gradient(135deg, #1abc9c, #16a085); padding: 1.5rem; border-radius: 8px; color: white; text-align: center; margin-bottom: 1.5rem;">
+            <h4 style="margin: 0; font-size: 1.2rem; opacity: 0.9;">Daily Target</h4>
+            <div
+                style="font-size: 3rem; font-weight: bold; margin: 0.5rem 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">
+                {{ diet_plan.calories }} <span style="font-size: 1.2rem; font-weight: normal; opacity: 0.8;">kcal</span>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div
+                style="background: rgba(52, 152, 219, 0.1); border-left: 4px solid #3498db; padding: 1rem; border-radius: 4px; text-align: center;">
+                <strong
+                    style="color: #2980b9; font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Protein</strong>
+                <span style="font-size: 1.2rem; font-weight: bold; color: #333;">{{ diet_plan.protein|default:"-"
+                    }}g</span>
+            </div>
+            <div
+                style="background: rgba(241, 196, 15, 0.1); border-left: 4px solid #f1c40f; padding: 1rem; border-radius: 4px; text-align: center;">
+                <strong style="color: #f39c12; font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Carbs</strong>
+                <span style="font-size: 1.2rem; font-weight: bold; color: #333;">{{ diet_plan.carbs|default:"-"
+                    }}g</span>
+            </div>
+            <div
+                style="background: rgba(231, 76, 60, 0.1); border-left: 4px solid #e74c3c; padding: 1rem; border-radius: 4px; text-align: center;">
+                <strong style="color: #c0392b; font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Fats</strong>
+                <span style="font-size: 1.2rem; font-weight: bold; color: #333;">{{ diet_plan.fats|default:"-"
+                    }}g</span>
+            </div>
+        </div>
+
         {% if diet_plan.notes %}
-        <p><strong>Notes:</strong> {{ diet_plan.notes }}</p>
+        <div
+            style="background: var(--bg-secondary, #f8f9fa); padding: 1rem; border-radius: 6px; border-left: 3px solid var(--border-color, #dee2e6); margin-bottom: 1.5rem;">
+            <h4 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-muted, #6c757d);">📝
+                Notes / Guidance</h4>
+            <p style="margin: 0; font-size: 0.95rem; line-height: 1.5;">{{ diet_plan.notes|linebreaksbr }}</p>
+        </div>
         {% endif %}
-        <div class="actions" style="margin-top: 1rem;">
-            <a href="{% url 'diet_plan_edit' member.id %}" class="btn">Edit Diet Plan</a>
+
+        <div class="actions" style="margin-top: auto;">
+            <a href="{% url 'diet_plan_edit' member.id %}" class="btn" style="width: 100%; text-align: center;">Edit
+                Diet Plan</a>
         </div>
         {% else %}
-        <p>No diet plan assigned.</p>
-        <a href="{% url 'diet_plan_edit' member.id %}" class="btn">Add Diet Plan</a>
+        <div style="text-align: center; padding: 2rem 0; color: var(--text-muted, #6c757d);">
+            <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">🥗</div>
+            <p style="margin-bottom: 1.5rem;">No diet plan has been created yet.</p>
+            <a href="{% url 'diet_plan_edit' member.id %}" class="btn btn-primary">Create Diet Plan</a>
+        </div>
         {% endif %}
     </div>
 
