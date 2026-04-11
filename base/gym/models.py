@@ -11,6 +11,11 @@ class Member(models.Model):
 
     membership_Plan = models.ForeignKey("MembershipPlan", on_delete=models.SET_NULL, null=True, blank=True)
 
+    @property
+    def active_plan_name(self):
+        active = self.memberships.filter(is_active=True).first()
+        return active.plan.name if active else None
+
     def __str__(self):
         return self.full_name 
     

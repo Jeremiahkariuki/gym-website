@@ -29,6 +29,8 @@ urlpatterns = [
     # Plans
     path("plans/", views.plan_list, name="plan_list"),
     path("plans/new/", views.plan_create, name="plan_create"),
+    path("plans/<int:pk>/edit/", views.plan_edit, name="plan_edit"),
+    path("plans/<int:pk>/delete/", views.plan_delete, name="plan_delete"),
     
     # Membership
     path("members/<int:member_id>/membership/", views.assign_membership, name="assign_membership"),

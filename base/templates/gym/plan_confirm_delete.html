@@ -1,0 +1,21 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Delete Plan - Gym Management{% endblock %}
+
+{% block content %}
+<a href="{% url 'plan_list' %}" class="back-link">←Back</a>
+
+<div class="card" style="margin-top: 1rem; border-left: 4px solid #dc3545;">
+    <h2>Delete Membership Plan</h2>
+    <p>Are you sure you want to delete the plan <strong>"{{ plan.name }}"</strong>?</p>
+    <p class="text-muted">This action cannot be undone.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+            <button type="submit" class="btn btn-danger">Yes</button>
+            <a href="{% url 'plan_list' %}" class="btn">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

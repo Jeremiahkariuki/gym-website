@@ -29,14 +29,19 @@
             <td>{{ m.phone }}</td>
             <td>{{ m.email|default:"N/A" }}</td>
             <td>{{ m.joined_on|date:"d/m/Y" }}</td>
-            <td>{{ m.membership_Plan|default:"None" }}</td>
+            <td>{{ m.active_plan_name|default:"None" }}</td>
             <td>
-                <div class="actions">
+                <div class="actions"
+                    style="display: flex; flex-wrap: nowrap; gap: 6px; justify-content: flex-start; align-items: center;">
                     <a href="{% url 'member_detail' m.id %}" class="btn"
-                        style="background-color: var(--primary-bg, #3498db); color: white;">👁 View Details</a>
-                    <a href="{% url 'mark_present' m.id %}" class="btn btn-success">✓ Check In</a>
-                    <a href="{% url 'member_edit' m.id %}" class="btn">Edit</a>
-                    <a href="{% url 'member_delete' m.id %}" class="btn btn-danger">Delete</a>
+                        style="background-color: var(--primary-bg, #3498db); color: white; padding: 4px 8px; font-size: 0.8rem; white-space: nowrap;">👁
+                        View</a>
+                    <a href="{% url 'mark_present' m.id %}" class="btn btn-success"
+                        style="padding: 4px 8px; font-size: 0.8rem; white-space: nowrap;">✓ Check In</a>
+                    <a href="{% url 'member_edit' m.id %}" class="btn"
+                        style="padding: 4px 8px; font-size: 0.8rem; white-space: nowrap;">Edit</a>
+                    <a href="{% url 'member_delete' m.id %}" class="btn btn-danger"
+                        style="padding: 4px 8px; font-size: 0.8rem; white-space: nowrap;">Delete</a>
                 </div>
             </td>
         </tr>

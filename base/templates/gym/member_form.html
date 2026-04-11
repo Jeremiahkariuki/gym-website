@@ -3,46 +3,68 @@
 {% block title %}{% if form.instance.id %}Edit Member{% else %}Add New Member{% endif %} - Gym Management{% endblock %}
 
 {% block content %}
-    <a href="{% url 'member_list' %}" class="back-link">← Back to Members</a>
+<a href="{% url 'member_list' %}" class="back-link">← Back to Members</a>
 
-    <h1>{% if form.instance.id %}Edit Member{% else %}Add New Member{% endif %}</h1>
+<h1>{% if form.instance.id %}Edit Member{% else %}Add New Member{% endif %}</h1>
 
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }}</label>
-            {{ form.full_name }}
-            {% if form.full_name.errors %}
-                <small style="color: red;">{{ form.full_name.errors }}</small>
-            {% endif %}
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }}</label>
+        {{ form.full_name }}
+        {% if form.full_name.errors %}
+        <small style="color: red;">{{ form.full_name.errors }}</small>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+        {{ form.phone }}
+        {% if form.phone.errors %}
+        <small style="color: red;">{{ form.phone.errors }}</small>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+        <small style="color: red;">{{ form.email.errors }}</small>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
+        {{ form.address }}
+        {% if form.address.errors %}
+        <small style="color: red;">{{ form.address.errors }}</small>
+        {% endif %}
+    </div>
+
+    <div class="form-group"
+        style="padding: 1.25rem; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #f8fafc; margin: 1.5rem 0;">
+        <div
+            style="font-weight: 600; font-size: 1.1rem; color: #0f172a; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Membership Plan <span style="color: #ef4444;">*</span>
         </div>
+        {{ form.plan }}
+        {% if form.plan.help_text %}
+        <small style="display: block; margin-top: 0.35rem; color: #64748b;">{{ form.plan.help_text }}</small>
+        {% endif %}
+        {% if form.plan.errors %}
+        <small style="color: red; display: block; margin-top: 0.35rem;">{{ form.plan.errors }}</small>
+        {% endif %}
+    </div>
 
-        <div class="form-group">
-            <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
-            {{ form.phone }}
-            {% if form.phone.errors %}
-                <small style="color: red;">{{ form.phone.errors }}</small>
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-            {{ form.email }}
-            {% if form.email.errors %}
-                <small style="color: red;">{{ form.email.errors }}</small>
-            {% endif %}
-        </div>
-
-        <div class="form-group">
-            <label for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
-            {{ form.address }}
-            {% if form.address.errors %}
-                <small style="color: red;">{{ form.address.errors }}</small>
-            {% endif %}
-        </div>
-
-        <button type="submit" class="btn btn-success">
-            {% if form.instance.id %}Update Member{% else %}Add Member{% endif %}
-        </button>
-    </form>
+    <button type="submit" class="btn btn-success">
+        {% if form.instance.id %}Update Member{% else %}Add Member{% endif %}
+    </button>
+</form>
 {% endblock %}

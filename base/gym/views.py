@@ -10,6 +10,15 @@ from .forms import PlanForm, MembershipForm, PaymentForm, ExpenseForm, Measureme
 from datetime import timedelta
 
 class MemberForm(forms.ModelForm):
+    plan = forms.ModelChoiceField(
+        queryset=MembershipPlan.objects.all(),
+        label="Membership Plan",
+        required=True,
+        empty_label="--- Select a Plan ---",
+        help_text="A starting membership plan is required for all new members.",
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
     class Meta:
         model = Member
         fields = ["full_name", "phone", "email", "address"]
@@ -25,7 +34,16 @@ def member_create(request):
     if request.method =="POST":
         form = MemberForm(request.POST)
         if form.is_valid():
-            form.save()
+            member = form.save()
+            plan = form.cleaned_data.get('plan')
+            if plan:
+                Membership.objects.create(
+                    member=member,
+                    plan=plan,
+                    is_active=True,
+                    start_date=timezone.now()
+                )
+            messages.success(request, "Member added successfully.")
             return redirect("member_list")
     else:
         form = MemberForm()
@@ -35,13 +53,37 @@ def member_create(request):
 @login_required
 def member_edit(request, member_id):
     member = get_object_or_404(Member, id=member_id)
+    active_membership = member.memberships.filter(is_active=True).first()
+
     if request.method == "POST":
         form = MemberForm(request.POST, instance=member)
         if form.is_valid():
-            form.save()
+            member = form.save()
+            plan = form.cleaned_data.get('plan')
+
+            if plan:
+                if not active_membership or active_membership.plan != plan:
+                    if active_membership:
+                        active_membership.is_active = False
+                        active_membership.save()
+                    Membership.objects.create(
+                        member=member,
+                        plan=plan,
+                        is_active=True,
+                        start_date=timezone.now()
+                    )
+            elif active_membership and not plan:
+                active_membership.is_active = False
+                active_membership.save()
+
+            messages.success(request, "Member updated successfully.")
             return redirect("member_list")
     else:
-        form = MemberForm(instance=member)
+        initial_data = {}
+        if active_membership:
+            initial_data['plan'] = active_membership.plan
+        form = MemberForm(instance=member, initial=initial_data)
+        
     return render(request, "gym/member_form.html", {"form": form, "member": member})
 
 
@@ -151,6 +193,32 @@ def plan_create(request):
         form = PlanForm()
     
     return render(request, "gym/plan_form.html", {"form": form})
+
+
+def plan_edit(request, pk):
+    plan = get_object_or_404(MembershipPlan, pk=pk)
+    
+    if request.method == "POST":
+        form = PlanForm(request.POST, instance=plan)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Membership Plan updated successfully.")
+            return redirect("plan_list")
+    else:
+        form = PlanForm(instance=plan)
+        
+    return render(request, "gym/plan_form.html", {"form": form})
+
+
+def plan_delete(request, pk):
+    plan = get_object_or_404(MembershipPlan, pk=pk)
+    
+    if request.method == "POST":
+        plan.delete()
+        messages.success(request, "Membership Plan deleted successfully.")
+        return redirect("plan_list")
+        
+    return render(request, "gym/plan_confirm_delete.html", {"plan": plan})
 
 
 @login_required
