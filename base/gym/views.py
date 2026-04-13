@@ -328,6 +328,7 @@ def attendance_report(request):
 @login_required
 def revenue_report(request):
     today = timezone.now().date()
+    # this_month can still be used for passing into context date formatting
     this_month = today.replace(day=1)
     
     total_revenue = Payment.objects.aggregate(
@@ -335,13 +336,15 @@ def revenue_report(request):
     )["total"] or 0
     
     monthly_revenue = Payment.objects.filter(
-        date__gte=this_month
+        date__year=today.year, date__month=today.month
     ).aggregate(
         total=models.Sum("amount")
     )["total"] or 0
     
     total_expenses = Expense.objects.aggregate(total=models.Sum("amount"))["total"] or 0
-    monthly_expenses = Expense.objects.filter(date__gte=this_month).aggregate(total=models.Sum("amount"))["total"] or 0
+    monthly_expenses = Expense.objects.filter(
+        date__year=today.year, date__month=today.month
+    ).aggregate(total=models.Sum("amount"))["total"] or 0
 
     payment_methods = Payment.objects.values("method").annotate(
         total=models.Sum("amount"), 
@@ -353,7 +356,7 @@ def revenue_report(request):
     member_status = []
     
     for member in members:
-        has_paid = member.payments.filter(date__gte=this_month).exists()
+        has_paid = member.payments.filter(date__year=today.year, date__month=today.month).exists()
         active_membership = member.memberships.filter(is_active=True).first()
         plan_name = active_membership.plan.name if active_membership else "No Active Plan"
         

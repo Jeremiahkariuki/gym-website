@@ -37,12 +37,21 @@
                 <div style="display: flex; flex-direction: column; gap: 4px;">
                     <span class="diet-badge">🔥 {{ m.diet_plan.calories }} kcal</span>
                     <div class="diet-macros">
-                        {% if m.diet_plan.protein %}<span class="macro-p" title="Protein">P:{{ m.diet_plan.protein
-                            }}g</span>{% endif %}
-                        {% if m.diet_plan.carbs %}<span class="macro-c" title="Carbohydrates">C:{{ m.diet_plan.carbs
-                            }}g</span>{% endif %}
-                        {% if m.diet_plan.fats %}<span class="macro-f" title="Fats">F:{{ m.diet_plan.fats }}g</span>{%
-                        endif %}
+                        {% if m.diet_plan.protein %}
+                        <span class="macro-p" title="Protein">
+                            P:{{ m.diet_plan.protein }}g
+                        </span>
+                        {% endif %}
+                        {% if m.diet_plan.carbs %}
+                        <span class="macro-c" title="Carbohydrates">
+                            C:{{ m.diet_plan.carbs }}g
+                        </span>
+                        {% endif %}
+                        {% if m.diet_plan.fats %}
+                        <span class="macro-f" title="Fats">
+                            F:{{ m.diet_plan.fats }}g
+                        </span>
+                        {% endif %}
                     </div>
                 </div>
                 {% else %}
