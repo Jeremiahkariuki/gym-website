@@ -58,4 +58,8 @@ urlpatterns = [
     path("workouts/<int:pk>/delete/", views.workout_plan_delete, name="workout_plan_delete"),
     path("workouts/<int:workout_id>/exercises/new/", views.exercise_create, name="exercise_create"),
     path("exercises/<int:pk>/delete/", views.exercise_delete, name="exercise_delete"),
+
+    # CSV Exports
+    path("members/export/", views.export_members_csv, name="export_members_csv"),
+    path("payments/export/", views.export_payments_csv, name="export_payments_csv"),
 ]

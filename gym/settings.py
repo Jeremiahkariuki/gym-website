@@ -21,6 +21,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load environment variables from .env file
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
+# Use BigAutoField globally to suppress models.W042 warnings
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/

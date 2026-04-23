@@ -33,7 +33,7 @@ class Membership(models.Model):
     plan = models.ForeignKey(MembershipPlan, on_delete=models.PROTECT)
     start_date = models.DateField(default=timezone.now)
     end_date = models.DateField(blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True, db_index=True)
 
     def save(self, *args, **kwargs):
         if not self.end_date and self.plan_id and self.start_date:
@@ -48,10 +48,10 @@ class Payment(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="payments")
     Membership = models.ForeignKey(Membership, on_delete=models.SET_NULL, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    paid_on = models.DateTimeField(default=timezone.now)
+    paid_on = models.DateTimeField(default=timezone.now, db_index=True)
     method = models.CharField(max_length=30, default="Cash")
     reference = models.CharField(max_length=60, blank=True)
-    date = models.DateField(default=timezone.now)
+    date = models.DateField(default=timezone.now, db_index=True)
 
     @property
     def plan_name(self):
@@ -75,7 +75,7 @@ class Payment(models.Model):
     
 class Attedance(models.Model):
     member = models.ForeignKey("Member", on_delete=models.CASCADE)
-    date = models.DateTimeField(default=timezone.now)
+    date = models.DateField(default=timezone.now, db_index=True)  # DateField so unique_together works per day
 
     class Meta:
         unique_together = ("member", "date")  # one check-in per day

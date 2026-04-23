@@ -5,7 +5,11 @@
 {% block content %}
 <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
 
-<h1>💰 Revenue Report</h1>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h1 style="margin: 0;">💰 Revenue Report</h1>
+    <a href="{% url 'export_payments_csv' %}" class="btn"
+        style="background-color: #27ae60; color: white; padding: 8px 16px;">⬇ Export Payments CSV</a>
+</div>
 
 <div
     style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
