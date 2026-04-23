@@ -1,0 +1,86 @@
+{% extends "gym/base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'portal_dashboard' %}" class="text-decoration-none">Portal</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Diet Plan</li>
+        </ol>
+    </nav>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="fw-bold">My Diet Plan</h1>
+            <p class="text-muted">Fuel your body for performance.</p>
+        </div>
+    </div>
+
+    {% if diet_plan %}
+    <div class="row g-4">
+        <!-- Macros Summary -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 text-center h-100">
+                <div class="card-header bg-success text-white py-3">
+                    <h5 class="mb-0 fw-bold">Daily Goal</h5>
+                </div>
+                <div class="card-body py-5">
+                    <div class="mb-4">
+                        <span class="display-3 fw-bold text-success">{{ diet_plan.calories }}</span>
+                        <span class="text-muted">kcal</span>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-4">
+                            <div class="p-2 bg-light rounded">
+                                <div class="fw-bold">{{ diet_plan.protein|default:"0" }}g</div>
+                                <small class="text-muted">Protein</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-2 bg-light rounded">
+                                <div class="fw-bold">{{ diet_plan.carbs|default:"0" }}g</div>
+                                <small class="text-muted">Carbs</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-2 bg-light rounded">
+                                <div class="fw-bold">{{ diet_plan.fats|default:"0" }}g</div>
+                                <small class="text-muted">Fats</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-0 py-3">
+                    <small class="text-muted">Last updated: {{ diet_plan.updated_at|date:"M d, Y" }}</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes & Instructions -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold">Nutritionist's Notes</h5>
+                </div>
+                <div class="card-body">
+                    {% if diet_plan.notes %}
+                    <div class="lead" style="white-space: pre-wrap;">{{ diet_plan.notes }}</div>
+                    {% else %}
+                    <p class="text-muted">No specific notes provided for this diet plan.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-12 text-center py-5">
+            <div class="display-1 text-muted mb-3"><i class="bi bi-egg"></i></div>
+            <h4>No Diet Plan Assigned</h4>
+            <p class="text-muted">Ask your nutritionist or trainer to upload a diet plan for you.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

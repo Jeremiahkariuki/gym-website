@@ -144,7 +144,7 @@ STORAGES = {
 }
 
 LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "dashboard"
+LOGIN_REDIRECT_URL = "login_redirect"
 LOGOUT_REDIRECT_URL = "login"
 
 # Security settings for production

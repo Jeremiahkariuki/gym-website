@@ -1,0 +1,81 @@
+{% extends "gym/base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'portal_dashboard' %}" class="text-decoration-none">Portal</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Workout Plan</li>
+        </ol>
+    </nav>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="fw-bold">My Workout Plans</h1>
+            <p class="text-muted">Stay consistent to reach your goals.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for plan in workout_plans %}
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold">{{ plan.name }}</h5>
+                    {% if plan.is_active %}
+                    <span class="badge bg-white text-primary">Active</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted mb-3">Started on: {{ plan.start_date }}</p>
+
+                    <div class="accordion" id="accordionPlan{{ plan.id }}">
+                        {% regroup plan.exercises.all by get_day_display as day_list %}
+                        {% for day in day_list %}
+                        <div class="accordion-item border-0 mb-2 shadow-sm rounded">
+                            <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                                <button
+                                    class="accordion-button {% if not forloop.first %}collapsed{% endif %} fw-bold rounded"
+                                    type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{ forloop.parentloop.counter }}{{ forloop.counter }}">
+                                    {{ day.grouper }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{ forloop.parentloop.counter }}{{ forloop.counter }}"
+                                class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                                data-bs-parent="#accordionPlan{{ plan.id }}">
+                                <div class="accordion-body p-0">
+                                    <ul class="list-group list-group-flush">
+                                        {% for exercise in day.list %}
+                                        <li
+                                            class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">{{ exercise.name }}</h6>
+                                                <small class="text-muted">{{ exercise.sets }} Sets × {{ exercise.reps }}
+                                                    Reps</small>
+                                            </div>
+                                            <i class="bi bi-check-circle text-muted"></i>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-center py-4 text-muted">No exercises added to this plan yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="display-1 text-muted mb-3"><i class="bi bi-card-checklist"></i></div>
+            <h4>No Workout Plans Assigned</h4>
+            <p class="text-muted">Ask your trainer to create a personalized workout plan for you.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

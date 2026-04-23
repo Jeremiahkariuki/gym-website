@@ -1,0 +1,115 @@
+{% extends "gym/base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Welcome, {{ member.full_name }}!</h1>
+            <p class="lead text-muted">Your personal gym portal.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Membership Status -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0 bg-light">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">Membership Status</h5>
+                    {% if active_membership %}
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-success me-2">Active</span>
+                            <span class="fw-bold">{{ active_membership.plan.name }}</span>
+                        </div>
+                        <p class="small text-muted mb-0">Expires on: {{ active_membership.end_date }}</p>
+                    {% else %}
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-danger me-2">Inactive</span>
+                            <span>No active plan</span>
+                        </div>
+                        <p class="small text-muted">Contact the front desk to renew.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="col-md-6 col-lg-8">
+            <div class="row g-3">
+                <div class="col-6 col-sm-4">
+                    <a href="{% url 'portal_workout' %}" class="card text-decoration-none h-100 shadow-sm border-0 text-center py-3 hover-lift">
+                        <div class="card-body">
+                            <i class="bi bi-calendar-check display-6 mb-2 text-primary"></i>
+                            <h6 class="mb-0">Workout Plan</h6>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-4">
+                    <a href="{% url 'portal_diet' %}" class="card text-decoration-none h-100 shadow-sm border-0 text-center py-3 hover-lift">
+                        <div class="card-body">
+                            <i class="bi bi-egg-fried display-6 mb-2 text-success"></i>
+                            <h6 class="mb-0">Diet Plan</h6>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-sm-4">
+                    <a href="{% url 'portal_payments' %}" class="card text-decoration-none h-100 shadow-sm border-0 text-center py-3 hover-lift">
+                        <div class="card-body">
+                            <i class="bi bi-credit-card display-6 mb-2 text-warning"></i>
+                            <h6 class="mb-0">Payments</h6>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Payments -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold">Recent Payments</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Plan</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payment in recent_payments %}
+                                <tr>
+                                    <td>{{ payment.paid_on|date:"M d, Y" }}</td>
+                                    <td>{{ payment.plan_name }}</td>
+                                    <td>${{ payment.amount }}</td>
+                                    <td>{{ payment.method }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-muted">No recent payments found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-lift {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>
+{% endblock %}

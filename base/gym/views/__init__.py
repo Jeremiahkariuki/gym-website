@@ -1,7 +1,8 @@
 # This file makes base/gym/views/ a Python package and re-exports every
 # view so that urls.py (which does `from . import views`) works unchanged.
 
-from .auth import LoginForm, RegistrationForm, logout_view, register_view
+from .auth import LoginForm, RegistrationForm, logout_view, register_view, login_redirect_view
+from .portal import portal_dashboard, portal_diet, portal_payments, portal_workout
 from .fitness import (
     diet_plan_edit,
     exercise_create,
@@ -45,7 +46,9 @@ from .reports import attendance_report, dashboard, mark_present
 
 __all__ = [
     # auth
-    "LoginForm", "RegistrationForm", "logout_view", "register_view",
+    "LoginForm", "RegistrationForm", "logout_view", "register_view", "login_redirect_view",
+    # portal
+    "portal_dashboard", "portal_diet", "portal_payments", "portal_workout",
     # members
     "MemberForm", "member_list", "member_create", "member_edit",
     "member_delete", "member_detail", "export_members_csv",

@@ -21,6 +21,13 @@ urlpatterns = [
     
     # Dashboard
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("dashboard-redirect/", views.login_redirect_view, name="login_redirect"),
+    
+    # Portal
+    path("portal/", views.portal_dashboard, name="portal_dashboard"),
+    path("portal/workout/", views.portal_workout, name="portal_workout"),
+    path("portal/diet/", views.portal_diet, name="portal_diet"),
+    path("portal/payments/", views.portal_payments, name="portal_payments"),
     
     # Attendance
     path("present/<int:member_id>/", views.mark_present, name="mark_present"),
