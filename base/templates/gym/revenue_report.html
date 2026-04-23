@@ -51,6 +51,34 @@
     </div>
 </div>
 
+<!-- Visual Analytics Section -->
+<h2 style="margin-top: 3rem;">📊 Visual Analytics</h2>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+    <!-- Revenue vs Expenses Trend -->
+    <div class="card" style="grid-column: span 2;">
+        <h3>Monthly Revenue vs Expenses</h3>
+        <div style="height: 300px;">
+            <canvas id="trendChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Revenue by Plan -->
+    <div class="card">
+        <h3>Revenue by Membership Plan</h3>
+        <div style="height: 300px; display: flex; justify-content: center;">
+            <canvas id="planChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Expenses by Category -->
+    <div class="card">
+        <h3>Expenses by Category</h3>
+        <div style="height: 300px;">
+            <canvas id="categoryChart"></canvas>
+        </div>
+    </div>
+</div>
+
 <h2 style="margin-top: 2rem;">💳 Revenue by Payment Method</h2>
 {% if payment_methods %}
 <table>
@@ -129,5 +157,88 @@
         </tbody>
     </table>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 1. Revenue vs Expenses Trend Chart
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: {{ chart_labels| safe }},
+        datasets: [
+        {
+            label: 'Revenue',
+            data: {{ chart_revenue| safe }},
+        borderColor: '#27ae60',
+        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+        fill: true,
+        tension: 0.3
+                    },
+        {
+            label: 'Expenses',
+            data: {{ chart_expenses| safe }},
+        borderColor: '#e74c3c',
+        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+        fill: true,
+        tension: 0.3
+                    }
+    ]
+            },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+        });
+
+    // 2. Revenue by Membership Plan Chart
+    const planCtx = document.getElementById('planChart').getContext('2d');
+    new Chart(planCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ plan_labels| safe }},
+        datasets: [{
+            data: {{ plan_data| safe }},
+        backgroundColor: [
+            '#3498db', '#e67e22', '#9b59b6', '#2ecc71', '#f1c40f', '#e74c3c'
+        ]
+                }]
+            },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { position: 'bottom' }
+        }
+    }
+        });
+
+    // 3. Expenses by Category Chart
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    new Chart(categoryCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ category_labels| safe }},
+        datasets: [{
+            label: 'Amount (KES)',
+            data: {{ category_data| safe }},
+        backgroundColor: '#e74c3c'
+                }]
+            },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        scales: {
+            x: { beginAtZero: true }
+        }
+    }
+        });
+    });
+</script>
 
 {% endblock %}

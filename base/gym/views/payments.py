@@ -165,6 +165,59 @@ def revenue_report(request):
             {"member": member, "has_paid": has_paid, "plan_name": plan_name}
         )
 
+    # --- Data for Financial Dashboard Charts ---
+    six_months_ago = today - timedelta(days=180)
+    
+    # 1. Monthly Revenue vs Expenses Trend (Last 6 Months)
+    from django.db.models.functions import TruncMonth
+    
+    monthly_trends_raw = Payment.objects.filter(date__gte=six_months_ago)\
+        .annotate(month=TruncMonth('date'))\
+        .values('month')\
+        .annotate(revenue=db_models.Sum('amount'))\
+        .order_by('month')
+
+    expense_trends_raw = Expense.objects.filter(date__gte=six_months_ago)\
+        .annotate(month=TruncMonth('date'))\
+        .values('month')\
+        .annotate(expenses=db_models.Sum('amount'))\
+        .order_by('month')
+
+    # Merge trends into a combined list for the chart
+    trend_data = {}
+    for entry in monthly_trends_raw:
+        m_str = entry['month'].strftime("%b %Y")
+        trend_data[m_str] = {'revenue': float(entry['revenue'] or 0), 'expenses': 0}
+    
+    for entry in expense_trends_raw:
+        m_str = entry['month'].strftime("%b %Y")
+        if m_str not in trend_data:
+            trend_data[m_str] = {'revenue': 0, 'expenses': 0}
+        trend_data[m_str]['expenses'] = float(entry['expenses'] or 0)
+    
+    # Sort trend_data by date (the keys are strings, so we might need a better sort if they span years)
+    sorted_months = sorted(trend_data.keys(), key=lambda x: timezone.datetime.strptime(x, "%b %Y"))
+    chart_labels = sorted_months
+    chart_revenue = [trend_data[m]['revenue'] for m in sorted_months]
+    chart_expenses = [trend_data[m]['expenses'] for m in sorted_months]
+
+    # 2. Revenue by Membership Plan
+    revenue_by_plan = Payment.objects.filter(Membership__isnull=False)\
+        .values('Membership__plan__name')\
+        .annotate(total=db_models.Sum('amount'))\
+        .order_by('-total')
+    
+    plan_labels = [entry['Membership__plan__name'] for entry in revenue_by_plan]
+    plan_data = [float(entry['total'] or 0) for entry in revenue_by_plan]
+
+    # 3. Expenses by Category
+    expenses_by_category = Expense.objects.values('category')\
+        .annotate(total=db_models.Sum('amount'))\
+        .order_by('-total')
+    
+    category_labels = [entry['category'] for entry in expenses_by_category]
+    category_data = [float(entry['total'] or 0) for entry in expenses_by_category]
+
     return render(
         request,
         "gym/revenue_report.html",
@@ -178,6 +231,14 @@ def revenue_report(request):
             "payment_methods": payment_methods,
             "month": this_month.strftime("%B %Y"),
             "member_status": member_status,
+            # Chart Data
+            "chart_labels": chart_labels,
+            "chart_revenue": chart_revenue,
+            "chart_expenses": chart_expenses,
+            "plan_labels": plan_labels,
+            "plan_data": plan_data,
+            "category_labels": category_labels,
+            "category_data": category_data,
         },
     )
 
