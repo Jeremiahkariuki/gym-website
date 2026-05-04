@@ -1,0 +1,141 @@
+{% extends "gym/base.html" %}
+{% block title %}Contact Us | GYMFLOW{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 3rem;
+        margin-top: 2rem;
+        margin-bottom: 5rem;
+    }
+
+    .info-card {
+        background: white;
+        padding: 3rem;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .info-item {
+        margin-bottom: 2rem;
+    }
+
+    .info-icon {
+        font-size: 1.5rem;
+        background: #f0f7ff;
+        color: #3498db;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .form-box {
+        background: #2c3e50;
+        padding: 3.5rem;
+        border-radius: 24px;
+        color: white;
+        box-shadow: 0 20px 40px rgba(44, 62, 80, 0.2);
+    }
+
+    .form-box h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        font-weight: 800;
+    }
+
+    .form-box input,
+    .form-box textarea {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+    }
+
+    .form-box input:focus,
+    .form-box textarea:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #3498db;
+        outline: none;
+    }
+
+    .map-placeholder {
+        background: #eee;
+        height: 300px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        margin-top: 2rem;
+        border: 2px dashed #ccc;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 4rem 0 2rem;">
+    <h1 style="font-size: 3.5rem; font-weight: 900; color: #2c3e50; letter-spacing: -1px;">GET IN TOUCH</h1>
+    <p style="color: #666; font-size: 1.1rem;">Have questions? Our team is ready to help you take the next step.</p>
+</div>
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}" style="max-width: 1200px; margin: 0 auto 2rem;">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="contact-container">
+    <div class="info-card">
+        <div class="info-item">
+            <div class="info-icon">📍</div>
+            <h3>Location</h3>
+            <p>123 Fitness Avenue, Nairobi, Kenya</p>
+        </div>
+        <div class="info-item">
+            <div class="info-icon">📞</div>
+            <h3>Contact Info</h3>
+            <p>Phone: +254 700 000 000<br>Email: info@gymflow.com</p>
+        </div>
+        <div class="info-item">
+            <div class="info-icon">⏰</div>
+            <h3>Opening Hours</h3>
+            <p>Mon - Fri: 5 AM - 10 PM<br>Sat - Sun: 7 AM - 8 PM</p>
+        </div>
+
+        <div class="map-placeholder">
+            <p>📍 Google Maps Integration Ready</p>
+        </div>
+    </div>
+
+    <div class="form-box">
+        <h2>Send us a Message</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="name" placeholder="Your Full Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" placeholder="Email Address" required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="subject" placeholder="Subject" required>
+            </div>
+            <div class="form-group">
+                <textarea name="message" rows="5" placeholder="How can we help you?" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success"
+                style="width: 100%; padding: 1.2rem; font-weight: 700; border-radius: 12px; font-size: 1.1rem; border: none;">Send
+                Message</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

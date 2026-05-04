@@ -1,0 +1,122 @@
+{% extends "gym/base.html" %}
+{% block title %}Class Schedule | GYMFLOW{% endblock %}
+
+{% block extra_css %}
+<style>
+    .schedule-header {
+        background: linear-gradient(135deg, #2c3e50, #2980b9);
+        color: white;
+        padding: 4rem 1rem;
+        text-align: center;
+        border-radius: 24px;
+        margin-bottom: 3rem;
+    }
+
+    .schedule-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 5rem;
+    }
+
+    .day-column {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        padding: 1.5rem;
+        border: 1px solid #eee;
+    }
+
+    .day-name {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .class-item {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+        border-left: 4px solid #3498db;
+        transition: transform 0.2s ease;
+    }
+
+    .class-item:hover {
+        transform: scale(1.02);
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .class-time {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #3498db;
+        margin-bottom: 0.25rem;
+        display: block;
+    }
+
+    .class-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+        display: block;
+    }
+
+    .class-trainer {
+        font-size: 0.85rem;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .empty-msg {
+        color: #aaa;
+        font-style: italic;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="schedule-header">
+    <h1 style="font-size: 3rem; font-weight: 900; margin-bottom: 1rem;">WEEKLY SCHEDULE</h1>
+    <p style="opacity: 0.9; max-width: 600px; margin: 0 auto;">Join our high-energy group classes led by expert
+        instructors. From beginner to elite, we have a session for you.</p>
+</div>
+
+<div class="schedule-grid">
+    {% for day, classes in classes_by_day.items %}
+    <div class="day-column">
+        <h2 class="day-name">{{ day }}</h2>
+        {% if classes %}
+        {% for c in classes %}
+        <div class="class-item">
+            <span class="class-time">{{ c.start_time|time:"H:i" }} - {{ c.end_time|time:"H:i" }}</span>
+            <span class="class-name">{{ c.name }}</span>
+            {% if c.trainer %}
+            <span class="class-trainer">👤 {{ c.trainer.full_name }}</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="empty-msg">No classes scheduled.</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<div style="background: #f8f9fa; padding: 3rem; border-radius: 20px; text-align: center; margin-bottom: 5rem;">
+    <h3>Interested in a private session?</h3>
+    <p style="color: #666; margin-bottom: 1.5rem;">Our personal trainers are available throughout the week for 1-on-1
+        coaching.</p>
+    <a href="{% url 'contact' %}" class="btn" style="background: #2c3e50; padding: 0.6rem 2rem;">Inquire Now</a>
+</div>
+{% endblock %}

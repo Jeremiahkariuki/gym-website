@@ -1,8 +1,19 @@
 from django.contrib import admin
-from .models import Member, Membership, MembershipPlan, Payment, Attedance, Expense, MeasurementLog, DietPlan, WorkoutPlan, Exercise, Trainer, TrainerAssignment
+from .models import Member, Membership, MembershipPlan, Payment, Attedance, Expense, MeasurementLog, DietPlan, WorkoutPlan, Exercise, Trainer, TrainerAssignment, GymClass, ContactMessage
 
 
-@admin.register(Member)
+@admin.register(GymClass)
+class GymClassAdmin(admin.ModelAdmin):
+    list_display = ('name', 'day', 'start_time', 'end_time', 'trainer')
+    list_filter = ('day', 'trainer')
+    search_fields = ('name',)
+
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'subject', 'created_at')
+    readonly_fields = ('created_at',)
+    search_fields = ('name', 'email', 'subject')
 class MemberAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'phone', 'email', 'joined_on', 'membership_Plan')
     list_filter = ('joined_on', 'membership_Plan')

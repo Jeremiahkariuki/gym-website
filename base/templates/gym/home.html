@@ -1,0 +1,267 @@
+{% extends "gym/base.html" %}
+{% block title %}Welcome to GYMFLOW | Experience the Peak of Fitness{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --accent-blue: #3498db;
+        --accent-green: #2ecc71;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .hero {
+        position: relative;
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at top left, #2c3e50, #000);
+        color: white;
+        text-align: center;
+        padding: 4rem 1rem;
+        margin-top: -2rem;
+        /* offset nav margin */
+    }
+
+    .hero-content {
+        max-width: 800px;
+        z-index: 2;
+    }
+
+    .hero-title {
+        font-size: clamp(3rem, 10vw, 5rem);
+        font-weight: 900;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #fff, #95a5a6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -2px;
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        opacity: 0.8;
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+    }
+
+    .cta-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-large {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .btn-large:hover {
+        transform: scale(1.05);
+    }
+
+    /* Features Section */
+    .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 4rem 0 3rem;
+        color: #2c3e50;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 5rem;
+    }
+
+    .feature-card {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+        text-align: center;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        display: block;
+    }
+
+    /* Pricing Section */
+    .pricing-wrap {
+        background: #f8f9fa;
+        padding: 4rem 0;
+        margin: 0 -100vw;
+        padding: 4rem 100vw;
+        box-shadow: inset 0 20px 40px rgba(0, 0, 0, 0.02);
+    }
+
+    .plans-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .plan-card {
+        background: white;
+        padding: 3rem;
+        border-radius: 24px;
+        border: 1px solid #eee;
+        text-align: center;
+        transition: scale 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .plan-card.popular {
+        border: 2px solid var(--accent-blue);
+        scale: 1.05;
+        z-index: 2;
+    }
+
+    .popular-badge {
+        position: absolute;
+        top: 20px;
+        right: -30px;
+        background: var(--accent-blue);
+        color: white;
+        padding: 5px 40px;
+        transform: rotate(45deg);
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .plan-price {
+        font-size: 3rem;
+        font-weight: 800;
+        margin: 1.5rem 0;
+        color: #2c3e50;
+    }
+
+    .plan-price span {
+        font-size: 1rem;
+        opacity: 0.6;
+    }
+
+    /* Animation */
+    @keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
+
+    .floating-shape {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: linear-gradient(135deg, var(--accent-blue), transparent);
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.2;
+        animation: float 6s ease-in-out infinite;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="floating-shape" style="top: 10%; left: 5%;"></div>
+    <div class="floating-shape" style="bottom: 10%; right: 5%; background: var(--accent-green);"></div>
+
+    <div class="hero-content">
+        <h1 class="hero-title">TRANSFORM YOUR BODY, ELEVATE YOUR LIFE.</h1>
+        <p class="hero-subtitle">Experience our premium gym facility, expert trainers, and personalized nutrition plans.
+            Join the community that pushes you to your limits.</p>
+        <div class="cta-group">
+            <a href="{% url 'register' %}" class="btn btn-large btn-success">Get Started Today</a>
+            <a href="{% url 'class_schedule' %}" class="btn btn-large"
+                style="background: transparent; border: 1px solid white;">View Schedule</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="section-title">Why Choose GYMFLOW?</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <span class="feature-icon">🏋️</span>
+            <h3>World-Class Equipment</h3>
+            <p>State-of-the-art machines and free weights designed for performance and safety.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">🎓</span>
+            <h3>Expert Trainers</h3>
+            <p>Our certified trainers create customized programs to help you smash your fitness goals.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">🍎</span>
+            <h3>Nutrition Plans</h3>
+            <p>Integrated diet tracking and plans tailored to your specific body type and goals.</p>
+        </div>
+    </div>
+
+    <div class="pricing-wrap">
+        <h2 class="section-title">Simple, Flexible Pricing</h2>
+        <div class="plans-grid">
+            {% for plan in plans %}
+            <div class="plan-card {% if forloop.counter == 2 %}popular{% endif %}">
+                {% if forloop.counter == 2 %}<div class="popular-badge">BEST VALUE</div>{% endif %}
+                <h3>{{ plan.name }}</h3>
+                <div class="plan-price">KES {{ plan.price }}<span> / {{ plan.duration_days }} days</span></div>
+                <ul
+                    style="list-style: none; padding: 0; margin-bottom: 2rem; color: #666; font-size: 0.95rem; line-height: 2;">
+                    <li>✓ 24/7 Gym Access</li>
+                    <li>✓ Locker Room & Showers</li>
+                    <li>✓ Free Trainer Consultation</li>
+                    {% if plan.price > 3000 %}
+                    <li>✓ Group Classes Included</li>
+                    <li>✓ Personalized Diet Plan</li>
+                    {% endif %}
+                </ul>
+                <a href="{% url 'register' %}" class="btn"
+                    style="width: 100%; padding: 1rem; border-radius: 12px; {% if forloop.counter == 2 %}background: var(--accent-blue);{% else %}background: #2c3e50;{% endif %}">Join
+                    Now</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div style="text-align: center; margin: 8rem 0;">
+        <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1.5rem;">Still have questions?</h2>
+        <p style="color: #666; margin-bottom: 2.5rem;">Our team is here to help you find the right path for your fitness
+            journey.</p>
+        <a href="{% url 'contact' %}" class="btn btn-large" style="background: #2c3e50;">Contact Our Team</a>
+    </div>
+</div>
+{% endblock %}

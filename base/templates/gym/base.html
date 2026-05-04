@@ -357,36 +357,37 @@
             below handles the visibility. the original Django comment was
             rendering in some circumstances, so it has been converted to an HTML
             comment to avoid any chance of leakage. -->
-    {% if user.is_authenticated %}
     <nav>
         <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
-            <div style="font-size: 1.25rem; font-weight: 700;">
-                <!-- replace with an actual logo image if available -->
-                Gym Management
+            <div
+                style="font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 0.5rem;">
+                <span
+                    style="background: linear-gradient(135deg, #3498db, #2ecc71); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">GYM</span>
+                <span style="color: #fff;">FLOW</span>
             </div>
             <div>
+                <!-- Public Links -->
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'class_schedule' %}">Classes</a>
+                <a href="{% url 'contact' %}">Contact</a>
+
+                {% if user.is_authenticated %}
                 {% if user.is_staff %}
-                <a href="{% url 'dashboard' %}">Dashboard</a>
-                <a href="{% url 'member_list' %}">Members</a>
-                <a href="{% url 'trainer_list' %}">Trainers</a>
-                <a href="{% url 'plan_list' %}">Plans</a>
-                <a href="{% url 'expense_list' %}">Expenses</a>
-                <a href="{% url 'attendance_report' %}">Attendance</a>
-                <a href="{% url 'revenue_report' %}">Financials</a>
+                <a href="{% url 'dashboard' %}" style="margin-left: 1.5rem; color: #3498db;">Admin Panel</a>
                 {% elif user.trainer_profile %}
-                <a href="{% url 'trainer_portal_dashboard' %}">Dashboard</a>
-                <a href="{% url 'trainer_portal_members' %}">My Members</a>
+                <a href="{% url 'trainer_portal_dashboard' %}" style="margin-left: 1.5rem; color: #3498db;">Trainer
+                    Portal</a>
                 {% else %}
-                <a href="{% url 'portal_dashboard' %}">Dashboard</a>
-                <a href="{% url 'portal_workout' %}">Workout</a>
-                <a href="{% url 'portal_diet' %}">Diet</a>
-                <a href="{% url 'portal_payments' %}">Payments</a>
+                <a href="{% url 'portal_dashboard' %}" style="margin-left: 1.5rem; color: #3498db;">Member Portal</a>
                 {% endif %}
-                <a href="{% url 'logout' %}" style="margin-left: 2rem;">Logout</a>
+                <a href="{% url 'logout' %}" style="margin-left: 1.5rem; opacity: 0.7;">Logout</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn"
+                    style="margin-left: 1.5rem; padding: 0.4rem 1.2rem; font-size: 0.9rem;">Member Login</a>
+                {% endif %}
             </div>
         </div>
     </nav>
-    {% endif %}
 
     <div class="container">
         {% block content %}{% endblock %}

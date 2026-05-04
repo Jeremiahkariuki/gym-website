@@ -5,7 +5,11 @@ from . import views
 
 urlpatterns = [
     # Root
-    path("", RedirectView.as_view(url='login/', permanent=False), name="home"),
+    path("", views.home_view, name="home"),
+    
+    # Public Pages
+    path("classes/", views.class_schedule_view, name="class_schedule"),
+    path("contact/", views.contact_view, name="contact"),
     
     # Members
     path("members/", views.member_list, name="member_list"),

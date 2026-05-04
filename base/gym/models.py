@@ -187,4 +187,35 @@ class TrainerAssignment(models.Model):
         return f"{self.trainer} → {self.member}"
 
 
+class GymClass(models.Model):
+    DAYS = [
+        (0, "Monday"), (1, "Tuesday"), (2, "Wednesday"), (3, "Thursday"),
+        (4, "Friday"), (5, "Saturday"), (6, "Sunday")
+    ]
+    name = models.CharField(max_length=100)
+    trainer = models.ForeignKey(Trainer, on_delete=models.SET_NULL, null=True, blank=True, related_name="classes")
+    day = models.IntegerField(choices=DAYS)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    description = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name_plural = "Gym Classes"
+        ordering = ["day", "start_time"]
+
+    def __str__(self):
+        return f"{self.name} ({self.get_day_display()})"
+
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Msg from {self.name} - {self.subject}"
+
+
 
