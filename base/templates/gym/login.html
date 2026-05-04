@@ -57,10 +57,13 @@
                 <button type="submit" class="login-btn">Login</button>
             </form>
 
-            <p class="auth-links" style="margin-top: 2rem; color: rgba(255, 255, 255, 0.7); text-align: center;">
-                Don't have an account?
-                <a href="{% url 'register' %}" class="register-link">Register now</a>
-            </p>
+            <div
+                style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; text-align: center;">
+                <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">Don't have an account?</p>
+                <a href="{% url 'register' %}" class="btn"
+                    style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; display: block; padding: 0.8rem; border-radius: 8px; text-decoration: none; transition: all 0.3s ease;">Create
+                    Now</a>
+            </div>
         </div>
     </div>
 

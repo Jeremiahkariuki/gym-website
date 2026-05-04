@@ -116,11 +116,6 @@ def staff_create(request):
 
 
 def register_view(request):
-    if request.user.is_authenticated:
-        if request.user.is_staff:
-            return redirect("dashboard")
-        return redirect("portal_dashboard")
-
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
