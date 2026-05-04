@@ -22,6 +22,7 @@ urlpatterns = [
     # Authentication
     path("login/", auth_views.LoginView.as_view(template_name="gym/login.html", form_class=views.LoginForm), name="login"),
     path("register/", views.register_view, name="register"),
+    path("staff/add/", views.staff_create, name="staff_create"),
     path("logout/", views.logout_view, name="logout"), 
     
     # Dashboard

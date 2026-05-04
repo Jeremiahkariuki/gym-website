@@ -374,6 +374,8 @@
                 {% if user.is_authenticated %}
                 {% if user.is_staff %}
                 <a href="{% url 'dashboard' %}" style="margin-left: 1.5rem; color: #3498db;">Admin Panel</a>
+                <a href="{% url 'staff_create' %}" style="margin-left: 1rem; opacity: 0.8; font-size: 0.9rem;">+ Add
+                    Staff</a>
                 {% elif user.trainer_profile %}
                 <a href="{% url 'trainer_portal_dashboard' %}" style="margin-left: 1.5rem; color: #3498db;">Trainer
                     Portal</a>

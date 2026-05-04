@@ -1,0 +1,64 @@
+{% extends "gym/base.html" %}
+{% block title %}Add New Staff | GYMFLOW{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 2rem auto;">
+    <div class="card">
+        <div class="card-header" style="background: #2c3e50; color: white;">
+            <h2 style="margin: 0;">Add New Staff Member</h2>
+        </div>
+        <div class="card-body">
+            <p style="color: #666; margin-bottom: 2rem;">Use this form to create a new administrative staff member or a
+                trainer. Credentials will be active immediately.</p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="font-weight: 700;">Staff Role</label>
+                    {{ form.role }}
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="font-weight: 700;">Account Credentials</label>
+                    <div style="display: grid; gap: 1rem; margin-top: 0.5rem;">
+                        {{ form.username }}
+                        {{ form.email }}
+                        {{ form.password }}
+                    </div>
+                </div>
+
+                <div id="trainer-fields"
+                    style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; display: none;">
+                    <label style="font-weight: 700; color: #2c3e50;">Trainer Details</label>
+                    <div style="display: grid; gap: 1rem; margin-top: 0.5rem;">
+                        {{ form.phone }}
+                        {{ form.specialization }}
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-success" style="flex: 1;">Create Staff Account</button>
+                    <a href="{% url 'dashboard' %}" class="btn" style="background: #eee;">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const roleSelect = document.querySelector('select[name="role"]');
+    const trainerFields = document.getElementById('trainer-fields');
+
+    function toggleTrainerFields() {
+        if (roleSelect.value === 'trainer') {
+            trainerFields.style.display = 'block';
+        } else {
+            trainerFields.style.display = 'none';
+        }
+    }
+
+    roleSelect.addEventListener('change', toggleTrainerFields);
+    toggleTrainerFields(); // initial state
+</script>
+{% endblock %}
