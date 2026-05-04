@@ -37,6 +37,24 @@
             {% endfor %}
         </tbody>
     </table>
+
+    {# Pagination Controls #}
+    {% if expenses.paginator.num_pages > 1 %}
+    <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 1.5rem;">
+        {% if expenses.has_previous %}
+        <a href="?page={{ expenses.previous_page_number }}" class="btn" style="padding: 6px 14px;">← Previous</a>
+        {% endif %}
+
+        <span style="font-size: 0.95rem; color: #555;">
+            Page <strong>{{ expenses.number }}</strong> of <strong>{{ expenses.paginator.num_pages }}</strong>
+        </span>
+
+        {% if expenses.has_next %}
+        <a href="?page={{ expenses.next_page_number }}" class="btn btn-success" style="padding: 6px 14px;">Next →</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
     {% else %}
     <p>No expenses recorded yet.</p>
     {% endif %}

@@ -1,0 +1,77 @@
+{% extends "gym/base.html" %}
+{% block title %}{{ trainer.full_name }}{% endblock %}
+{% block content %}
+<a href="{% url 'trainer_list' %}" class="back-link">← All Trainers</a>
+
+<div
+    style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;">
+    <h1>{{ trainer.full_name }}</h1>
+    <div class="actions">
+        <a href="{% url 'trainer_edit' trainer.id %}" class="btn btn-success">Edit</a>
+        <a href="{% url 'trainer_delete' trainer.id %}" class="btn btn-danger">Delete</a>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom:1.5rem;">
+    <h2>Profile</h2>
+    <table style="box-shadow:none;margin:0;">
+        <tr>
+            <th style="width:160px;">Username</th>
+            <td>{{ trainer.user.username }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ trainer.user.email|default:"—" }}</td>
+        </tr>
+        <tr>
+            <th>Phone</th>
+            <td>{{ trainer.phone|default:"—" }}</td>
+        </tr>
+        <tr>
+            <th>Specialization</th>
+            <td>{{ trainer.specialization|default:"—" }}</td>
+        </tr>
+        <tr>
+            <th>Joined</th>
+            <td>{{ trainer.joined_on }}</td>
+        </tr>
+        {% if trainer.bio %}
+        <tr>
+            <th>Bio</th>
+            <td>{{ trainer.bio }}</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+
+<div class="card">
+    <h2>Assigned Members ({{ assignments.count }})</h2>
+    {% if assignments %}
+    <table style="box-shadow:none;margin:0;">
+        <thead>
+            <tr>
+                <th>Member</th>
+                <th>Phone</th>
+                <th>Assigned On</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in assignments %}
+            <tr>
+                <td>{{ a.member.full_name }}</td>
+                <td>{{ a.member.phone|default:"—" }}</td>
+                <td>{{ a.assigned_on }}</td>
+                <td>
+                    <a href="{% url 'member_detail' a.member.id %}" class="btn"
+                        style="padding:0.3rem 0.7rem;font-size:0.85rem;">View Member</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color:#7f8c8d;">No members assigned yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

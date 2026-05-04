@@ -1,0 +1,62 @@
+{% extends "gym/base.html" %}
+{% block title %}Trainers{% endblock %}
+{% block content %}
+<h1>Trainers</h1>
+
+<div style="display:flex;gap:1rem;margin-bottom:1.5rem;align-items:center;flex-wrap:wrap;">
+    <a href="{% url 'trainer_create' %}" class="btn">+ Add Trainer</a>
+    <form method="get" style="display:flex;gap:0.5rem;background:none;padding:0;box-shadow:none;max-width:none;">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search trainers…" style="width:260px;">
+        <button type="submit" class="btn">Search</button>
+        {% if query %}<a href="{% url 'trainer_list' %}" class="btn btn-danger">Clear</a>{% endif %}
+    </form>
+</div>
+
+{% if trainers %}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Specialization</th>
+            <th>Phone</th>
+            <th>Members</th>
+            <th>Joined</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for trainer in trainers %}
+        <tr>
+            <td><strong>{{ trainer.full_name }}</strong></td>
+            <td>{{ trainer.user.username }}</td>
+            <td>{{ trainer.specialization|default:"—" }}</td>
+            <td>{{ trainer.phone|default:"—" }}</td>
+            <td>{{ trainer.member_count }}</td>
+            <td>{{ trainer.joined_on }}</td>
+            <td class="actions">
+                <a href="{% url 'trainer_detail' trainer.id %}" class="btn" style="padding:0.4rem 0.8rem;font-size:0.9rem;">View</a>
+                <a href="{% url 'trainer_edit' trainer.id %}" class="btn btn-success" style="padding:0.4rem 0.8rem;font-size:0.9rem;">Edit</a>
+                <a href="{% url 'trainer_delete' trainer.id %}" class="btn btn-danger" style="padding:0.4rem 0.8rem;font-size:0.9rem;">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if trainers.has_other_pages %}
+<div style="display:flex;gap:0.5rem;margin-top:1rem;">
+    {% if trainers.has_previous %}
+        <a href="?page={{ trainers.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" class="btn">← Prev</a>
+    {% endif %}
+    <span style="line-height:2.2rem;">Page {{ trainers.number }} of {{ trainers.paginator.num_pages }}</span>
+    {% if trainers.has_next %}
+        <a href="?page={{ trainers.next_page_number }}{% if query %}&q={{ query }}{% endif %}" class="btn">Next →</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<p>No trainers found{% if query %} matching "<strong>{{ query }}</strong>"{% endif %}.</p>
+{% endif %}
+{% endblock %}

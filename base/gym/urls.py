@@ -10,6 +10,7 @@ urlpatterns = [
     # Members
     path("members/", views.member_list, name="member_list"),
     path("members/new/", views.member_create, name="member_create"),
+    path("members/import/", views.import_members_csv, name="import_members_csv"),
     path("members/<int:member_id>/", views.member_detail, name="member_detail"),
     path("members/<int:member_id>/edit/", views.member_edit, name="member_edit"),
     path("members/<int:member_id>/delete/", views.member_delete, name="member_delete"),
@@ -69,4 +70,16 @@ urlpatterns = [
     # CSV Exports
     path("members/export/", views.export_members_csv, name="export_members_csv"),
     path("payments/export/", views.export_payments_csv, name="export_payments_csv"),
+
+    # Trainers (Admin)
+    path("trainers/", views.trainer_list, name="trainer_list"),
+    path("trainers/new/", views.trainer_create, name="trainer_create"),
+    path("trainers/<int:trainer_id>/", views.trainer_detail, name="trainer_detail"),
+    path("trainers/<int:trainer_id>/edit/", views.trainer_edit, name="trainer_edit"),
+    path("trainers/<int:trainer_id>/delete/", views.trainer_delete, name="trainer_delete"),
+    path("members/<int:member_id>/assign-trainer/", views.assign_trainer, name="assign_trainer"),
+
+    # Trainer Portal
+    path("trainer/dashboard/", views.trainer_portal_dashboard, name="trainer_portal_dashboard"),
+    path("trainer/members/", views.trainer_portal_members, name="trainer_portal_members"),
 ]

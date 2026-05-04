@@ -3,9 +3,12 @@
 {% block title %}Members - Gym Management{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+<div
+    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px;">
     <h1>Members ({{ members.paginator.count }})</h1>
-    <div style="display: flex; gap: 8px;">
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <a href="{% url 'import_members_csv' %}" class="btn" style="background-color: #3498db; color: white;">⬆ Import
+            CSV</a>
         <a href="{% url 'export_members_csv' %}" class="btn" style="background-color: #27ae60; color: white;">⬇ Export
             CSV</a>
         <a href="{% url 'member_create' %}" class="btn btn-success">+ Add Member</a>
@@ -15,11 +18,18 @@
 <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
 
 {# Search Form #}
-<form method="get" action="" style="margin: 1.2rem 0; display: flex; gap: 8px;">
+<form method="get" action="" style="margin: 1.2rem 0; display: flex; gap: 8px; flex-wrap: wrap;">
     <input type="text" name="q" value="{{ query }}" placeholder="Search by name or phone..."
-        style="flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem;">
+        style="flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem;">
+
+    <select name="status" style="padding: 8px; border: 1px solid #ccc; border-radius: 6px;">
+        <option value="">All Statuses</option>
+        <option value="active" {% if status=='active' %}selected{% endif %}>Active</option>
+        <option value="inactive" {% if status=='inactive' %}selected{% endif %}>Inactive</option>
+    </select>
+
     <button type="submit" class="btn btn-success" style="padding: 8px 16px;">🔍 Search</button>
-    {% if query %}
+    {% if query or status %}
     <a href="{% url 'member_list' %}" class="btn" style="padding: 8px 12px;">✕ Clear</a>
     {% endif %}
 </form>

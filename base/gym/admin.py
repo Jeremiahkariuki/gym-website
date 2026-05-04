@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Member, Membership, MembershipPlan, Payment, Attedance, Expense, MeasurementLog, DietPlan, WorkoutPlan, Exercise
+from .models import Member, Membership, MembershipPlan, Payment, Attedance, Expense, MeasurementLog, DietPlan, WorkoutPlan, Exercise, Trainer, TrainerAssignment
 
 
 @admin.register(Member)
@@ -63,3 +63,18 @@ class WorkoutPlanAdmin(admin.ModelAdmin):
 class ExerciseAdmin(admin.ModelAdmin):
     list_display = ('name', 'workout_plan', 'day', 'order')
     list_filter = ('day',)
+
+
+@admin.register(Trainer)
+class TrainerAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'specialization', 'phone', 'joined_on')
+    search_fields = ('user__username', 'user__first_name', 'user__last_name', 'specialization')
+    readonly_fields = ('joined_on',)
+
+
+@admin.register(TrainerAssignment)
+class TrainerAssignmentAdmin(admin.ModelAdmin):
+    list_display = ('trainer', 'member', 'assigned_on')
+    list_filter = ('trainer',)
+    search_fields = ('trainer__user__username', 'member__full_name')
+    readonly_fields = ('assigned_on',)

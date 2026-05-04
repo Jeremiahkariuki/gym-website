@@ -1,0 +1,39 @@
+{% extends "gym/base.html" %}
+{% block title %}My Members — {{ trainer.full_name }}{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+    <div>
+        <a href="{% url 'trainer_portal_dashboard' %}" class="back-link">← Dashboard</a>
+        <h1>My Members</h1>
+    </div>
+</div>
+
+{% if assignments %}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Active Plan</th>
+            <th>Assigned On</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in assignments %}
+        <tr>
+            <td><strong>{{ a.member.full_name }}</strong></td>
+            <td>{{ a.member.phone|default:"—" }}</td>
+            <td>{{ a.member.email|default:"—" }}</td>
+            <td>{{ a.member.active_plan_name|default:"—" }}</td>
+            <td>{{ a.assigned_on }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="card">
+    <p style="color:#7f8c8d;">You have no members assigned yet. Ask an admin to assign members to you.</p>
+</div>
+{% endif %}
+{% endblock %}

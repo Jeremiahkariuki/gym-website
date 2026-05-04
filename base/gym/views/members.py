@@ -36,6 +36,8 @@ class MemberForm(forms.ModelForm):
 @login_required
 def member_list(request):
     query = request.GET.get("q", "").strip()
+    status = request.GET.get("status", "").strip()
+
     qs = (
         Member.objects.select_related("diet_plan")
         .prefetch_related("memberships__plan")
@@ -46,12 +48,18 @@ def member_list(request):
         qs = qs.filter(
             db_models.Q(full_name__icontains=query) | db_models.Q(phone__icontains=query)
         )
+        
+    if status == "active":
+        qs = qs.filter(memberships__is_active=True).distinct()
+    elif status == "inactive":
+        # Members with no active membership
+        qs = qs.exclude(memberships__is_active=True).distinct()
 
     paginator = Paginator(qs, 25)  # 25 members per page
     page_number = request.GET.get("page")
     members = paginator.get_page(page_number)
 
-    return render(request, "gym/member_list.html", {"members": members, "query": query})
+    return render(request, "gym/member_list.html", {"members": members, "query": query, "status": status})
 
 
 @login_required
@@ -171,3 +179,44 @@ def export_members_csv(request):
         ])
 
     return response
+
+@login_required
+def import_members_csv(request):
+    if request.method == "POST" and request.FILES.get("csv_file"):
+        csv_file = request.FILES["csv_file"]
+        
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, "This is not a CSV file.")
+            return redirect("import_members_csv")
+            
+        try:
+            file_data = csv_file.read().decode("utf-8")
+            lines = file_data.split("\n")
+            
+            # Skip header, iterate through rows
+            created_count = 0
+            for line in lines[1:]:
+                fields = line.split(",")
+                if len(fields) >= 2 and fields[0].strip():
+                    full_name = fields[0].strip()
+                    phone = fields[1].strip() if len(fields) > 1 else ""
+                    email = fields[2].strip() if len(fields) > 2 else ""
+                    address = fields[3].strip() if len(fields) > 3 else ""
+                    
+                    Member.objects.get_or_create(
+                        phone=phone,
+                        defaults={
+                            "full_name": full_name,
+                            "email": email,
+                            "address": address
+                        }
+                    )
+                    created_count += 1
+            
+            messages.success(request, f"Successfully imported {created_count} members.")
+            return redirect("member_list")
+        except Exception as e:
+            messages.error(request, f"Unable to upload file. Error: {e}")
+            return redirect("import_members_csv")
+
+    return render(request, "gym/import_members.html")

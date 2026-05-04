@@ -1,0 +1,64 @@
+{% extends "gym/base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<a href="{% if trainer %}{% url 'trainer_detail' trainer.id %}{% else %}{% url 'trainer_list' %}{% endif %}"
+    class="back-link">← Back</a>
+<h1>{{ title }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% if not trainer %}
+    <h3 style="margin-bottom:1rem;color:#7f8c8d;font-size:1rem;text-transform:uppercase;letter-spacing:1px;">Login
+        Credentials</h3>
+    <div class="form-group">
+        <label>Username *</label>
+        {{ form.username }}
+        {% if form.username.errors %}<p style="color:red;font-size:0.9rem;">{{ form.username.errors.0 }}</p>{% endif %}
+    </div>
+    <div class="form-group">
+        <label>Password *</label>
+        {{ form.password }}
+    </div>
+    <hr style="margin: 1.5rem 0;">
+    {% endif %}
+
+    <h3 style="margin-bottom:1rem;color:#7f8c8d;font-size:1rem;text-transform:uppercase;letter-spacing:1px;">Personal
+        Info</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+            <label>First Name</label>
+            {{ form.first_name }}
+        </div>
+        <div class="form-group">
+            <label>Last Name</label>
+            {{ form.last_name }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Email</label>
+        {{ form.email }}
+    </div>
+    <div class="form-group">
+        <label>Phone</label>
+        {{ form.phone }}
+    </div>
+
+    <hr style="margin: 1.5rem 0;">
+    <h3 style="margin-bottom:1rem;color:#7f8c8d;font-size:1rem;text-transform:uppercase;letter-spacing:1px;">
+        Professional Info</h3>
+    <div class="form-group">
+        <label>Specialization</label>
+        {{ form.specialization }}
+    </div>
+    <div class="form-group">
+        <label>Bio</label>
+        {{ form.bio }}
+    </div>
+
+    <div class="actions" style="margin-top:1.5rem;">
+        <button type="submit" class="btn btn-success">Save Trainer</button>
+        <a href="{% url 'trainer_list' %}" class="btn btn-danger">Cancel</a>
+    </div>
+</form>
+{% endblock %}

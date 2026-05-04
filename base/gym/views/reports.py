@@ -5,7 +5,7 @@ from django.db import models as db_models
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from ..models import Attedance, Member
+from ..models import Attedance, Member, Membership
 
 
 @login_required
@@ -17,6 +17,15 @@ def dashboard(request):
     members_joined_today = Member.objects.filter(joined_on=today).count()
     today_attedance = Attedance.objects.filter(date=today).count()
     present_today = Attedance.objects.filter(date=today).select_related("member")
+    
+    # Calculate memberships expiring in the next 7 days
+    seven_days_from_now = today + timedelta(days=7)
+    expiring_soon = Membership.objects.filter(
+        is_active=True,
+        end_date__isnull=False,
+        end_date__gte=today,
+        end_date__lte=seven_days_from_now
+    ).select_related("member", "plan").order_by("end_date")
 
     return render(
         request,
@@ -28,6 +37,7 @@ def dashboard(request):
             "members_joined_today": members_joined_today,
             "today_attedance": today_attedance,
             "present_today": present_today,
+            "expiring_soon": expiring_soon,
         },
     )
 

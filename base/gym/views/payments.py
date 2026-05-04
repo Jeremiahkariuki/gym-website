@@ -1,4 +1,5 @@
 import csv
+from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -86,9 +87,14 @@ def payment_delete(request, pk):
 
 # ── Expenses ────────────────────────────────────────────────────────────── #
 
+from django.core.paginator import Paginator
+
 @login_required
 def expense_list(request):
-    expenses = Expense.objects.all().order_by("-date")
+    expenses_list = Expense.objects.all().order_by("-date")
+    paginator = Paginator(expenses_list, 20)  # 20 expenses per page
+    page_number = request.GET.get("page")
+    expenses = paginator.get_page(page_number)
     return render(request, "gym/expense_list.html", {"expenses": expenses})
 
 

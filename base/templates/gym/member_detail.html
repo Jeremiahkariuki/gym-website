@@ -16,6 +16,15 @@
         <p><strong>Address:</strong> {{ member.address|default:"N/A" }}</p>
         <p><strong>Joined:</strong> {{ member.joined_on|date:"d/m/Y" }}</p>
         <p><strong>Current Plan:</strong> {{ member.membership_Plan|default:"None" }}</p>
+        <p>
+            <strong>Trainer:</strong>
+            {% if member.trainer_assignment %}
+            <a href="{% url 'trainer_detail' member.trainer_assignment.trainer.id %}">{{
+                member.trainer_assignment.trainer.full_name }}</a>
+            {% else %}
+            <span style="color:#7f8c8d;">Not assigned</span>
+            {% endif %}
+        </p>
         <div class="actions" style="margin-top: 1rem;">
             <a href="{% url 'member_edit' member.id %}" class="btn">Edit</a>
             <a href="{% url 'member_delete' member.id %}" class="btn btn-danger">Delete</a>
@@ -28,6 +37,8 @@
             <a href="{% url 'mark_present' member.id %}" class="btn btn-success">✓ Check In Today</a>
             <a href="{% url 'assign_membership' member.id %}" class="btn">Assign Membership</a>
             <a href="{% url 'record_payment' member.id %}" class="btn">Record Payment</a>
+            <a href="{% url 'assign_trainer' member.id %}" class="btn" style="background-color:#8e44ad;">🏋️ Assign
+                Trainer</a>
         </div>
     </div>
 </div>

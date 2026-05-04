@@ -1,0 +1,29 @@
+{% extends "gym/base.html" %}
+{% block title %}Assign Trainer — {{ member.full_name }}{% endblock %}
+{% block content %}
+<a href="{% url 'member_detail' member.id %}" class="back-link">← Back to {{ member.full_name }}</a>
+<h1>Assign Trainer</h1>
+
+<div class="card" style="margin-bottom:1rem;">
+    <p><strong>Member:</strong> {{ member.full_name }}</p>
+    {% if current_assignment %}
+    <p><strong>Current Trainer:</strong> {{ current_assignment.trainer.full_name }} (since {{
+        current_assignment.assigned_on }})</p>
+    {% else %}
+    <p style="color:#7f8c8d;"><em>No trainer currently assigned.</em></p>
+    {% endif %}
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label>Select Trainer</label>
+        {{ form.trainer }}
+        <small style="color:#7f8c8d;">Choose "--- Remove trainer ---" to unassign the current trainer.</small>
+    </div>
+    <div class="actions" style="margin-top:1rem;">
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{% url 'member_detail' member.id %}" class="btn btn-danger">Cancel</a>
+    </div>
+</form>
+{% endblock %}

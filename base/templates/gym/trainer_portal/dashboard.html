@@ -1,0 +1,76 @@
+{% extends "gym/base.html" %}
+{% block title %}Trainer Dashboard{% endblock %}
+{% block content %}
+<h1>Welcome, {{ trainer.full_name }} 👋</h1>
+<p style="color:#7f8c8d;margin-bottom:2rem;">{{ today }}</p>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem;">
+    <div class="card" style="text-align:center;">
+        <div style="font-size:2.5rem;font-weight:bold;color:#3498db;">{{ assignments.count }}</div>
+        <div style="color:#7f8c8d;">Assigned Members</div>
+    </div>
+    <div class="card" style="text-align:center;">
+        <div style="font-size:2.5rem;font-weight:bold;color:#27ae60;">{{ today_checkins }}</div>
+        <div style="color:#7f8c8d;">Checked In Today</div>
+    </div>
+    <div class="card" style="text-align:center;">
+        <div style="font-size:2.5rem;font-weight:bold;color:#e74c3c;">{{ expiring_soon.count }}</div>
+        <div style="color:#7f8c8d;">Memberships Expiring Soon</div>
+    </div>
+</div>
+
+{% if expiring_soon %}
+<div class="card" style="margin-bottom:1.5rem;">
+    <h2>⏰ Expiring Memberships (Next 7 Days)</h2>
+    <table style="box-shadow:none;margin:0;">
+        <thead>
+            <tr>
+                <th>Member</th>
+                <th>Plan</th>
+                <th>Expires</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in expiring_soon %}
+            <tr>
+                <td>{{ m.member.full_name }}</td>
+                <td>{{ m.plan.name }}</td>
+                <td style="color:#e74c3c;font-weight:600;">{{ m.end_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <h2>My Members</h2>
+        <a href="{% url 'trainer_portal_members' %}" class="btn" style="font-size:0.9rem;">View All →</a>
+    </div>
+    {% if assignments %}
+    <table style="box-shadow:none;margin:0;">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Plan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in assignments|slice:":8" %}
+            {% with active=a.member.memberships.all %}
+            <tr>
+                <td>{{ a.member.full_name }}</td>
+                <td>{{ a.member.phone|default:"—" }}</td>
+                <td>{{ a.member.active_plan_name|default:"None" }}</td>
+            </tr>
+            {% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color:#7f8c8d;">No members assigned yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

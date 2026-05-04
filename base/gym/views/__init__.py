@@ -3,6 +3,11 @@
 
 from .auth import LoginForm, RegistrationForm, logout_view, register_view, login_redirect_view
 from .portal import portal_dashboard, portal_diet, portal_payments, portal_workout
+from .trainers import (
+    trainer_list, trainer_create, trainer_detail,
+    trainer_edit, trainer_delete, assign_trainer,
+)
+from .trainer_portal import trainer_portal_dashboard, trainer_portal_members
 from .fitness import (
     diet_plan_edit,
     exercise_create,
@@ -16,6 +21,7 @@ from .fitness import (
 from .members import (
     MemberForm,
     export_members_csv,
+    import_members_csv,
     member_create,
     member_delete,
     member_detail,
@@ -51,7 +57,7 @@ __all__ = [
     "portal_dashboard", "portal_diet", "portal_payments", "portal_workout",
     # members
     "MemberForm", "member_list", "member_create", "member_edit",
-    "member_delete", "member_detail", "export_members_csv",
+    "member_delete", "member_detail", "export_members_csv", "import_members_csv",
     # plans & memberships
     "plan_list", "plan_create", "plan_edit", "plan_delete",
     "assign_membership", "membership_edit", "membership_delete",
@@ -65,4 +71,9 @@ __all__ = [
     "exercise_create", "exercise_delete",
     # reports
     "dashboard", "mark_present", "attendance_report",
+    # trainers (admin)
+    "trainer_list", "trainer_create", "trainer_detail",
+    "trainer_edit", "trainer_delete", "assign_trainer",
+    # trainer portal
+    "trainer_portal_dashboard", "trainer_portal_members",
 ]

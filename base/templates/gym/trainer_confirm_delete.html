@@ -1,0 +1,20 @@
+{% extends "gym/base.html" %}
+{% block title %}Delete Trainer{% endblock %}
+{% block content %}
+<a href="{% url 'trainer_detail' trainer.id %}" class="back-link">← Back to {{ trainer.full_name }}</a>
+<h1>Delete Trainer</h1>
+
+<div class="card" style="border-left: 4px solid #e74c3c;">
+    <p>Are you sure you want to delete trainer <strong>{{ trainer.full_name }}</strong> (<em>{{ trainer.user.username
+            }}</em>)?</p>
+    <p style="color:#e74c3c;margin-top:0.5rem;">⚠️ This will also delete their login account. All member assignments
+        will be removed. This cannot be undone.</p>
+    <form method="post" style="background:none;padding:0;box-shadow:none;max-width:none;margin-top:1.5rem;">
+        {% csrf_token %}
+        <div class="actions">
+            <button type="submit" class="btn btn-danger">Yes, Delete Trainer</button>
+            <a href="{% url 'trainer_detail' trainer.id %}" class="btn">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

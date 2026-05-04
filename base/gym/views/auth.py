@@ -53,6 +53,9 @@ class RegistrationForm(UserCreationForm):
 def login_redirect_view(request):
     if request.user.is_staff:
         return redirect("dashboard")
+    # Trainers get their own portal
+    if hasattr(request.user, "trainer_profile"):
+        return redirect("trainer_portal_dashboard")
     return redirect("portal_dashboard")
 
 

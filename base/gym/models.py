@@ -156,4 +156,35 @@ class Exercise(models.Model):
         return f"{self.name} on {self.get_day_display()}"
 
 
+class Trainer(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="trainer_profile")
+    phone = models.CharField(max_length=20, blank=True)
+    specialization = models.CharField(
+        max_length=100, blank=True,
+        help_text="e.g. Weight Loss, Bodybuilding, Yoga"
+    )
+    bio = models.TextField(blank=True)
+    joined_on = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.get_full_name() or self.user.username
+
+    @property
+    def full_name(self):
+        return self.user.get_full_name() or self.user.username
+
+    @property
+    def assigned_members_count(self):
+        return self.assignments.count()
+
+
+class TrainerAssignment(models.Model):
+    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, related_name="assignments")
+    member = models.OneToOneField(Member, on_delete=models.CASCADE, related_name="trainer_assignment")
+    assigned_on = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.trainer} → {self.member}"
+
+
 

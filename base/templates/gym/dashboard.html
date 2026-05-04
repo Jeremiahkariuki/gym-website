@@ -42,6 +42,34 @@
     </div>
 </div>
 
+<div>
+    <h2>⏰ Pending Renewals (Next 7 Days)</h2>
+    <div class="card">
+        {% if expiring_soon %}
+        <ul style="list-style-type: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+            {% for membership in expiring_soon %}
+            <li
+                style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee;">
+                <div>
+                    <strong>{{ membership.member.full_name }}</strong><br>
+                    <span style="font-size: 0.85rem; color: #666;">{{ membership.plan.name }}</span>
+                </div>
+                <div style="text-align: right;">
+                    <span style="color: #e74c3c; font-weight: bold; font-size: 0.9rem;">Expires: {{
+                        membership.end_date|date:"d/m" }}</span><br>
+                    <a href="{% url 'member_detail' membership.member.id %}"
+                        style="font-size: 0.8rem; text-decoration: none; color: #3498db;">View Profile</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p style="color: #666; margin: 0;">No memberships expiring soon.</p>
+        {% endif %}
+    </div>
+</div>
+</div>
+
 <h2 style="margin-top: 2rem;">📊 Reports</h2>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
     <a href="{% url 'attendance_report' %}" class="btn" style="display: block; text-align: center; padding: 1rem;">👥

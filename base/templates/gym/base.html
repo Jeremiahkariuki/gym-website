@@ -365,12 +365,23 @@
                 Gym Management
             </div>
             <div>
+                {% if user.is_staff %}
                 <a href="{% url 'dashboard' %}">Dashboard</a>
                 <a href="{% url 'member_list' %}">Members</a>
+                <a href="{% url 'trainer_list' %}">Trainers</a>
                 <a href="{% url 'plan_list' %}">Plans</a>
                 <a href="{% url 'expense_list' %}">Expenses</a>
                 <a href="{% url 'attendance_report' %}">Attendance</a>
                 <a href="{% url 'revenue_report' %}">Financials</a>
+                {% elif user.trainer_profile %}
+                <a href="{% url 'trainer_portal_dashboard' %}">Dashboard</a>
+                <a href="{% url 'trainer_portal_members' %}">My Members</a>
+                {% else %}
+                <a href="{% url 'portal_dashboard' %}">Dashboard</a>
+                <a href="{% url 'portal_workout' %}">Workout</a>
+                <a href="{% url 'portal_diet' %}">Diet</a>
+                <a href="{% url 'portal_payments' %}">Payments</a>
+                {% endif %}
                 <a href="{% url 'logout' %}" style="margin-left: 2rem;">Logout</a>
             </div>
         </div>

@@ -1,0 +1,30 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Import Members - Gym Management{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>📥 Import Members from CSV</h1>
+    <a href="{% url 'member_list' %}" class="btn">Cancel</a>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <p>Upload a CSV file to bulk import members. The file must have the following columns in exactly this order (without
+        headers):</p>
+    <ul style="margin-left: 20px; margin-bottom: 20px; color: #555;">
+        <li><strong>Full Name</strong> (Required)</li>
+        <li><strong>Phone</strong> (Required, used for tracking uniqueness)</li>
+        <li><strong>Email</strong> (Optional)</li>
+        <li><strong>Address</strong> (Optional)</li>
+    </ul>
+
+    <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 15px;">
+        {% csrf_token %}
+        <div style="padding: 20px; border: 2px dashed #ccc; border-radius: 8px; text-align: center;">
+            <input type="file" name="csv_file" accept=".csv" required style="width: 100%;">
+        </div>
+        <button type="submit" class="btn btn-success" style="width: 100%; padding: 12px; font-size: 1.1rem;">Upload &
+            Import</button>
+    </form>
+</div>
+{% endblock %}
