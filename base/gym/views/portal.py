@@ -1,10 +1,14 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from ..models import Member, WorkoutPlan, DietPlan, Payment
 
 @login_required
 def portal_dashboard(request):
-    member = get_object_or_404(Member, user=request.user)
+    try:
+        member = request.user.member_profile
+    except Member.DoesNotExist:
+        return redirect("login")
+        
     active_membership = member.memberships.filter(is_active=True).first()
     recent_payments = member.payments.all().order_by("-paid_on")[:5]
     
@@ -16,7 +20,11 @@ def portal_dashboard(request):
 
 @login_required
 def portal_workout(request):
-    member = get_object_or_404(Member, user=request.user)
+    try:
+        member = request.user.member_profile
+    except Member.DoesNotExist:
+        return redirect("login")
+        
     workout_plans = member.workout_plans.all()
     return render(request, "gym/portal/workout.html", {
         "member": member,
@@ -25,7 +33,11 @@ def portal_workout(request):
 
 @login_required
 def portal_diet(request):
-    member = get_object_or_404(Member, user=request.user)
+    try:
+        member = request.user.member_profile
+    except Member.DoesNotExist:
+        return redirect("login")
+        
     try:
         diet_plan = member.diet_plan
     except DietPlan.DoesNotExist:
@@ -38,7 +50,11 @@ def portal_diet(request):
 
 @login_required
 def portal_payments(request):
-    member = get_object_or_404(Member, user=request.user)
+    try:
+        member = request.user.member_profile
+    except Member.DoesNotExist:
+        return redirect("login")
+        
     payments = member.payments.all().order_by("-paid_on")
     return render(request, "gym/portal/payments.html", {
         "member": member,
