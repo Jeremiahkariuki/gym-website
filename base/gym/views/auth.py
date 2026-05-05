@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
+from django.db import transaction, IntegrityError
 
 
 class LoginForm(AuthenticationForm):
@@ -51,6 +52,14 @@ class RegistrationForm(UserCreationForm):
                     "class": "form-control"
                 })
 
+    def clean_phone(self):
+        phone = self.cleaned_data.get("phone")
+        if phone:
+            phone = phone.strip()
+            if Member.objects.filter(phone=phone).exists():
+                raise forms.ValidationError("This phone number is already registered.")
+        return phone
+
 @login_required
 def login_redirect_view(request):
     if request.user.is_staff:
@@ -80,6 +89,14 @@ class StaffCreateForm(forms.Form):
     phone = forms.CharField(required=False, widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Phone (for trainers)"}))
     specialization = forms.CharField(required=False, widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Specialization (for trainers)"}))
 
+    def clean_phone(self):
+        phone = self.cleaned_data.get("phone")
+        if phone and Member.objects.filter(phone=phone).exists():
+            raise forms.ValidationError("This phone number is already registered to a member.")
+        if phone and Trainer.objects.filter(phone=phone).exists():
+            raise forms.ValidationError("This phone number is already registered to a trainer.")
+        return phone
+
 from ..models import Member, Trainer
 from .trainers import admin_required
 
@@ -103,7 +120,7 @@ def staff_create(request):
                 # Create Trainer profile
                 Trainer.objects.create(
                     user=user,
-                    phone=form.cleaned_data["phone"],
+                phone=form.cleaned_data.get("phone") or None,
                     specialization=form.cleaned_data["specialization"]
                 )
                 messages.success(request, f"Trainer '{user.username}' created successfully.")
@@ -119,16 +136,20 @@ def register_view(request):
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            # Automatically create a Member profile for the new user
-            Member.objects.create(
-                user=user,
-                full_name=user.username,
-                email=user.email,
-                phone=form.cleaned_data.get("phone", "")
-            )
-            login(request, user)
-            return redirect("portal_dashboard")
+            try:
+                with transaction.atomic():
+                    user = form.save()
+                    # Automatically create a Member profile for the new user
+                    Member.objects.create(
+                        user=user,
+                        full_name=user.username,
+                        email=user.email,
+                        phone=form.cleaned_data.get("phone") or None
+                    )
+                login(request, user)
+                return redirect("portal_dashboard")
+            except IntegrityError:
+                form.add_error("phone", "This phone number is already in use.")
     else:
         form = RegistrationForm()
 

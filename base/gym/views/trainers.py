@@ -156,7 +156,7 @@ def trainer_create(request):
             )
             Trainer.objects.create(
                 user=user,
-                phone=form.cleaned_data["phone"],
+                phone=form.cleaned_data.get("phone") or None,
                 specialization=form.cleaned_data["specialization"],
                 bio=form.cleaned_data["bio"],
             )
