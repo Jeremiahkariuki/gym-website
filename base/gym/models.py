@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
+import uuid
 
 class Member(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="member_profile", null=True, blank=True)
@@ -10,6 +11,7 @@ class Member(models.Model):
     email = models.EmailField(blank=True, null=True)
     address = models.CharField(max_length=200, blank=True)
     joined_on = models.DateField(auto_now_add=True)
+    checkin_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
     membership_Plan = models.ForeignKey("MembershipPlan", on_delete=models.SET_NULL, null=True, blank=True)
 
