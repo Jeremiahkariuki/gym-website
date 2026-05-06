@@ -1,0 +1,14 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Delete Announcement - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1>Confirm Delete</h1>
+<p>Are you sure you want to delete the announcement <strong>"{{ object.title }}"</strong>?</p>
+
+<form method="post" style="margin-top: 2rem;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete Announcement</button>
+    <a href="{% url 'admin_announcement_list' %}" class="btn" style="background-color: #95a5a6;">Cancel</a>
+</form>
+{% endblock %}

@@ -134,7 +134,7 @@ def member_detail(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     memberships = member.memberships.all()
     payments = member.payments.all()
-    attendance = member.attedance_set.all().order_by("-date")[:30]
+    attendance = member.attendance_set.all().order_by("-date")[:30]
 
     measurements = member.measurements.all().order_by("-date")
     try:

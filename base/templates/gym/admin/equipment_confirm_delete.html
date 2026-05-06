@@ -1,0 +1,14 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Remove Equipment - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1>Confirm Removal</h1>
+<p>Are you sure you want to remove <strong>"{{ object.name }}"</strong> from the inventory?</p>
+
+<form method="post" style="margin-top: 2rem;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Remove Item</button>
+    <a href="{% url 'equipment_list' %}" class="btn" style="background-color: #95a5a6;">Cancel</a>
+</form>
+{% endblock %}

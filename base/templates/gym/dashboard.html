@@ -17,7 +17,7 @@
     </div>
     <div class="card">
         <h3>Attendance Today</h3>
-        <div style="font-size: 2.5rem; color: #e74c3c; font-weight: bold;">{{ today_attedance }}</div>
+        <div style="font-size: 2.5rem; color: #e74c3c; font-weight: bold;">{{ today_attendance }}</div>
     </div>
 </div>
 
@@ -31,8 +31,12 @@
     <div>
         <h2>⚡ Quick Actions</h2>
         <div class="card">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                <a href="{% url 'qr_scanner' %}" class="btn"
+                    style="background-color: #2c3e50; grid-column: 1 / -1; font-weight: bold;">📷 Launch QR Scanner</a>
                 <a href="{% url 'member_list' %}" class="btn">View Members</a>
+                <a href="{% url 'admin_class_list' %}" class="btn">Manage Classes</a>
+                <a href="{% url 'equipment_list' %}" class="btn">Equipment Inventory</a>
                 <a href="{% url 'plan_list' %}" class="btn">View Plans</a>
                 <a href="{% url 'member_create' %}" class="btn btn-success">Add New Member</a>
                 <a href="{% url 'expense_create' %}" class="btn btn-danger" style="background-color: #e74c3c;">Add
@@ -40,6 +44,13 @@
             </div>
         </div>
     </div>
+</div>
+
+<h2 style="margin-top: 2rem;">🛠️ Advanced Management</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+    <a href="{% url 'admin_announcement_list' %}" class="btn" style="background-color: #34495e;">📢 Announcements</a>
+    <a href="{% url 'admin_gallery' %}" class="btn" style="background-color: #9b59b6;">🖼️ Gym Gallery</a>
+    <a href="{% url 'system_settings' %}" class="btn" style="background-color: #7f8c8d;">⚙️ System Settings</a>
 </div>
 
 <div>

@@ -1,5 +1,9 @@
 from django import forms
-from .models import MembershipPlan, Membership, Payment, Member, Expense, MeasurementLog, DietPlan, WorkoutPlan, Exercise
+from .models import (
+    MembershipPlan, Membership, Payment, Member, Expense, 
+    MeasurementLog, DietPlan, WorkoutPlan, Exercise,
+    GymClass, Equipment, Announcement, GymPhoto, SystemSetting
+)
 
 class PlanForm(forms.ModelForm):
     class Meta:
@@ -74,3 +78,45 @@ class ExerciseForm(forms.ModelForm):
     class Meta:
         model = Exercise
         fields = ["day", "name", "sets", "reps", "order"]
+
+
+class GymClassForm(forms.ModelForm):
+    class Meta:
+        model = GymClass
+        fields = ["name", "trainer", "day", "start_time", "end_time", "description"]
+        widgets = {
+            "start_time": forms.TimeInput(attrs={"type": "time"}),
+            "end_time": forms.TimeInput(attrs={"type": "time"}),
+            "description": forms.Textarea(attrs={"rows": 3}),
+        }
+
+class EquipmentForm(forms.ModelForm):
+    class Meta:
+        model = Equipment
+        fields = ["name", "category", "purchase_date", "status", "last_maintenance", "description"]
+        widgets = {
+            "purchase_date": forms.DateInput(attrs={"type": "date"}),
+            "last_maintenance": forms.DateInput(attrs={"type": "date"}),
+            "description": forms.Textarea(attrs={"rows": 3}),
+        }
+
+class AnnouncementForm(forms.ModelForm):
+    class Meta:
+        model = Announcement
+        fields = ["title", "content", "is_active"]
+        widgets = {
+            "content": forms.Textarea(attrs={"rows": 5}),
+        }
+
+class GymPhotoForm(forms.ModelForm):
+    class Meta:
+        model = GymPhoto
+        fields = ["url", "caption"]
+
+class SystemSettingForm(forms.ModelForm):
+    class Meta:
+        model = SystemSetting
+        fields = ["gym_name", "contact_email", "phone", "address", "logo_url", "currency_symbol", "opening_hours"]
+        widgets = {
+            "address": forms.Textarea(attrs={"rows": 3}),
+        }

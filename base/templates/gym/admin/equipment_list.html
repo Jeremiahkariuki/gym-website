@@ -1,0 +1,54 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Equipment Inventory - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>🛠️ Equipment Inventory</h1>
+    <a href="{% url 'equipment_create' %}" class="btn btn-success">+ Add New Item</a>
+</div>
+
+<a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Last Maintenance</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in equipment %}
+            <tr>
+                <td><strong>{{ item.name }}</strong></td>
+                <td>{{ item.category }}</td>
+                <td>
+                    {% if item.status == 'Active' %}
+                    <span style="color: #27ae60; font-weight: bold;">✅ Active</span>
+                    {% elif item.status == 'Maintenance' %}
+                    <span style="color: #f39c12; font-weight: bold;">🛠️ Maintenance</span>
+                    {% else %}
+                    <span style="color: #e74c3c; font-weight: bold;">❌ Retired</span>
+                    {% endif %}
+                </td>
+                <td>{{ item.last_maintenance|default:"Never" }}</td>
+                <td class="actions">
+                    <a href="{% url 'equipment_edit' item.id %}" class="btn"
+                        style="background-color: #f39c12; padding: 0.3rem 0.6rem;">Edit</a>
+                    <a href="{% url 'equipment_delete' item.id %}" class="btn btn-danger"
+                        style="padding: 0.3rem 0.6rem;">Remove</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 2rem;">No equipment recorded yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

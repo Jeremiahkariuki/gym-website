@@ -1,0 +1,56 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Gym Gallery - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>🖼️ Gym Gallery Management</h1>
+</div>
+
+<a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+    <!-- Add Photo Form -->
+    <div class="card">
+        <h2>Add Photo</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div style="color: #e74c3c;">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-success" style="width: 100%;">Add to Gallery</button>
+        </form>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="card">
+        <h2>Current Gallery</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
+            {% for photo in photos %}
+            <div
+                style="position: relative; border-radius: 4px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
+                <img src="{{ photo.url }}" alt="{{ photo.caption }}"
+                    style="width: 100%; height: 120px; object-fit: cover;">
+                <div style="padding: 0.5rem; font-size: 0.8rem; background: white;">
+                    <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0.5rem;">{{
+                        photo.caption|default:"No caption" }}</p>
+                    <form action="{% url 'admin_gallery_delete' photo.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger"
+                            style="width: 100%; padding: 0.2rem; font-size: 0.7rem;">Remove</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+            <p style="grid-column: 1 / -1; text-align: center; color: #999; padding: 2rem;">Gallery is empty.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

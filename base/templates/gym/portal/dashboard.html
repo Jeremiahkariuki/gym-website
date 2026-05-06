@@ -1,5 +1,9 @@
 {% extends "gym/base.html" %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+
 {% block content %}
 <div class="container py-4">
     <div class="row mb-4">
@@ -16,17 +20,17 @@
                 <div class="card-body">
                     <h5 class="card-title fw-bold mb-3">Membership Status</h5>
                     {% if active_membership %}
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="badge bg-success me-2">Active</span>
-                            <span class="fw-bold">{{ active_membership.plan.name }}</span>
-                        </div>
-                        <p class="small text-muted mb-0">Expires on: {{ active_membership.end_date }}</p>
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="badge bg-success me-2" style="background-color: #27ae60 !important;">Active</span>
+                        <span class="fw-bold">{{ active_membership.plan.name }}</span>
+                    </div>
+                    <p class="small text-muted mb-0">Expires on: {{ active_membership.end_date }}</p>
                     {% else %}
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="badge bg-danger me-2">Inactive</span>
-                            <span>No active plan</span>
-                        </div>
-                        <p class="small text-muted">Contact the front desk to renew.</p>
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="badge bg-danger me-2" style="background-color: #e74c3c !important;">Inactive</span>
+                        <span>No active plan</span>
+                    </div>
+                    <p class="small text-muted">Contact the front desk to renew.</p>
                     {% endif %}
                 </div>
             </div>
@@ -36,39 +40,121 @@
         <div class="col-md-6 col-lg-8">
             <div class="row g-3">
                 <div class="col-6 col-sm-4">
-                    <a href="{% url 'portal_workout' %}" class="card text-decoration-none h-100 shadow-sm border-0 text-center py-3 hover-lift">
-                        <div class="card-body">
-                            <i class="bi bi-calendar-check display-6 mb-2 text-primary"></i>
+                    <a href="{% url 'portal_workout' %}"
+                        class="card text-decoration-none h-100 shadow-sm border-0 text-center py-3 hover-lift">
+                        <div class="card-body text-primary">
+                            <i class="bi bi-calendar-check display-6 mb-2"></i>
                             <h6 class="mb-0">Workout Plan</h6>
                         </div>
                     </a>
                 </div>
                 <div class="col-6 col-sm-4">
-                    <a href="{% url 'portal_diet' %}" class="card text-decoration-none h-100 shadow-sm border-0 text-center py-3 hover-lift">
-                        <div class="card-body">
-                            <i class="bi bi-egg-fried display-6 mb-2 text-success"></i>
+                    <a href="{% url 'portal_diet' %}"
+                        class="card text-decoration-none h-100 shadow-sm border-0 text-center py-3 hover-lift">
+                        <div class="card-body text-success">
+                            <i class="bi bi-egg-fried display-6 mb-2"></i>
                             <h6 class="mb-0">Diet Plan</h6>
                         </div>
                     </a>
                 </div>
                 <div class="col-6 col-sm-4">
-                    <a href="{% url 'portal_payments' %}" class="card text-decoration-none h-100 shadow-sm border-0 text-center py-3 hover-lift">
-                        <div class="card-body">
-                            <i class="bi bi-credit-card display-6 mb-2 text-warning"></i>
+                    <a href="{% url 'portal_payments' %}"
+                        class="card text-decoration-none h-100 shadow-sm border-0 text-center py-3 hover-lift">
+                        <div class="card-body text-warning">
+                            <i class="bi bi-credit-card display-6 mb-2"></i>
                             <h6 class="mb-0">Payments</h6>
                         </div>
+                    </a>
+                </div>
+                <div class="col-12 mt-2">
+                    <a href="{% url 'portal_id_card' %}" class="btn btn-primary w-100 py-3"
+                        style="background: linear-gradient(135deg, #2c3e50, #4ca1af); border: none; border-radius: 12px; font-weight: bold;">
+                        🎴 Access Digital ID / QR Check-in
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Recent Payments -->
+    <!-- Health Progress Chart -->
     <div class="row mt-5">
         <div class="col-12">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold">Recent Payments</h5>
+                    <h5 class="mb-0 fw-bold">📉 Health Progress Trends</h5>
+                </div>
+                <div class="card-body">
+                    {% if chart_labels %}
+                    <div style="height: 300px;">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4 text-muted">
+                        <p>No measurement logs found yet. Start tracking your progress!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5 g-4">
+        <!-- Gym Classes -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold">🏋️ Available Gym Classes</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Class</th>
+                                    <th>Schedule</th>
+                                    <th>Link</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for class in available_classes %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">{{ class.name }}</div>
+                                        <small class="text-muted">{{ class.trainer.full_name|default:"General"
+                                            }}</small>
+                                    </td>
+                                    <td>
+                                        <small>{{ class.get_day_display }}</small><br>
+                                        <span class="badge bg-light text-dark border">{{ class.start_time|time:"H:i"
+                                            }}</span>
+                                    </td>
+                                    <td>
+                                        {% if class.id in enrolled_class_ids %}
+                                        <a href="{% url 'portal_class_toggle' class.id %}"
+                                            class="btn btn-sm btn-danger">Leave</a>
+                                        {% else %}
+                                        <a href="{% url 'portal_class_toggle' class.id %}"
+                                            class="btn btn-sm btn-success">Join</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-4 text-muted">No classes scheduled.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Payments -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold">💰 Recent Payments</h5>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -76,22 +162,18 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>Date</th>
-                                    <th>Plan</th>
                                     <th>Amount</th>
-                                    <th>Method</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for payment in recent_payments %}
                                 <tr>
-                                    <td>{{ payment.paid_on|date:"M d, Y" }}</td>
-                                    <td>{{ payment.plan_name }}</td>
-                                    <td>${{ payment.amount }}</td>
-                                    <td>{{ payment.method }}</td>
+                                    <td>{{ payment.paid_on|date:"M d" }}</td>
+                                    <td class="fw-bold">${{ payment.amount }}</td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="4" class="text-center py-4 text-muted">No recent payments found.</td>
+                                    <td colspan="2" class="text-center py-4 text-muted">No recent payments.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -103,13 +185,73 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    {% if chart_labels %}
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ chart_labels| safe }},
+        datasets: [{
+            label: 'Weight (kg)',
+            data: {{ chart_weight| safe }},
+        borderColor: '#3498db',
+        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+        yAxisID: 'y',
+        fill: true,
+        tension: 0.3
+                }, {
+            label: 'BMI',
+            data: {{ chart_bmi| safe }},
+        borderColor: '#2ecc71',
+        backgroundColor: 'transparent',
+        yAxisID: 'y1',
+        tension: 0.3
+                }]
+            },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                type: 'linear',
+                display: true,
+                position: 'left',
+                title: { display: true, text: 'Weight (kg)' }
+            },
+            y1: {
+                type: 'linear',
+                display: true,
+                position: 'right',
+                grid: { drawOnChartArea: false },
+                title: { display: true, text: 'BMI' }
+            }
+        }
+    }
+        });
+    });
+    {% endif %}
+</script>
+
 <style>
     .hover-lift {
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     }
+
     .hover-lift:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .badge {
+        font-weight: 500;
+        padding: 5px 10px;
+    }
+
+    .table td {
+        vertical-align: middle;
     }
 </style>
 {% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Manage Announcements - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>📢 Announcements</h1>
+    <a href="{% url 'admin_announcement_create' %}" class="btn btn-success">+ New Announcement</a>
+</div>
+
+<a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notice in announcements %}
+            <tr>
+                <td><strong>{{ notice.title }}</strong></td>
+                <td>{{ notice.date|date:"F j, Y" }}</td>
+                <td>
+                    {% if notice.is_active %}
+                    <span style="color: #27ae60;">Active</span>
+                    {% else %}
+                    <span style="color: #999;">Hidden</span>
+                    {% endif %}
+                </td>
+                <td class="actions">
+                    <a href="{% url 'admin_announcement_edit' notice.id %}" class="btn"
+                        style="background-color: #f39c12; padding: 0.3rem 0.6rem;">Edit</a>
+                    <a href="{% url 'admin_announcement_delete' notice.id %}" class="btn btn-danger"
+                        style="padding: 0.3rem 0.6rem;">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 2rem;">No announcements yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

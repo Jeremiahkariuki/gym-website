@@ -11,7 +11,7 @@ class Member(models.Model):
     email = models.EmailField(blank=True, null=True)
     address = models.CharField(max_length=200, blank=True)
     joined_on = models.DateField(auto_now_add=True)
-    checkin_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    checkin_token = models.UUIDField(default=uuid.uuid4, null=True, blank=True)
 
     membership_Plan = models.ForeignKey("MembershipPlan", on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -77,7 +77,7 @@ class Payment(models.Model):
     def __str__(self):
         return f"{self.member} - {self.amount}"
     
-class Attedance(models.Model):
+class Attendance(models.Model):
     member = models.ForeignKey("Member", on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now, db_index=True)  # DateField so unique_together works per day
 
@@ -200,6 +200,7 @@ class GymClass(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     description = models.TextField(blank=True)
+    members = models.ManyToManyField(Member, related_name="enrolled_classes", blank=True)
 
     class Meta:
         verbose_name_plural = "Gym Classes"
@@ -207,6 +208,69 @@ class GymClass(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.get_day_display()})"
+
+
+class Equipment(models.Model):
+    STATUS_CHOICES = [
+        ("Active", "Active"),
+        ("Maintenance", "Maintenance"),
+        ("Retired", "Retired"),
+    ]
+    name = models.CharField(max_length=100)
+    category = models.CharField(max_length=50, blank=True)
+    purchase_date = models.DateField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Active")
+    last_maintenance = models.DateField(null=True, blank=True)
+    description = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name_plural = "Equipment"
+
+    def __str__(self):
+        return self.name
+
+
+class Announcement(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    date = models.DateTimeField(default=timezone.now)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["-date"]
+
+    def __str__(self):
+        return self.title
+
+
+class GymPhoto(models.Model):
+    url = models.URLField(max_length=500, help_text="Direct link to the gym image")
+    caption = models.CharField(max_length=200, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.caption or f"Photo {self.id}"
+
+
+class SystemSetting(models.Model):
+    gym_name = models.CharField(max_length=100, default="Antigravity Gym")
+    contact_email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    address = models.TextField(blank=True)
+    logo_url = models.URLField(blank=True)
+    currency_symbol = models.CharField(max_length=5, default="$")
+    opening_hours = models.CharField(max_length=200, blank=True)
+
+    class Meta:
+        verbose_name = "System Setting"
+
+    def __str__(self):
+        return "Gym Settings"
+
+    def save(self, *args, **kwargs):
+        if not self.pk and SystemSetting.objects.exists():
+            return
+        super().save(*args, **kwargs)
 
 
 class ContactMessage(models.Model):
@@ -218,6 +282,3 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Msg from {self.name} - {self.subject}"
-
-
-

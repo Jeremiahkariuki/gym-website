@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Member, Membership, MembershipPlan, Payment, Attedance, Expense, MeasurementLog, DietPlan, WorkoutPlan, Exercise, Trainer, TrainerAssignment, GymClass, ContactMessage
+from .models import Member, Membership, MembershipPlan, Payment, Attendance, Expense, MeasurementLog, DietPlan, WorkoutPlan, Exercise, Trainer, TrainerAssignment, GymClass, ContactMessage
 
 
 @admin.register(GymClass)
@@ -44,8 +44,8 @@ class PaymentAdmin(admin.ModelAdmin):
     readonly_fields = ('paid_on',)
 
 
-@admin.register(Attedance)
-class AttedanceAdmin(admin.ModelAdmin):
+@admin.register(Attendance)
+class AttendanceAdmin(admin.ModelAdmin):
     list_display = ('member', 'date')
     list_filter = ('date',)
     search_fields = ('member__full_name',)

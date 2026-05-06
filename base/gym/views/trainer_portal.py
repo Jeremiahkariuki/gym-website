@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 
-from ..models import Trainer, Attedance, Membership
+from ..models import Trainer, Attendance, Membership
 
 
 def trainer_required(view_func):
@@ -30,7 +30,7 @@ def trainer_portal_dashboard(request):
     member_ids = assignments.values_list("member_id", flat=True)
 
     # Today's attendance for their members
-    today_checkins = Attedance.objects.filter(
+    today_checkins = Attendance.objects.filter(
         member_id__in=member_ids, date=today
     ).select_related("member").count()
 

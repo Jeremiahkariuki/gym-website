@@ -1,0 +1,99 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}QR Check-in Scanner - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1>📷 QR Check-in Scanner</h1>
+            <a href="{% url 'dashboard' %}" class="btn">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <!-- Scanner Window -->
+    <div class="card">
+        <div id="reader" style="width: 100%; border: none;"></div>
+        <div id="result" style="margin-top: 1rem; padding: 1rem; border-radius: 4px; display: none;"></div>
+    </div>
+
+    <!-- Instructions & Log -->
+    <div class="card">
+        <h3>How to use:</h3>
+        <p>1. Grant camera permissions if prompted.</p>
+        <p>2. Ask members to show their digital ID QR code.</p>
+        <p>3. Point the camera at the QR code.</p>
+        <p>4. Check-in is automatic once scanned.</p>
+
+        <hr style="margin: 1.5rem 0;">
+
+        <h3>Checked-in Today:</h3>
+        <ul id="checkin-log" style="list-style: none; padding: 0;">
+            <li class="text-muted">New check-ins will appear here...</li>
+        </ul>
+    </div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+    function onScanSuccess(decodedText, decodedResult) {
+        // Stop scanning to prevent multiple triggers
+        html5QrcodeScanner.clear();
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block';
+        resultDiv.style.background = '#f1c40f';
+        resultDiv.innerHTML = 'Processing check-in...';
+
+        fetch("{% url 'qr_checkin_api' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ token: decodedText })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resultDiv.style.background = '#d4edda';
+                    resultDiv.style.color = '#155724';
+                    resultDiv.innerHTML = `✅ ${data.message}`;
+
+                    // Add to log
+                    const log = document.getElementById('checkin-log');
+                    if (log.innerHTML.includes('New check-ins will appear here')) {
+                        log.innerHTML = '';
+                    }
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong> - ${data.member_name}`;
+                    li.style.padding = '0.5rem 0';
+                    li.style.borderBottom = '1px solid #eee';
+                    log.prepend(li);
+                } else {
+                    resultDiv.style.background = '#f8d7da';
+                    resultDiv.style.color = '#721c24';
+                    resultDiv.innerHTML = `❌ ${data.message}`;
+                }
+
+                // Restart scanner after 3 seconds
+                setTimeout(() => {
+                    resultDiv.style.display = 'none';
+                    html5QrcodeScanner.render(onScanSuccess);
+                }, 3000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultDiv.style.background = '#f8d7da';
+                resultDiv.innerHTML = '❌ Network error processing check-in.';
+                setTimeout(() => { html5QrcodeScanner.render(onScanSuccess); }, 3000);
+            });
+    }
+
+    const html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader", { fps: 10, qrbox: 250 });
+    html5QrcodeScanner.render(onScanSuccess);
+</script>
+{% endblock %}

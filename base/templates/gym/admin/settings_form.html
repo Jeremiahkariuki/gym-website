@@ -1,0 +1,32 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}System Settings - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1>⚙️ System Settings</h1>
+<a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+
+<div class="card" style="max-width: 800px;">
+    <p style="margin-bottom: 2rem; color: #666;">Configure your gym's public information, logo, and branding settings
+        here.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            {% for field in form %}
+            <div
+                class="form-group {% if field.name == 'address' or field.name == 'opening_hours' %}style='grid-column: 1 / -1;'{% endif %}">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div style="color: #e74c3c;">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <div style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-success">Save Settings</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

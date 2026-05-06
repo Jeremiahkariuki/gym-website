@@ -1,0 +1,52 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Manage Classes - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>🏋️ Gym Classes</h1>
+    <a href="{% url 'admin_class_create' %}" class="btn btn-success">+ Add New Class</a>
+</div>
+
+<a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Class Name</th>
+                <th>Day</th>
+                <th>Time</th>
+                <th>Trainer</th>
+                <th>Enrolled</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for class in classes %}
+            <tr>
+                <td><strong>{{ class.name }}</strong></td>
+                <td>{{ class.get_day_display }}</td>
+                <td>{{ class.start_time|time:"H:i" }} - {{ class.end_time|time:"H:i" }}</td>
+                <td>
+                    {% if class.trainer %}
+                        {{ class.trainer.full_name }}
+                    {% else %}
+                        <span style="color: #999;">Unassigned</span>
+                    {% endif %}
+                </td>
+                <td>{{ class.members.count }}</td>
+                <td class="actions">
+                    <a href="{% url 'admin_class_edit' class.id %}" class="btn" style="background-color: #f39c12; padding: 0.3rem 0.6rem;">Edit</a>
+                    <a href="{% url 'admin_class_delete' class.id %}" class="btn btn-danger" style="padding: 0.3rem 0.6rem;">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem;">No classes scheduled yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Delete Class - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1>Confirm Delete</h1>
+<p>Are you sure you want to delete the class <strong>"{{ object.name }}"</strong> on {{ object.get_day_display }}?</p>
+
+<form method="post" style="margin-top: 2rem;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete Class</button>
+    <a href="{% url 'admin_class_list' %}" class="btn" style="background-color: #95a5a6;">Cancel</a>
+</form>
+{% endblock %}

@@ -231,6 +231,48 @@
         </div>
     </div>
 
+    <!-- Announcements Section -->
+    {% if announcements %}
+    <h2 class="section-title">📢 Latest Updates</h2>
+    <div class="row g-4 mb-5">
+        {% for notice in announcements %}
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; background: #fff;">
+                <div class="card-body p-4">
+                    <span class="badge bg-primary mb-2"
+                        style="font-size: 0.7rem; background-color: var(--accent-blue) !important;">ANNOUNCEMENT</span>
+                    <h5 class="fw-bold mb-2">{{ notice.title }}</h5>
+                    <p class="text-muted small mb-3">{{ notice.content|truncatewords:20 }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <small class="text-muted">{{ notice.date|date:"M d, Y" }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Gallery Section -->
+    {% if gallery %}
+    <h2 class="section-title">🖼️ Peak Into Our Space</h2>
+    <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 8rem;">
+        {% for photo in gallery %}
+        <div style="border-radius: 20px; overflow: hidden; height: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative;"
+            class="hover-lift">
+            <img src="{{ photo.url }}" alt="{{ photo.caption }}" style="width: 100%; height: 100%; object-fit: cover;">
+            {% if photo.caption %}
+            <div
+                style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.7)); padding: 1.5rem; color: white;">
+                <p style="margin: 0; font-size: 0.9rem;">{{ photo.caption }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="pricing-wrap">
         <h2 class="section-title">Simple, Flexible Pricing</h2>
         <div class="plans-grid">
