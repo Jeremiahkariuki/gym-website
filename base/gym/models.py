@@ -11,7 +11,7 @@ class Member(models.Model):
     email = models.EmailField(blank=True, null=True)
     address = models.CharField(max_length=200, blank=True)
     joined_on = models.DateField(auto_now_add=True)
-    checkin_token = models.UUIDField(default=uuid.uuid4, null=True, blank=True)
+    checkin_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
     membership_Plan = models.ForeignKey("MembershipPlan", on_delete=models.SET_NULL, null=True, blank=True)
 
