@@ -57,6 +57,9 @@ from .admin_management import (
     gym_photo_list, gym_photo_delete, system_settings_edit,
     qr_scanner, qr_checkin_api,
 )
+from .contact_messages import (
+    contact_message_list, contact_message_detail, contact_message_delete,
+)
 
 __all__ = [
     # auth
@@ -92,4 +95,6 @@ __all__ = [
     "announcement_list", "announcement_create", "announcement_edit", "announcement_delete",
     "gym_photo_list", "gym_photo_delete", "system_settings_edit",
     "qr_scanner", "qr_checkin_api",
+    # contact messages
+    "contact_message_list", "contact_message_detail", "contact_message_delete",
 ]

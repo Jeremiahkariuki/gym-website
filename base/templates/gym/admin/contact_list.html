@@ -1,0 +1,46 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Contact Messages - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>📩 Contact Messages</h1>
+</div>
+
+<a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Sender</th>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for msg in contact_messages %}
+            <tr>
+                <td>
+                    <strong>{{ msg.name }}</strong><br>
+                    <small class="text-muted">{{ msg.email }}</small>
+                </td>
+                <td>{{ msg.subject }}</td>
+                <td>{{ msg.created_at|date:"M d, Y H:i" }}</td>
+                <td class="actions">
+                    <a href="{% url 'contact_message_detail' msg.id %}" class="btn btn-info"
+                        style="padding: 0.3rem 0.6rem;">Read</a>
+                    <a href="{% url 'contact_message_delete' msg.id %}" class="btn btn-danger"
+                        style="padding: 0.3rem 0.6rem;">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 2rem;">No messages yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

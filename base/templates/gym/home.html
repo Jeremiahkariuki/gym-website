@@ -214,20 +214,23 @@
 <div class="container">
     <h2 class="section-title">Why Choose GYMFLOW?</h2>
     <div class="features-grid">
-        <div class="feature-card">
-            <span class="feature-icon">🏋️</span>
-            <h3>World-Class Equipment</h3>
-            <p>State-of-the-art machines and free weights designed for performance and safety.</p>
+        <div class="feature-card" style="border-bottom: 4px solid var(--accent-blue);">
+            <span class="feature-icon">⚡</span>
+            <h3>High-Performance Facility</h3>
+            <p>Our 15,000 sq ft space is equipped with the latest Olympic-grade equipment and advanced tracking
+                technology.</p>
         </div>
-        <div class="feature-card">
-            <span class="feature-icon">🎓</span>
-            <h3>Expert Trainers</h3>
-            <p>Our certified trainers create customized programs to help you smash your fitness goals.</p>
+        <div class="feature-card" style="border-bottom: 4px solid var(--accent-green);">
+            <span class="feature-icon">🛡️</span>
+            <h3>Safe & Supportive</h3>
+            <p>We maintain the highest sanitation standards and provide a community environment where every member feels
+                at home.</p>
         </div>
-        <div class="feature-card">
-            <span class="feature-icon">🍎</span>
-            <h3>Nutrition Plans</h3>
-            <p>Integrated diet tracking and plans tailored to your specific body type and goals.</p>
+        <div class="feature-card" style="border-bottom: 4px solid #f1c40f;">
+            <span class="feature-icon">📈</span>
+            <h3>Data-Driven Results</h3>
+            <p>From BMI tracking to custom diet plans, we use data to ensure your hard work translates into real
+                progress.</p>
         </div>
     </div>
 
@@ -292,7 +295,7 @@
                     {% endif %}
                 </ul>
                 <a href="{% url 'register' %}" class="btn"
-                    style="width: 100%; padding: 1rem; border-radius: 12px; {% if forloop.counter == 2 %}background: var(--accent-blue);{% else %}background: #2c3e50;{% endif %}">Join
+                    style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; {% if forloop.counter == 2 %}background: var(--accent-blue);{% else %}background: #2c3e50;{% endif %}">Join
                     Now</a>
             </div>
             {% endfor %}

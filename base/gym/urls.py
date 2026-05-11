@@ -118,4 +118,9 @@ urlpatterns = [
     # Admin Expansion - QR Check-in
     path("admin/scanner/", views.qr_scanner, name="qr_scanner"),
     path("admin/checkin-api/", views.qr_checkin_api, name="qr_checkin_api"),
+
+    # Admin Expansion - Contact Messages
+    path("admin/messages/", views.contact_message_list, name="contact_message_list"),
+    path("admin/messages/<int:pk>/", views.contact_message_detail, name="contact_message_detail"),
+    path("admin/messages/<int:pk>/delete/", views.contact_message_delete, name="contact_message_delete"),
 ]

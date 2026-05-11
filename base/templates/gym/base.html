@@ -5,7 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Gym Management System{% endblock %}</title>
+    <meta name="description"
+        content="GYMFLOW - Premium fitness facility centered around your goals. Expert trainers, world-class equipment, and personalized nutrition plans.">
+    <meta name="keywords" content="gym, fitness, workout, personal trainer, Nairobi, body transformation">
+    <meta name="author" content="Antigravity Team">
+    <title>{% block title %}GYMFLOW | Experience the Peak of Fitness{% endblock %}</title>
     <style>
         * {
             margin: 0;
@@ -394,6 +398,40 @@
     <div class="container">
         {% block content %}{% endblock %}
     </div>
+
+    <footer style="background: #2c3e50; color: white; padding: 4rem 1rem 2rem; margin-top: 8rem;">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem;">
+                <div>
+                    <div style="font-size: 1.5rem; font-weight: 800; margin-bottom: 1rem;">GYMFLOW</div>
+                    <p style="opacity: 0.7; font-size: 0.9rem; line-height: 1.6;">Your journey to peak fitness starts
+                        here. We provide the tools, you provide the drive.</p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 1rem;">Quick Links</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.8; font-size: 0.9rem;">
+                        <li style="margin-bottom: 0.5rem;"><a href="{% url 'home' %}"
+                                style="color: inherit; text-decoration: none;">Home</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="{% url 'class_schedule' %}"
+                                style="color: inherit; text-decoration: none;">Classes</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="{% url 'contact' %}"
+                                style="color: inherit; text-decoration: none;">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 1rem;">Connect</h4>
+                    <div style="display: flex; gap: 1rem; font-size: 1.2rem;">
+                        <span>FB</span> <span>IG</span> <span>X</span>
+                    </div>
+                </div>
+            </div>
+            <div
+                style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 3rem; padding-top: 2rem; text-align: center; opacity: 0.5; font-size: 0.8rem;">
+                &copy; 2026 GYMFLOW. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
     {% block extra_js %}{% endblock %}
 </body>
 

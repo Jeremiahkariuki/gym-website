@@ -1,0 +1,28 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Message Detail - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h1>📩 Message Detail</h1>
+
+<a href="{% url 'contact_message_list' %}" class="back-link">← Back to Inbox</a>
+
+<div class="card p-4 mt-4">
+    <div style="border-bottom: 1px solid #eee; margin-bottom: 1.5rem; padding-bottom: 1rem;">
+        <h2 class="mb-1">{{ contact_message.subject }}</h2>
+        <p class="text-muted">
+            From: <strong>{{ contact_message.name }}</strong> ({{ contact_message.email }})<br>
+            Sent: {{ contact_message.created_at|date:"F d, Y \a\t H:i" }}
+        </p>
+    </div>
+
+    <div
+        style="background: #f8f9fa; padding: 2rem; border-radius: 12px; font-size: 1.1rem; line-height: 1.6; min-height: 200px;">
+        {{ contact_message.message|linebreaks }}
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'contact_message_delete' contact_message.id %}" class="btn btn-danger">Delete Message</a>
+    </div>
+</div>
+{% endblock %}
