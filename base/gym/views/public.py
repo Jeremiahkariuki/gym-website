@@ -1,24 +1,35 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
-from ..models import MembershipPlan, GymClass, ContactMessage, Announcement, GymPhoto
+from ..models import MembershipPlan, GymClass, ContactMessage, Announcement, GymPhoto, Membership
 
 def home_view(request):
     """Public landing page."""
-    plans = MembershipPlan.objects.all()
+    plans = MembershipPlan.objects.all().order_by("price")
     # Top 3 classes for preview
     featured_classes = GymClass.objects.all()[:3]
     # Latest announcements
     announcements = Announcement.objects.filter(is_active=True)[:3]
     # Gallery preview
     gallery = GymPhoto.objects.all()[:6]
-    
+
+    # Get the logged-in user's active membership (if any)
+    active_membership = None
+    if request.user.is_authenticated:
+        member = getattr(request.user, "member_profile", None)
+        if member:
+            active_membership = Membership.objects.filter(
+                member=member, is_active=True
+            ).select_related("plan").first()
+
     return render(request, "gym/home.html", {
         "plans": plans,
         "featured_classes": featured_classes,
         "announcements": announcements,
-        "gallery": gallery
+        "gallery": gallery,
+        "active_membership": active_membership,
     })
+
 
 def class_schedule_view(request):
     """Displays the full week schedule."""

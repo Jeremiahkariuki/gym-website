@@ -277,9 +277,57 @@
     {% endif %}
 
     <div class="pricing-wrap">
+        {% if active_membership %}
+        <h2 class="section-title">Your Membership</h2>
+        {% else %}
         <h2 class="section-title">Simple, Flexible Pricing</h2>
+        {% endif %}
         <div class="plans-grid">
             {% for plan in plans %}
+            {% if active_membership and plan.id == active_membership.plan.id %}
+            {# ── Current Plan ── #}
+            <div class="plan-card popular" style="border: 2px solid var(--accent-green);">
+                <div class="popular-badge" style="background: var(--accent-green);">YOUR PLAN</div>
+                <h3>{{ plan.name }}</h3>
+                <div class="plan-price">KES {{ plan.price }}<span> / {{ plan.duration_days }} days</span></div>
+                <ul
+                    style="list-style: none; padding: 0; margin-bottom: 1rem; color: #666; font-size: 0.95rem; line-height: 2;">
+                    <li>✓ 24/7 Gym Access</li>
+                    <li>✓ Locker Room & Showers</li>
+                    <li>✓ Free Trainer Consultation</li>
+                    {% if plan.price > 3000 %}
+                    <li>✓ Group Classes Included</li>
+                    <li>✓ Personalized Diet Plan</li>
+                    {% endif %}
+                </ul>
+                <div
+                    style="text-align: center; padding: 0.8rem; background: #d5f5e3; border-radius: 12px; color: #1e8449; font-weight: 700;">
+                    ✅ Active until {{ active_membership.end_date|date:"M d, Y" }}
+                </div>
+            </div>
+
+            {% elif active_membership and plan.price > active_membership.plan.price %}
+            {# ── Upgrade Option ── #}
+            <div class="plan-card">
+                <h3>{{ plan.name }}</h3>
+                <div class="plan-price">KES {{ plan.price }}<span> / {{ plan.duration_days }} days</span></div>
+                <ul
+                    style="list-style: none; padding: 0; margin-bottom: 2rem; color: #666; font-size: 0.95rem; line-height: 2;">
+                    <li>✓ 24/7 Gym Access</li>
+                    <li>✓ Locker Room & Showers</li>
+                    <li>✓ Free Trainer Consultation</li>
+                    {% if plan.price > 3000 %}
+                    <li>✓ Group Classes Included</li>
+                    <li>✓ Personalized Diet Plan</li>
+                    {% endif %}
+                </ul>
+                <a href="{% url 'contact' %}" class="btn"
+                    style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #f39c12, #e67e22);">⬆
+                    Upgrade</a>
+            </div>
+
+            {% elif not active_membership %}
+            {# ── Public / Not logged in ── #}
             <div class="plan-card {% if forloop.counter == 2 %}popular{% endif %}">
                 {% if forloop.counter == 2 %}<div class="popular-badge">BEST VALUE</div>{% endif %}
                 <h3>{{ plan.name }}</h3>
@@ -298,6 +346,7 @@
                     style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; {% if forloop.counter == 2 %}background: var(--accent-blue);{% else %}background: #2c3e50;{% endif %}">Join
                     Now</a>
             </div>
+            {% endif %}
             {% endfor %}
         </div>
     </div>
