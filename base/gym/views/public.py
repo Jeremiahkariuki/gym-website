@@ -1,3 +1,6 @@
+from django.contrib import messages
+from django.shortcuts import redirect, render
+
 from ..models import MembershipPlan, GymClass, ContactMessage, Announcement, GymPhoto
 
 def home_view(request):
