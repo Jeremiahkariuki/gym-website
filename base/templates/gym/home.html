@@ -204,7 +204,11 @@
         <p class="hero-subtitle">Experience our premium gym facility, expert trainers, and personalized nutrition plans.
             Join the community that pushes you to your limits.</p>
         <div class="cta-group">
+            {% if user.is_authenticated %}
+            <a href="{% url 'portal_dashboard' %}" class="btn btn-large btn-success">My Dashboard</a>
+            {% else %}
             <a href="{% url 'register' %}" class="btn btn-large btn-success">Get Started Today</a>
+            {% endif %}
             <a href="{% url 'class_schedule' %}" class="btn btn-large"
                 style="background: transparent; border: 1px solid white;">View Schedule</a>
         </div>
