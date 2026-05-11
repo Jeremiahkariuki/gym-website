@@ -1,190 +1,466 @@
 {% extends "gym/base.html" %}
+{% block title %}My Dashboard | GYMFLOW{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+    .portal-page {
+        margin-top: -1rem;
+    }
+
+    /* ── Hero Greeting ── */
+    .portal-hero {
+        background: linear-gradient(135deg, #2c3e50, #4ca1af);
+        color: white;
+        padding: 3rem 2.5rem;
+        border-radius: 24px;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        box-shadow: 0 10px 30px rgba(44, 62, 80, 0.2);
+    }
+
+    .portal-hero h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .portal-hero p {
+        opacity: 0.8;
+        margin: 0.5rem 0 0;
+    }
+
+    .portal-hero-badge {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(4px);
+        padding: 0.8rem 1.5rem;
+        border-radius: 14px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .portal-hero-badge .plan-label {
+        font-size: 0.75rem;
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .portal-hero-badge .plan-name {
+        font-size: 1.3rem;
+        font-weight: 800;
+    }
+
+    .portal-hero-badge .plan-expiry {
+        font-size: 0.8rem;
+        opacity: 0.6;
+        margin-top: 0.25rem;
+    }
+
+    /* ── Stat Cards ── */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.8rem;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: 1px solid #f0f0f0;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #2c3e50;
+        display: block;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* ── Quick Actions ── */
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .action-card {
+        background: white;
+        padding: 1.5rem 1rem;
+        border-radius: 16px;
+        text-align: center;
+        text-decoration: none;
+        color: #2c3e50;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: 1px solid #f0f0f0;
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        color: #2c3e50;
+    }
+
+    .action-card i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .action-card span {
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    /* ── Section Headers ── */
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .section-header h3 {
+        font-weight: 800;
+        color: #2c3e50;
+        margin: 0;
+        font-size: 1.25rem;
+    }
+
+    /* ── Content Cards ── */
+    .portal-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+        margin-bottom: 2rem;
+    }
+
+    .portal-card-body {
+        padding: 1.5rem;
+    }
+
+    /* ── Classes Table ── */
+    .class-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid #f5f5f5;
+    }
+
+    .class-row:last-child {
+        border-bottom: none;
+    }
+
+    .class-info h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+
+    .class-info p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #999;
+    }
+
+    .class-badge {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 0.15s ease;
+    }
+
+    .class-badge:hover {
+        transform: scale(1.05);
+    }
+
+    .class-badge-join {
+        background: #d5f5e3;
+        color: #1e8449;
+    }
+
+    .class-badge-leave {
+        background: #fadbd8;
+        color: #c0392b;
+    }
+
+    /* ── Payments ── */
+    .payment-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #f5f5f5;
+    }
+
+    .payment-row:last-child {
+        border-bottom: none;
+    }
+
+    /* ── Two Column Layout ── */
+    .portal-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .portal-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .portal-hero {
+            padding: 2rem 1.5rem;
+        }
+    }
+
+    /* ── ID Card Banner ── */
+    .id-card-banner {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 1.5rem 2rem;
+        border-radius: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 8px 20px rgba(118, 75, 162, 0.25);
+        margin-bottom: 2.5rem;
+        text-decoration: none;
+        transition: transform 0.2s ease;
+    }
+
+    .id-card-banner:hover {
+        transform: translateY(-3px);
+        color: white;
+    }
+
+    .id-card-banner h4 {
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .id-card-banner p {
+        margin: 0.25rem 0 0;
+        opacity: 0.8;
+        font-size: 0.9rem;
+    }
+
+    /* ── Chart container ── */
+    .chart-wrap {
+        height: 280px;
+        padding: 1rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #aaa;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+        opacity: 0.4;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="display-5 fw-bold">Welcome, {{ member.full_name }}!</h1>
-            <p class="lead text-muted">Your personal gym portal.</p>
+<div class="portal-page">
+
+    <!-- ═══ Hero ═══ -->
+    <div class="portal-hero">
+        <div>
+            <h1>Welcome back, {{ member.full_name }} 👋</h1>
+            <p>Here's what's happening with your fitness journey today.</p>
+        </div>
+        {% if active_membership %}
+        <div class="portal-hero-badge">
+            <div class="plan-label">Current Plan</div>
+            <div class="plan-name">{{ active_membership.plan.name }}</div>
+            <div class="plan-expiry">Expires {{ active_membership.end_date|date:"M d, Y" }}</div>
+        </div>
+        {% else %}
+        <div class="portal-hero-badge" style="border-color: rgba(231,76,60,0.4);">
+            <div class="plan-label">Membership</div>
+            <div class="plan-name" style="color: #e74c3c;">Inactive</div>
+            <div class="plan-expiry">Contact front desk to renew</div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ═══ Stats ═══ -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <span class="stat-icon">📅</span>
+            <span class="stat-value">{{ member.joined_on|date:"M Y" }}</span>
+            <span class="stat-label">Member Since</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">🏋️</span>
+            <span class="stat-value">{{ enrolled_class_ids|length }}</span>
+            <span class="stat-label">Classes Enrolled</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">💳</span>
+            <span class="stat-value">{{ recent_payments|length }}</span>
+            <span class="stat-label">Recent Payments</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">📊</span>
+            <span class="stat-value">{{ measurements|length }}</span>
+            <span class="stat-label">Measurements</span>
         </div>
     </div>
 
-    <div class="row g-4">
-        <!-- Membership Status -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm border-0 bg-light">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold mb-3">Membership Status</h5>
-                    {% if active_membership %}
-                    <div class="d-flex align-items-center mb-2">
-                        <span class="badge bg-success me-2" style="background-color: #27ae60 !important;">Active</span>
-                        <span class="fw-bold">{{ active_membership.plan.name }}</span>
+    <!-- ═══ Quick Actions ═══ -->
+    <div class="quick-actions">
+        <a href="{% url 'portal_workout' %}" class="action-card">
+            <i class="bi bi-lightning-charge" style="color: #3498db;"></i>
+            <span>Workout Plan</span>
+        </a>
+        <a href="{% url 'portal_diet' %}" class="action-card">
+            <i class="bi bi-egg-fried" style="color: #27ae60;"></i>
+            <span>Diet Plan</span>
+        </a>
+        <a href="{% url 'portal_payments' %}" class="action-card">
+            <i class="bi bi-receipt" style="color: #f39c12;"></i>
+            <span>Payments</span>
+        </a>
+        <a href="{% url 'class_schedule' %}" class="action-card">
+            <i class="bi bi-calendar-week" style="color: #9b59b6;"></i>
+            <span>Full Schedule</span>
+        </a>
+    </div>
+
+    <!-- ═══ Digital ID Banner ═══ -->
+    <a href="{% url 'portal_id_card' %}" class="id-card-banner">
+        <div>
+            <h4>🎴 Your Digital ID Card</h4>
+            <p>Scan the QR code at the front desk for instant check-in</p>
+        </div>
+        <i class="bi bi-qr-code" style="font-size: 2.5rem; opacity: 0.8;"></i>
+    </a>
+
+    <!-- ═══ Health Chart ═══ -->
+    <div class="portal-card">
+        <div class="portal-card-body">
+            <div class="section-header">
+                <h3>📈 Health Progress</h3>
+            </div>
+            {% if chart_labels %}
+            <div class="chart-wrap">
+                <canvas id="progressChart"></canvas>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-graph-up"></i>
+                <p>No measurements logged yet.<br>Start tracking your weight & BMI to see progress here!</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ═══ Classes + Payments Grid ═══ -->
+    <div class="portal-grid">
+        <!-- Classes -->
+        <div class="portal-card">
+            <div class="portal-card-body">
+                <div class="section-header">
+                    <h3>🏋️ Gym Classes</h3>
+                    <a href="{% url 'class_schedule' %}"
+                        style="font-size: 0.85rem; color: #3498db; text-decoration: none;">View All →</a>
+                </div>
+                {% for class in available_classes %}
+                <div class="class-row">
+                    <div class="class-info">
+                        <h4>{{ class.name }}</h4>
+                        <p>{{ class.get_day_display }} · {{ class.start_time|time:"H:i" }} {% if class.trainer %}· {{
+                            class.trainer.full_name }}{% endif %}</p>
                     </div>
-                    <p class="small text-muted mb-0">Expires on: {{ active_membership.end_date }}</p>
+                    {% if class.id in enrolled_class_ids %}
+                    <a href="{% url 'portal_class_toggle' class.id %}" class="class-badge class-badge-leave">Leave</a>
                     {% else %}
-                    <div class="d-flex align-items-center mb-2">
-                        <span class="badge bg-danger me-2" style="background-color: #e74c3c !important;">Inactive</span>
-                        <span>No active plan</span>
-                    </div>
-                    <p class="small text-muted">Contact the front desk to renew.</p>
+                    <a href="{% url 'portal_class_toggle' class.id %}" class="class-badge class-badge-join">+ Join</a>
                     {% endif %}
                 </div>
-            </div>
-        </div>
-
-        <!-- Quick Links -->
-        <div class="col-md-6 col-lg-8">
-            <div class="row g-3">
-                <div class="col-6 col-sm-4">
-                    <a href="{% url 'portal_workout' %}"
-                        class="card text-decoration-none h-100 shadow-sm border-0 text-center py-3 hover-lift">
-                        <div class="card-body text-primary">
-                            <i class="bi bi-calendar-check display-6 mb-2"></i>
-                            <h6 class="mb-0">Workout Plan</h6>
-                        </div>
-                    </a>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="bi bi-calendar-x"></i>
+                    <p>No classes available.</p>
                 </div>
-                <div class="col-6 col-sm-4">
-                    <a href="{% url 'portal_diet' %}"
-                        class="card text-decoration-none h-100 shadow-sm border-0 text-center py-3 hover-lift">
-                        <div class="card-body text-success">
-                            <i class="bi bi-egg-fried display-6 mb-2"></i>
-                            <h6 class="mb-0">Diet Plan</h6>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4">
-                    <a href="{% url 'portal_payments' %}"
-                        class="card text-decoration-none h-100 shadow-sm border-0 text-center py-3 hover-lift">
-                        <div class="card-body text-warning">
-                            <i class="bi bi-credit-card display-6 mb-2"></i>
-                            <h6 class="mb-0">Payments</h6>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-12 mt-2">
-                    <a href="{% url 'portal_id_card' %}" class="btn btn-primary w-100 py-3"
-                        style="background: linear-gradient(135deg, #2c3e50, #4ca1af); border: none; border-radius: 12px; font-weight: bold;">
-                        🎴 Access Digital ID / QR Check-in
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Health Progress Chart -->
-    <div class="row mt-5">
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold">📉 Health Progress Trends</h5>
-                </div>
-                <div class="card-body">
-                    {% if chart_labels %}
-                    <div style="height: 300px;">
-                        <canvas id="progressChart"></canvas>
-                    </div>
-                    {% else %}
-                    <div class="text-center py-4 text-muted">
-                        <p>No measurement logs found yet. Start tracking your progress!</p>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-5 g-4">
-        <!-- Gym Classes -->
-        <div class="col-lg-7">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold">🏋️ Available Gym Classes</h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Class</th>
-                                    <th>Schedule</th>
-                                    <th>Link</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for class in available_classes %}
-                                <tr>
-                                    <td>
-                                        <div class="fw-bold">{{ class.name }}</div>
-                                        <small class="text-muted">{{ class.trainer.full_name|default:"General"
-                                            }}</small>
-                                    </td>
-                                    <td>
-                                        <small>{{ class.get_day_display }}</small><br>
-                                        <span class="badge bg-light text-dark border">{{ class.start_time|time:"H:i"
-                                            }}</span>
-                                    </td>
-                                    <td>
-                                        {% if class.id in enrolled_class_ids %}
-                                        <a href="{% url 'portal_class_toggle' class.id %}"
-                                            class="btn btn-sm btn-danger">Leave</a>
-                                        {% else %}
-                                        <a href="{% url 'portal_class_toggle' class.id %}"
-                                            class="btn btn-sm btn-success">Join</a>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="3" class="text-center py-4 text-muted">No classes scheduled.</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
 
         <!-- Recent Payments -->
-        <div class="col-lg-5">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold">💰 Recent Payments</h5>
+        <div class="portal-card">
+            <div class="portal-card-body">
+                <div class="section-header">
+                    <h3>💰 Recent Payments</h3>
+                    <a href="{% url 'portal_payments' %}"
+                        style="font-size: 0.85rem; color: #3498db; text-decoration: none;">View All →</a>
                 </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for payment in recent_payments %}
-                                <tr>
-                                    <td>{{ payment.paid_on|date:"M d" }}</td>
-                                    <td class="fw-bold">${{ payment.amount }}</td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="2" class="text-center py-4 text-muted">No recent payments.</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                {% for payment in recent_payments %}
+                <div class="payment-row">
+                    <div>
+                        <div style="font-weight: 600; color: #2c3e50;">{{ payment.paid_on|date:"M d, Y" }}</div>
+                        <small style="color: #999;">{{ payment.get_method_display|default:"Payment" }}</small>
                     </div>
+                    <span style="font-weight: 800; color: #27ae60; font-size: 1.1rem;">KES {{ payment.amount }}</span>
                 </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="bi bi-wallet2"></i>
+                    <p>No payments recorded yet.</p>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-</div>
 
+</div>
+{% endblock %}
+
+{% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     {% if chart_labels %}
@@ -198,60 +474,47 @@
             label: 'Weight (kg)',
             data: {{ chart_weight| safe }},
         borderColor: '#3498db',
-        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+        backgroundColor: 'rgba(52, 152, 219, 0.08)',
         yAxisID: 'y',
         fill: true,
-        tension: 0.3
+        tension: 0.4,
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointBackgroundColor: '#3498db'
                 }, {
             label: 'BMI',
             data: {{ chart_bmi| safe }},
         borderColor: '#2ecc71',
         backgroundColor: 'transparent',
         yAxisID: 'y1',
-        tension: 0.3
+        tension: 0.4,
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointBackgroundColor: '#2ecc71'
                 }]
             },
         options: {
         responsive: true,
         maintainAspectRatio: false,
+        plugins: {
+            legend: { position: 'top', labels: { usePointStyle: true, padding: 20 } }
+        },
         scales: {
             y: {
-                type: 'linear',
-                display: true,
-                position: 'left',
-                title: { display: true, text: 'Weight (kg)' }
+                type: 'linear', display: true, position: 'left',
+                title: { display: true, text: 'Weight (kg)', font: { weight: 'bold' } },
+                grid: { color: 'rgba(0,0,0,0.04)' }
             },
             y1: {
-                type: 'linear',
-                display: true,
-                position: 'right',
+                type: 'linear', display: true, position: 'right',
                 grid: { drawOnChartArea: false },
-                title: { display: true, text: 'BMI' }
-            }
+                title: { display: true, text: 'BMI', font: { weight: 'bold' } }
+            },
+            x: { grid: { display: false } }
         }
     }
         });
     });
     {% endif %}
 </script>
-
-<style>
-    .hover-lift {
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
-
-    .hover-lift:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
-    }
-
-    .badge {
-        font-weight: 500;
-        padding: 5px 10px;
-    }
-
-    .table td {
-        vertical-align: middle;
-    }
-</style>
 {% endblock %}
