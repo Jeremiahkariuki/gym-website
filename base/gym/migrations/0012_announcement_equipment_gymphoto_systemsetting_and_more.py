@@ -5,6 +5,14 @@ import django.utils.timezone
 import uuid
 
 
+def populate_unique_tokens(apps, schema_editor):
+    """Assign a unique UUID to every existing Member row."""
+    Member = apps.get_model('gym', 'Member')
+    for member in Member.objects.all():
+        member.checkin_token = uuid.uuid4()
+        member.save(update_fields=['checkin_token'])
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -70,9 +78,19 @@ class Migration(migrations.Migration):
             name='members',
             field=models.ManyToManyField(blank=True, related_name='enrolled_classes', to='gym.member'),
         ),
+        # Step 1: Add checkin_token WITHOUT unique constraint
         migrations.AddField(
+            model_name='member',
+            name='checkin_token',
+            field=models.UUIDField(default=uuid.uuid4, editable=False, null=True),
+        ),
+        # Step 2: Populate unique UUIDs for existing rows
+        migrations.RunPython(populate_unique_tokens, migrations.RunPython.noop),
+        # Step 3: Now enforce uniqueness
+        migrations.AlterField(
             model_name='member',
             name='checkin_token',
             field=models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
         ),
     ]
+
