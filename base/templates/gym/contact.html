@@ -3,7 +3,7 @@
 
 {% block extra_css %}
 <style>
-    .contact-container {
+    .contact-page-container {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
         gap: 3rem;
@@ -11,18 +11,18 @@
         margin-bottom: 5rem;
     }
 
-    .info-card {
+    .contact-info-card {
         background: white;
         padding: 3rem;
         border-radius: 24px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     }
 
-    .info-item {
+    .contact-info-item {
         margin-bottom: 2rem;
     }
 
-    .info-icon {
+    .contact-info-icon {
         font-size: 1.5rem;
         background: #f0f7ff;
         color: #3498db;
@@ -35,40 +35,80 @@
         margin-bottom: 1rem;
     }
 
-    .form-box {
-        background: #2c3e50;
+    .contact-form-card {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
         padding: 3.5rem;
         border-radius: 24px;
-        color: white;
-        box-shadow: 0 20px 40px rgba(44, 62, 80, 0.2);
+        box-shadow: 0 20px 40px rgba(44, 62, 80, 0.25);
     }
 
-    .form-box h2 {
+    .contact-form-card h2 {
         font-size: 2rem;
         margin-bottom: 2rem;
         font-weight: 800;
+        color: #fff;
     }
 
-    .form-box input,
-    .form-box textarea {
-        background: rgba(255, 255, 255, 0.1) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        color: #3b3939 !important;
-        margin-bottom: 1.5rem;
-        padding: 1rem;
-        border-radius: 8px;
+    .contact-field {
+        margin-bottom: 1.2rem;
     }
 
-    .form-box input::placeholder,
-    .form-box textarea::placeholder {
-        color: rgba(255, 255, 255, 0.5);
+    .contact-field label {
+        display: block;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    .form-box input:focus,
-    .form-box textarea:focus {
-        background: rgba(255, 255, 255, 0.15) !important;
+    .contact-field input[type="text"],
+    .contact-field input[type="email"],
+    .contact-field textarea {
+        width: 100% !important;
+        padding: 0.9rem 1rem !important;
+        background-color: #fff !important;
+        color: #333 !important;
+        border: 2px solid transparent !important;
+        border-radius: 10px !important;
+        font-size: 1rem !important;
+        font-family: inherit !important;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .contact-field input[type="text"]::placeholder,
+    .contact-field input[type="email"]::placeholder,
+    .contact-field textarea::placeholder {
+        color: #999 !important;
+    }
+
+    .contact-field input[type="text"]:focus,
+    .contact-field input[type="email"]:focus,
+    .contact-field textarea:focus {
+        outline: none !important;
         border-color: #3498db !important;
-        outline: none;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25) !important;
+    }
+
+    .contact-submit-btn {
+        width: 100%;
+        padding: 1.2rem;
+        font-weight: 700;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        border: none;
+        background: linear-gradient(135deg, #27ae60, #2ecc71);
+        color: white;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        margin-top: 0.5rem;
+    }
+
+    .contact-submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
     }
 
     .map-placeholder {
@@ -99,20 +139,20 @@
 {% endfor %}
 {% endif %}
 
-<div class="contact-container">
-    <div class="info-card">
-        <div class="info-item">
-            <div class="info-icon">📍</div>
+<div class="contact-page-container">
+    <div class="contact-info-card">
+        <div class="contact-info-item">
+            <div class="contact-info-icon">📍</div>
             <h3>Location</h3>
             <p>123 Fitness Avenue, Nairobi, Kenya</p>
         </div>
-        <div class="info-item">
-            <div class="info-icon">📞</div>
+        <div class="contact-info-item">
+            <div class="contact-info-icon">📞</div>
             <h3>Contact Info</h3>
-            <p>Phone: +254 743 341 474<br>Email: jeremmykariz001@gmai..com</p>
+            <p>Phone: +254 743 341 474<br>Email: jeremmykariz001@gmail.com</p>
         </div>
-        <div class="info-item">
-            <div class="info-icon">⏰</div>
+        <div class="contact-info-item">
+            <div class="contact-info-icon">⏰</div>
             <h3>Opening Hours</h3>
             <p>Mon - Fri: 5 AM - 10 PM<br>Sat - Sun: 7 AM - 8 PM</p>
         </div>
@@ -122,25 +162,28 @@
         </div>
     </div>
 
-    <div class="form-box">
+    <div class="contact-form-card">
         <h2>Send us a Message</h2>
-        <form method="post">
+        <form method="post" style="background: none; box-shadow: none; padding: 0; max-width: none;">
             {% csrf_token %}
-            <div class="form-group">
-                <input type="text" name="name" placeholder="Your Full Name" required>
+            <div class="contact-field">
+                <label for="contact-name">Full Name</label>
+                <input type="text" id="contact-name" name="name" placeholder="e.g. John Kamau" required>
             </div>
-            <div class="form-group">
-                <input type="email" name="email" placeholder="Email Address" required>
+            <div class="contact-field">
+                <label for="contact-email">Email Address</label>
+                <input type="email" id="contact-email" name="email" placeholder="e.g. john@example.com" required>
             </div>
-            <div class="form-group">
-                <input type="text" name="subject" placeholder="Subject" required>
+            <div class="contact-field">
+                <label for="contact-subject">Subject</label>
+                <input type="text" id="contact-subject" name="subject" placeholder="What's this about?" required>
             </div>
-            <div class="form-group">
-                <textarea name="message" rows="5" placeholder="How can we help you?" required></textarea>
+            <div class="contact-field">
+                <label for="contact-message">Your Message</label>
+                <textarea id="contact-message" name="message" rows="5" placeholder="Tell us how we can help..."
+                    required></textarea>
             </div>
-            <button type="submit" class="btn btn-success"
-                style="width: 100%; padding: 1.2rem; font-weight: 700; border-radius: 12px; font-size: 1.1rem; border: none;">Send
-                Message</button>
+            <button type="submit" class="contact-submit-btn">Send Message ✉️</button>
         </form>
     </div>
 </div>
