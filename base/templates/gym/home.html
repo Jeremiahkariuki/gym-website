@@ -205,7 +205,13 @@
             Join the community that pushes you to your limits.</p>
         <div class="cta-group">
             {% if user.is_authenticated %}
+            {% if user.is_staff %}
+            <a href="{% url 'dashboard' %}" class="btn btn-large btn-success">Admin Dashboard</a>
+            {% elif user.trainer_profile %}
+            <a href="{% url 'trainer_portal_dashboard' %}" class="btn btn-large btn-success">Trainer Dashboard</a>
+            {% else %}
             <a href="{% url 'portal_dashboard' %}" class="btn btn-large btn-success">My Dashboard</a>
+            {% endif %}
             {% else %}
             <a href="{% url 'register' %}" class="btn btn-large btn-success">Get Started Today</a>
             {% endif %}
