@@ -335,39 +335,42 @@
             <span class="stat-label">Member Since</span>
         </div>
         <div class="stat-card">
-            <span class="stat-icon">🏋️</span>
-            <span class="stat-value">{{ enrolled_class_ids|length }}</span>
-            <span class="stat-label">Classes Enrolled</span>
+            <span class="stat-icon">🏆</span>
+            <span class="stat-value">{{ recent_achievements|length }}</span>
+            <span class="stat-label">Achievements</span>
         </div>
         <div class="stat-card">
-            <span class="stat-icon">💳</span>
-            <span class="stat-value">{{ recent_payments|length }}</span>
-            <span class="stat-label">Recent Payments</span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-icon">📊</span>
+            <span class="stat-icon">📈</span>
             <span class="stat-value">{{ measurements|length }}</span>
-            <span class="stat-label">Measurements</span>
+            <span class="stat-label">Progress logs</span>
         </div>
     </div>
 
     <!-- ═══ Quick Actions ═══ -->
     <div class="quick-actions">
+        <a href="{% url 'portal_exercise_library' %}" class="action-card">
+            <i class="bi bi-journal-text" style="color: #3498db;"></i>
+            <span>Exercise Library</span>
+        </a>
+        <a href="{% url 'portal_progress_gallery' %}" class="action-card">
+            <i class="bi bi-camera" style="color: #27ae60;"></i>
+            <span>Progress Gallery</span>
+        </a>
+        <a href="{% url 'portal_achievement_room' %}" class="action-card">
+            <i class="bi bi-trophy" style="color: #f39c12;"></i>
+            <span>Achievements</span>
+        </a>
+        <a href="{% url 'portal_profile_hub' %}" class="action-card">
+            <i class="bi bi-person-circle" style="color: #9b59b6;"></i>
+            <span>My Profile</span>
+        </a>
         <a href="{% url 'portal_workout' %}" class="action-card">
-            <i class="bi bi-lightning-charge" style="color: #3498db;"></i>
+            <i class="bi bi-lightning-charge" style="color: #e67e22;"></i>
             <span>Workout Plan</span>
         </a>
         <a href="{% url 'portal_diet' %}" class="action-card">
-            <i class="bi bi-egg-fried" style="color: #27ae60;"></i>
+            <i class="bi bi-egg-fried" style="color: #16a085;"></i>
             <span>Diet Plan</span>
-        </a>
-        <a href="{% url 'portal_payments' %}" class="action-card">
-            <i class="bi bi-receipt" style="color: #f39c12;"></i>
-            <span>Payments</span>
-        </a>
-        <a href="{% url 'class_schedule' %}" class="action-card">
-            <i class="bi bi-calendar-week" style="color: #9b59b6;"></i>
-            <span>Full Schedule</span>
         </a>
     </div>
 
