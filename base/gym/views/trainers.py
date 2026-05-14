@@ -124,10 +124,14 @@ def admin_required(view_func):
 
 @admin_required
 def trainer_list(request):
+    active_branch_id = request.session.get('active_branch_id')
     query = request.GET.get("q", "").strip()
     qs = Trainer.objects.select_related("user").annotate(
         member_count=db_models.Count("assignments")
     ).order_by("user__first_name", "user__username")
+    
+    if active_branch_id:
+        qs = qs.filter(branch_id=active_branch_id)
 
     if query:
         qs = qs.filter(
@@ -154,11 +158,13 @@ def trainer_create(request):
                 last_name=form.cleaned_data["last_name"],
                 email=form.cleaned_data["email"],
             )
+            active_branch_id = request.session.get('active_branch_id')
             Trainer.objects.create(
                 user=user,
                 phone=form.cleaned_data.get("phone") or None,
                 specialization=form.cleaned_data["specialization"],
                 bio=form.cleaned_data["bio"],
+                branch_id=active_branch_id,
             )
             messages.success(request, f"Trainer '{user.username}' created successfully.")
             return redirect("trainer_list")

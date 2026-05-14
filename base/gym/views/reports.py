@@ -13,19 +13,37 @@ def dashboard(request):
     today = timezone.now().date()
     this_month = timezone.now().month
 
-    total_members = Member.objects.count()
-    members_joined_today = Member.objects.filter(joined_on=today).count()
-    today_attendance = Attendance.objects.filter(date=today).count()
-    present_today = Attendance.objects.filter(date=today).select_related("member")
+    active_branch_id = request.session.get('active_branch_id')
+    
+    total_members = Member.objects.all()
+    members_joined_today_query = Member.objects.filter(joined_on=today)
+    today_attendance_query = Attendance.objects.filter(date=today)
+    
+    if active_branch_id:
+        total_members = total_members.filter(branch_id=active_branch_id)
+        members_joined_today_query = members_joined_today_query.filter(branch_id=active_branch_id)
+        today_attendance_query = today_attendance_query.filter(branch_id=active_branch_id)
+
+    total_members_count = total_members.count()
+    members_joined_today = members_joined_today_query.count()
+    today_attendance = today_attendance_query.count()
+    present_today = today_attendance_query.select_related("member")
     
     # Calculate memberships expiring in the next 7 days
+    seven_days_from_now = today + timedelta(days=7)
+    # Calculate memberships expiring soon
     seven_days_from_now = today + timedelta(days=7)
     expiring_soon = Membership.objects.filter(
         is_active=True,
         end_date__isnull=False,
         end_date__gte=today,
         end_date__lte=seven_days_from_now
-    ).select_related("member", "plan").order_by("end_date")
+    ).select_related("member", "plan")
+
+    if active_branch_id:
+        expiring_soon = expiring_soon.filter(member__branch_id=active_branch_id)
+    
+    expiring_soon = expiring_soon.order_by("end_date")
 
     return render(
         request,
@@ -33,11 +51,12 @@ def dashboard(request):
         {
             "today": today,
             "this_month": this_month,
-            "total_members": total_members,
+            "total_members": total_members_count,
             "members_joined_today": members_joined_today,
             "today_attendance": today_attendance,
             "present_today": present_today,
             "expiring_soon": expiring_soon,
+            "active_branch_id": active_branch_id,
         },
     )
 
@@ -48,7 +67,13 @@ def mark_present(request, member_id):
     today = timezone.now().date()
 
     # Only create if they haven't checked in today yet (unique_together now enforces this too)
-    Attendance.objects.get_or_create(member=member, date=today)
+    # Only create if they haven't checked in today yet
+    active_branch_id = request.session.get('active_branch_id')
+    Attendance.objects.get_or_create(
+        member=member, 
+        date=today,
+        defaults={'branch_id': active_branch_id or member.branch_id}
+    )
 
     return redirect("dashboard")
 

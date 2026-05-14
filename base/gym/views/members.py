@@ -38,11 +38,15 @@ def member_list(request):
     query = request.GET.get("q", "").strip()
     status = request.GET.get("status", "").strip()
 
+    active_branch_id = request.session.get('active_branch_id')
     qs = (
         Member.objects.select_related("diet_plan")
         .prefetch_related("memberships__plan")
         .order_by("-joined_on")
     )
+
+    if active_branch_id:
+        qs = qs.filter(branch_id=active_branch_id)
 
     if query:
         qs = qs.filter(
@@ -67,7 +71,12 @@ def member_create(request):
     if request.method == "POST":
         form = MemberForm(request.POST)
         if form.is_valid():
-            member = form.save()
+            active_branch_id = request.session.get('active_branch_id')
+            member = form.save(commit=False)
+            if active_branch_id:
+                member.branch_id = active_branch_id
+            member.save()
+            
             plan = form.cleaned_data.get("plan")
             if plan:
                 Membership.objects.create(
@@ -167,7 +176,13 @@ def export_members_csv(request):
     writer = csv.writer(response)
     writer.writerow(["Name", "Phone", "Email", "Address", "Joined On", "Active Plan"])
 
-    for member in Member.objects.prefetch_related("memberships__plan").order_by("full_name"):
+    active_branch_id = request.session.get('active_branch_id')
+    qs = Member.objects.prefetch_related("memberships__plan").order_by("full_name")
+    
+    if active_branch_id:
+        qs = qs.filter(branch_id=active_branch_id)
+
+    for member in qs:
         active = member.memberships.filter(is_active=True).first()
         writer.writerow([
             member.full_name,
@@ -203,12 +218,14 @@ def import_members_csv(request):
                     email = fields[2].strip() if len(fields) > 2 else ""
                     address = fields[3].strip() if len(fields) > 3 else ""
                     
+                    active_branch_id = request.session.get('active_branch_id')
                     Member.objects.get_or_create(
                         phone=phone,
                         defaults={
                             "full_name": full_name,
                             "email": email,
-                            "address": address
+                            "address": address,
+                            "branch_id": active_branch_id
                         }
                     )
                     created_count += 1

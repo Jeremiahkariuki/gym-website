@@ -7,15 +7,22 @@ from .trainers import admin_required
 # --- Gym Class Management ---
 @admin_required
 def gym_class_list(request):
+    active_branch_id = request.session.get('active_branch_id')
     classes = GymClass.objects.all().select_related('trainer')
+    if active_branch_id:
+        classes = classes.filter(branch_id=active_branch_id)
     return render(request, 'gym/admin/class_list.html', {'classes': classes})
 
 @admin_required
 def gym_class_create(request):
+    active_branch_id = request.session.get('active_branch_id')
     if request.method == 'POST':
         form = GymClassForm(request.POST)
         if form.is_valid():
-            form.save()
+            gym_class = form.save(commit=False)
+            if active_branch_id:
+                gym_class.branch_id = active_branch_id
+            gym_class.save()
             messages.success(request, "Gym class created successfully.")
             return redirect('admin_class_list')
     else:
@@ -47,15 +54,22 @@ def gym_class_delete(request, pk):
 # --- Equipment Management ---
 @admin_required
 def equipment_list(request):
+    active_branch_id = request.session.get('active_branch_id')
     equipment = Equipment.objects.all()
+    if active_branch_id:
+        equipment = equipment.filter(branch_id=active_branch_id)
     return render(request, 'gym/admin/equipment_list.html', {'equipment': equipment})
 
 @admin_required
 def equipment_create(request):
+    active_branch_id = request.session.get('active_branch_id')
     if request.method == 'POST':
         form = EquipmentForm(request.POST)
         if form.is_valid():
-            form.save()
+            item = form.save(commit=False)
+            if active_branch_id:
+                item.branch_id = active_branch_id
+            item.save()
             messages.success(request, "Equipment added successfully.")
             return redirect('equipment_list')
     else:
@@ -87,15 +101,22 @@ def equipment_delete(request, pk):
 # --- Announcement Management ---
 @admin_required
 def announcement_list(request):
+    active_branch_id = request.session.get('active_branch_id')
     announcements = Announcement.objects.all()
+    if active_branch_id:
+        announcements = announcements.filter(branch_id=active_branch_id)
     return render(request, 'gym/admin/announcement_list.html', {'announcements': announcements})
 
 @admin_required
 def announcement_create(request):
+    active_branch_id = request.session.get('active_branch_id')
     if request.method == 'POST':
         form = AnnouncementForm(request.POST)
         if form.is_valid():
-            form.save()
+            notice = form.save(commit=False)
+            if active_branch_id:
+                notice.branch_id = active_branch_id
+            notice.save()
             messages.success(request, "Announcement posted.")
             return redirect('admin_announcement_list')
     else:
@@ -127,11 +148,18 @@ def announcement_delete(request, pk):
 # --- Gallery Management ---
 @admin_required
 def gym_photo_list(request):
+    active_branch_id = request.session.get('active_branch_id')
     photos = GymPhoto.objects.all()
+    if active_branch_id:
+        photos = photos.filter(branch_id=active_branch_id)
+        
     if request.method == 'POST':
         form = GymPhotoForm(request.POST)
         if form.is_valid():
-            form.save()
+            photo = form.save(commit=False)
+            if active_branch_id:
+                photo.branch_id = active_branch_id
+            photo.save()
             messages.success(request, "Photo added to gallery.")
             return redirect('admin_gallery')
     else:
@@ -180,6 +208,8 @@ def qr_checkin_api(request):
             
             # Check if already checked in today
             today = timezone.now().date()
+            active_branch_id = request.session.get('active_branch_id')
+            
             if Attendance.objects.filter(member=member, date=today).exists():
                 return JsonResponse({
                     "success": False,
@@ -187,7 +217,11 @@ def qr_checkin_api(request):
                 })
             
             # Create attendance record
-            Attendance.objects.create(member=member, date=today)
+            Attendance.objects.create(
+                member=member, 
+                date=today,
+                branch_id=active_branch_id or member.branch_id
+            )
             
             return JsonResponse({
                 "success": True,

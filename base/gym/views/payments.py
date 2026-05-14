@@ -91,7 +91,10 @@ from django.core.paginator import Paginator
 
 @login_required
 def expense_list(request):
+    active_branch_id = request.session.get('active_branch_id')
     expenses_list = Expense.objects.all().order_by("-date")
+    if active_branch_id:
+        expenses_list = expenses_list.filter(branch_id=active_branch_id)
     paginator = Paginator(expenses_list, 20)  # 20 expenses per page
     page_number = request.GET.get("page")
     expenses = paginator.get_page(page_number)
@@ -103,7 +106,11 @@ def expense_create(request):
     if request.method == "POST":
         form = ExpenseForm(request.POST)
         if form.is_valid():
-            form.save()
+            active_branch_id = request.session.get('active_branch_id')
+            expense = form.save(commit=False)
+            if active_branch_id:
+                expense.branch_id = active_branch_id
+            expense.save()
             messages.success(request, "Expense added successfully.")
             return redirect("expense_list")
     else:
@@ -142,24 +149,36 @@ def revenue_report(request):
     today = timezone.now().date()
     this_month = today.replace(day=1)
 
-    total_revenue = Payment.objects.aggregate(total=db_models.Sum("amount"))["total"] or 0
+    active_branch_id = request.session.get('active_branch_id')
+    
+    payments_qs = Payment.objects.all()
+    expenses_qs = Expense.objects.all()
+    
+    if active_branch_id:
+        payments_qs = payments_qs.filter(branch_id=active_branch_id)
+        expenses_qs = expenses_qs.filter(branch_id=active_branch_id)
+
+    total_revenue = payments_qs.aggregate(total=db_models.Sum("amount"))["total"] or 0
     monthly_revenue = (
-        Payment.objects.filter(date__year=today.year, date__month=today.month)
+        payments_qs.filter(date__year=today.year, date__month=today.month)
         .aggregate(total=db_models.Sum("amount"))["total"] or 0
     )
 
-    total_expenses = Expense.objects.aggregate(total=db_models.Sum("amount"))["total"] or 0
+    total_expenses = expenses_qs.aggregate(total=db_models.Sum("amount"))["total"] or 0
     monthly_expenses = (
-        Expense.objects.filter(date__year=today.year, date__month=today.month)
+        expenses_qs.filter(date__year=today.year, date__month=today.month)
         .aggregate(total=db_models.Sum("amount"))["total"] or 0
     )
 
-    payment_methods = Payment.objects.values("method").annotate(
+    payment_methods = payments_qs.values("method").annotate(
         total=db_models.Sum("amount"),
         count=db_models.Count("id"),
     )
 
-    members = Member.objects.all().prefetch_related("payments", "memberships__plan")
+    members = Member.objects.all()
+    if active_branch_id:
+        members = members.filter(branch_id=active_branch_id)
+    members = members.prefetch_related("payments", "memberships__plan")
     member_status = []
     for member in members:
         has_paid = member.payments.filter(
@@ -258,7 +277,13 @@ def export_payments_csv(request):
     writer = csv.writer(response)
     writer.writerow(["Member", "Amount", "Method", "Plan", "Date", "Reference"])
 
-    for p in Payment.objects.select_related("member", "Membership__plan").order_by("-date"):
+    active_branch_id = request.session.get('active_branch_id')
+    payments_qs = Payment.objects.select_related("member", "Membership__plan").order_by("-date")
+    
+    if active_branch_id:
+        payments_qs = payments_qs.filter(branch_id=active_branch_id)
+
+    for p in payments_qs:
         writer.writerow([
             p.member.full_name,
             p.amount,
