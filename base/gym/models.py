@@ -4,7 +4,20 @@ from django.utils import timezone
 from datetime import timedelta
 import uuid
 
+class Branch(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.TextField()
+    phone = models.CharField(max_length=20)
+    email = models.EmailField()
+    manager_name = models.CharField(max_length=100)
+    logo_url = models.URLField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
 class Member(models.Model):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="members", null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="member_profile", null=True, blank=True)
     full_name = models.CharField(max_length=120)
     phone = models.CharField(max_length=20, unique=True, null=True, blank=True)
@@ -62,6 +75,7 @@ class Membership(models.Model):
     
 
 class Payment(models.Model):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="payments", null=True, blank=True)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="payments")
     Membership = models.ForeignKey(Membership, on_delete=models.SET_NULL, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -91,6 +105,7 @@ class Payment(models.Model):
         return f"{self.member} - {self.amount}"
     
 class Attendance(models.Model):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="attendance_records", null=True, blank=True)
     member = models.ForeignKey("Member", on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now, db_index=True)  # DateField so unique_together works per day
 
@@ -98,6 +113,7 @@ class Attendance(models.Model):
         unique_together = ("member", "date")  # one check-in per day
 
 class Expense(models.Model):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="expenses", null=True, blank=True)
     CATEGORY_CHOICES = [
         ("Utilities", "Utilities"),
         ("Equipment", "Equipment"),
@@ -172,6 +188,7 @@ class Exercise(models.Model):
 
 
 class Trainer(models.Model):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="trainers", null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="trainer_profile")
     phone = models.CharField(max_length=20, blank=True)
     specialization = models.CharField(
@@ -203,6 +220,7 @@ class TrainerAssignment(models.Model):
 
 
 class GymClass(models.Model):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="classes", null=True, blank=True)
     DAYS = [
         (0, "Monday"), (1, "Tuesday"), (2, "Wednesday"), (3, "Thursday"),
         (4, "Friday"), (5, "Saturday"), (6, "Sunday")
@@ -224,6 +242,7 @@ class GymClass(models.Model):
 
 
 class Equipment(models.Model):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="equipment", null=True, blank=True)
     STATUS_CHOICES = [
         ("Active", "Active"),
         ("Maintenance", "Maintenance"),
@@ -244,6 +263,7 @@ class Equipment(models.Model):
 
 
 class Announcement(models.Model):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="announcements", null=True, blank=True)
     title = models.CharField(max_length=200)
     content = models.TextField()
     date = models.DateTimeField(default=timezone.now)
@@ -257,6 +277,7 @@ class Announcement(models.Model):
 
 
 class GymPhoto(models.Model):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="photos", null=True, blank=True)
     url = models.URLField(max_length=500, help_text="Direct link to the gym image")
     caption = models.CharField(max_length=200, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

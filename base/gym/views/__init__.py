@@ -64,6 +64,10 @@ from .admin_management import (
 from .contact_messages import (
     contact_message_list, contact_message_detail, contact_message_delete,
 )
+from .branches import (
+    branch_list, branch_create, branch_edit, branch_delete, set_active_branch
+)
+
 
 __all__ = [
     # auth
@@ -104,4 +108,7 @@ __all__ = [
     "qr_scanner", "qr_checkin_api",
     # contact messages
     "contact_message_list", "contact_message_detail", "contact_message_delete",
+    # branches
+    "branch_list", "branch_create", "branch_edit", "branch_delete", "set_active_branch",
 ]
+
