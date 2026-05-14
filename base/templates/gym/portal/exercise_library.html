@@ -1,0 +1,117 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Exercise Library - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Exercise Library</h1>
+    <div class="btn-group">
+        <a href="?"
+            class="btn btn-sm {% if not active_category %}btn-primary{% else %}btn-outline-primary{% endif %}">All</a>
+        {% for cat_id, cat_name in categories %}
+        <a href="?category={{ cat_id }}"
+            class="btn btn-sm {% if active_category == cat_id %}btn-primary{% else %}btn-outline-primary{% endif %}">{{
+            cat_name }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="row">
+    {% for exercise in exercises %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm overflow-hidden"
+            style="border-radius: 12px; transition: transform 0.2s;">
+            {% if exercise.thumbnail_url %}
+            <img src="{{ exercise.thumbnail_url }}" class="card-img-top" alt="{{ exercise.name }}"
+                style="height: 200px; object-fit: cover;">
+            {% else %}
+            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                <i class="fas fa-dumbbell fa-3x text-muted opacity-25"></i>
+            </div>
+            {% endif %}
+
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title mb-0">{{ exercise.name }}</h5>
+                    <span
+                        class="badge {% if exercise.difficulty == 'Beginner' %}bg-success{% elif exercise.difficulty == 'Intermediate' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
+                        {{ exercise.difficulty }}
+                    </span>
+                </div>
+                <p class="text-muted small mb-2"><i class="fas fa-tag"></i> {{ exercise.category }}</p>
+                <p class="card-text text-truncate-3" style="font-size: 0.9rem;">{{ exercise.description }}</p>
+
+                <div class="d-grid mt-3">
+                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#exerciseModal{{ exercise.id }}">
+                        View Instructions
+                    </button>
+                    {% if exercise.video_url %}
+                    <a href="{{ exercise.video_url }}" target="_blank"
+                        class="btn btn-link btn-sm text-decoration-none mt-1">
+                        <i class="fas fa-video"></i> Watch Video
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exercise Modal -->
+    <div class="modal fade" id="exerciseModal{{ exercise.id }}" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="border-radius: 16px;">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">{{ exercise.name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="row">
+                        <div class="col-md-5">
+                            {% if exercise.thumbnail_url %}
+                            <img src="{{ exercise.thumbnail_url }}" class="img-fluid rounded shadow-sm mb-3"
+                                alt="{{ exercise.name }}">
+                            {% endif %}
+                            <div class="p-3 bg-light rounded shadow-sm mb-3">
+                                <h6 class="mb-2">Details</h6>
+                                <p class="mb-1 small"><strong>Category:</strong> {{ exercise.category }}</p>
+                                <p class="mb-0 small"><strong>Difficulty:</strong> {{ exercise.difficulty }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <h6>Instructions</h6>
+                            <div class="instruction-list text-muted" style="line-height: 1.6;">
+                                {{ exercise.instructions|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div class="mb-3">
+            <i class="fas fa-search fa-4x text-muted opacity-25"></i>
+        </div>
+        <p class="lead text-muted">No exercises found in this category.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .text-truncate-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}

@@ -1,7 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from ..models import Member, WorkoutPlan, DietPlan, Payment, MeasurementLog, GymClass
+from ..models import (
+    Member, WorkoutPlan, DietPlan, Payment, MeasurementLog, GymClass,
+    LibraryExercise, ProgressPhoto, Achievement, MemberAchievement
+)
+from django import forms
+from django.shortcuts import get_object_or_404
 
 @login_required
 def portal_dashboard(request):
@@ -20,8 +25,12 @@ def portal_dashboard(request):
     chart_bmi = [float(m.bmi) for m in measurements if m.bmi]
     
     # Class Booking Data
-    available_classes = GymClass.objects.all().select_related('trainer')
+    # Branches? Filter classes by member's branch
+    available_classes = GymClass.objects.filter(branch=member.branch).select_related('trainer')
     enrolled_class_ids = member.enrolled_classes.values_list('id', flat=True)
+    
+    # Recent achievements
+    recent_achievements = member.achievements_earned.select_related('achievement').order_by('-earned_on')[:3]
     
     return render(request, "gym/portal/dashboard.html", {
         "member": member,
@@ -33,6 +42,7 @@ def portal_dashboard(request):
         "chart_labels": chart_labels,
         "chart_weight": chart_weight,
         "chart_bmi": chart_bmi,
+        "recent_achievements": recent_achievements,
     })
 
 @login_required
@@ -112,17 +122,106 @@ def portal_id_card(request):
 
 @login_required
 def portal_exercise_library(request):
-    return render(request, "gym/portal/exercise_library.html")
+    category = request.GET.get('category')
+    exercises = LibraryExercise.objects.all()
+    if category:
+        exercises = exercises.filter(category=category)
+    
+    categories = LibraryExercise.CATEGORY_CHOICES
+    return render(request, "gym/portal/exercise_library.html", {
+        "exercises": exercises,
+        "categories": categories,
+        "active_category": category
+    })
+
+class ProgressPhotoForm(forms.ModelForm):
+    class Meta:
+        model = ProgressPhoto
+        fields = ['photo_before', 'photo_after', 'weight_at_time', 'notes']
+        widgets = {
+            'photo_before': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'URL to current photo'}),
+            'photo_after': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'URL to previous/after photo (optional)'}),
+            'weight_at_time': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+        }
 
 @login_required
 def portal_progress_gallery(request):
-    return render(request, "gym/portal/progress_history.html")
+    try:
+        member = request.user.member_profile
+    except Member.DoesNotExist:
+        return redirect("login")
+        
+    photos = member.progress_photos.all()
+    
+    if request.method == "POST":
+        form = ProgressPhotoForm(request.POST)
+        if form.is_valid():
+            photo = form.save(commit=False)
+            photo.member = member
+            photo.save()
+            messages.success(request, "Progress photo added!")
+            return redirect("portal_progress_gallery")
+    else:
+        form = ProgressPhotoForm()
+        
+    return render(request, "gym/portal/progress_history.html", {
+        "photos": photos,
+        "form": form
+    })
+
+class MemberProfileForm(forms.ModelForm):
+    class Meta:
+        model = Member
+        fields = ['full_name', 'email', 'phone', 'address', 'fitness_goal', 'bio', 'medical_conditions', 'profile_picture']
+        widgets = {
+            'full_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'fitness_goal': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Lose 5kg, Build Muscle'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'medical_conditions': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'profile_picture': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Link to profile image'}),
+        }
 
 @login_required
 def portal_profile_hub(request):
-    return render(request, "gym/portal/profile_hub.html")
+    try:
+        member = request.user.member_profile
+    except Member.DoesNotExist:
+        return redirect("login")
+        
+    if request.method == "POST":
+        form = MemberProfileForm(request.POST, instance=member)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect("portal_profile_hub")
+    else:
+        form = MemberProfileForm(instance=member)
+        
+    return render(request, "gym/portal/profile_hub.html", {
+        "member": member,
+        "form": form
+    })
 
 @login_required
 def portal_achievement_room(request):
-    return render(request, "gym/portal/achievements.html")
+    try:
+        member = request.user.member_profile
+    except Member.DoesNotExist:
+        return redirect("login")
+        
+    earned = member.achievements_earned.select_related('achievement').all()
+    all_achievements = Achievement.objects.all()
+    
+    # Map earned achievements for easier lookup in template
+    earned_ids = set(earned.values_list('achievement_id', flat=True))
+    
+    return render(request, "gym/portal/achievements.html", {
+        "earned": earned,
+        "all_achievements": all_achievements,
+        "earned_ids": earned_ids
+    })
 

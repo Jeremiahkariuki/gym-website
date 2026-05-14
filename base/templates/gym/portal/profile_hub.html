@@ -1,0 +1,185 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Profile Hub - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <div class="card border-0 shadow-lg overflow-hidden" style="border-radius: 20px;">
+            <div class="card-header bg-dark text-white p-5 border-0 position-relative">
+                <div class="d-flex align-items-center gap-4">
+                    <div class="position-relative">
+                        {% if member.profile_picture %}
+                        <img src="{{ member.profile_picture }}"
+                            class="rounded-circle border border-4 border-white shadow"
+                            style="width: 120px; height: 120px; object-fit: cover;">
+                        {% else %}
+                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center border border-4 border-white shadow"
+                            style="width: 120px; height: 120px;">
+                            <span class="display-4 text-white">{{ member.full_name|slice:":1" }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h1 class="mb-1 text-white">{{ member.full_name }}</h1>
+                        <p class="mb-0 opacity-75">Member since {{ member.joined_on|date:"F Y" }}</p>
+                        <span class="badge bg-primary mt-2">Active Member</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body p-5">
+                <ul class="nav nav-pills mb-5 gap-2" id="profileTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active px-4" data-bs-toggle="pill"
+                            data-bs-target="#overview">Overview</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link px-4" data-bs-toggle="pill" data-bs-target="#edit">Edit Profile</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link px-4" data-bs-toggle="pill" data-bs-target="#goals">Goals &
+                            Health</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="profileTabContent">
+                    <!-- Overview Tab -->
+                    <div class="tab-pane fade show active" id="overview">
+                        <div class="row g-4">
+                            <div class="col-md-7">
+                                <h5 class="fw-bold mb-3">About Me</h5>
+                                <p class="text-muted" style="line-height: 1.8;">
+                                    {% if member.bio %}{{ member.bio }}{% else %}No bio provided yet. Tell us about your
+                                    fitness journey!{% endif %}
+                                </p>
+
+                                <div class="mt-4">
+                                    <h5 class="fw-bold mb-3">Statistics</h5>
+                                    <div class="row g-3">
+                                        <div class="col-6">
+                                            <div class="p-3 bg-light rounded-3 text-center">
+                                                <div class="h3 fw-bold text-primary mb-0">{{ member.memberships.count }}
+                                                </div>
+                                                <div class="small text-muted">Total Plans</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="p-3 bg-light rounded-3 text-center">
+                                                <div class="h3 fw-bold text-success mb-0">{{
+                                                    member.achievements_earned.count }}</div>
+                                                <div class="small text-muted">Achievements</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="p-4 bg-light rounded-4">
+                                    <h5 class="fw-bold mb-3">Contact Info</h5>
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="mb-3 d-flex align-items-center gap-3">
+                                            <i class="fas fa-envelope text-primary"></i>
+                                            <div>
+                                                <div class="small text-muted">Email</div>
+                                                <div>{{ member.email|default:"Not set" }}</div>
+                                            </div>
+                                        </li>
+                                        <li class="mb-3 d-flex align-items-center gap-3">
+                                            <i class="fas fa-phone text-primary"></i>
+                                            <div>
+                                                <div class="small text-muted">Phone</div>
+                                                <div>{{ member.phone }}</div>
+                                            </div>
+                                        </li>
+                                        <li class="mb-0 d-flex align-items-center gap-3">
+                                            <i class="fas fa-map-marker-alt text-primary"></i>
+                                            <div>
+                                                <div class="small text-muted">Address</div>
+                                                <div>{{ member.address|default:"Not set" }}</div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Profile Tab -->
+                    <div class="tab-pane fade" id="edit">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Full Name</label>
+                                    {{ form.full_name }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Email Address</label>
+                                    {{ form.email }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Phone</label>
+                                    {{ form.phone }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Profile Picture URL</label>
+                                    {{ form.profile_picture }}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Bio</label>
+                                {{ form.bio }}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Street Address</label>
+                                {{ form.address }}
+                            </div>
+                            <hr class="my-4">
+                            <button type="submit" class="btn btn-primary px-5">Update Profile</button>
+                        </form>
+                    </div>
+
+                    <!-- Goals Tab -->
+                    <div class="tab-pane fade" id="goals">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Your Primary Fitness Goal</label>
+                                {{ form.fitness_goal }}
+                                <div class="form-text">e.g., "Build 3kg of muscle", "Run a 5k", "General fitness"</div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Medical Conditions & Injuries</label>
+                                {{ form.medical_conditions }}
+                                <div class="form-text">Please list any conditions our trainers should be aware of.</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary px-5">Save Goals</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .nav-pills .nav-link.active {
+        background-color: #3498db;
+        border-radius: 10px;
+    }
+
+    .nav-pills .nav-link {
+        color: #6c757d;
+        font-weight: 500;
+        border-radius: 10px;
+    }
+
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.1);
+    }
+</style>
+{% endblock %}

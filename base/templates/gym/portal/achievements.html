@@ -1,0 +1,75 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Achievement Room - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4 fw-bold">Achievement Room</h1>
+    <p class="lead text-muted">Complete challenges and hit milestones to unlock exclusive badges!</p>
+</div>
+
+<div class="row g-4">
+    <!-- Stats Row -->
+    <div class="col-md-12 mb-2">
+        <div class="card border-0 bg-primary text-white shadow-lg" style="border-radius: 20px;">
+            <div class="card-body p-4 d-flex justify-content-around align-items-center text-center">
+                <div>
+                    <div class="h2 mb-0 fw-bold">{{ earned.count }}</div>
+                    <div class="small opacity-75">Unlocked</div>
+                </div>
+                <div style="width: 1px; height: 40px; background: rgba(255,255,255,0.2);"></div>
+                <div>
+                    <div class="h2 mb-0 fw-bold">{{ all_achievements.count }}</div>
+                    <div class="small opacity-75">Total Badges</div>
+                </div>
+                <div style="width: 1px; height: 40px; background: rgba(255,255,255,0.2);"></div>
+                <div>
+                    <div class="h2 mb-0 fw-bold">{% widthratio earned.count all_achievements.count 100 %}%</div>
+                    <div class="small opacity-75">Progress</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievements Grid -->
+    {% for achievement in all_achievements %}
+    {% with is_earned=achievement.id in earned_ids %}
+    <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm text-center p-4 {% if is_earned %}bg-white{% else %}bg-light grayscale{% endif %}"
+            style="border-radius: 20px; transition: all 0.3s;">
+            <div class="mb-3">
+                <span class="display-3 d-block mb-2"
+                    style="filter: {% if is_earned %}none{% else %}grayscale(100%) opacity(0.4){% endif %};">
+                    {{ achievement.icon_emoji }}
+                </span>
+            </div>
+            <h5 class="fw-bold mb-2">{{ achievement.name }}</h5>
+            <p class="text-muted small mb-3">{{ achievement.description }}</p>
+
+            <div class="mt-auto">
+                {% if is_earned %}
+                <span class="badge bg-success py-2 px-3 rounded-pill">Unlocked!</span>
+                {% else %}
+                <div class="small text-muted py-1">
+                    <i class="fas fa-lock me-1"></i> {{ achievement.requirement_description }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+</div>
+
+<style>
+    .grayscale {
+        filter: grayscale(1);
+        opacity: 0.8;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
+{% endblock %}
