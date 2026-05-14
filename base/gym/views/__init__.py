@@ -3,7 +3,11 @@
 
 from .auth import LoginForm, RegistrationForm, logout_view, register_view, login_redirect_view, staff_create
 from .public import home_view, class_schedule_view, contact_view
-from .portal import portal_dashboard, portal_diet, portal_payments, portal_workout, portal_class_toggle, portal_id_card
+from .portal import (
+    portal_dashboard, portal_diet, portal_payments, portal_workout, 
+    portal_class_toggle, portal_id_card, portal_notifications_optin,
+    portal_exercise_library, portal_progress_gallery, portal_profile_hub, portal_achievement_room
+)
 from .trainers import (
     trainer_list, trainer_create, trainer_detail,
     trainer_edit, trainer_delete, assign_trainer,
@@ -65,7 +69,10 @@ __all__ = [
     # auth
     "LoginForm", "RegistrationForm", "logout_view", "register_view", "login_redirect_view", "staff_create",
     # portal
-    "portal_dashboard", "portal_diet", "portal_payments", "portal_workout", "portal_class_toggle", "portal_id_card",
+    "portal_dashboard", "portal_diet", "portal_payments", "portal_workout", 
+    "portal_class_toggle", "portal_id_card", "portal_notifications_optin",
+    "portal_exercise_library", "portal_progress_gallery", "portal_profile_hub", "portal_achievement_room",
+
     # members
     "MemberForm", "member_list", "member_create", "member_edit",
     "member_delete", "member_detail", "export_members_csv", "import_members_csv",

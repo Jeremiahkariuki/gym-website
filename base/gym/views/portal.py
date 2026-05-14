@@ -109,3 +109,20 @@ def portal_id_card(request):
     return render(request, "gym/portal/id_card.html", {
         "member": member,
     })
+
+@login_required
+def portal_exercise_library(request):
+    return render(request, "gym/portal/exercise_library.html")
+
+@login_required
+def portal_progress_gallery(request):
+    return render(request, "gym/portal/progress_history.html")
+
+@login_required
+def portal_profile_hub(request):
+    return render(request, "gym/portal/profile_hub.html")
+
+@login_required
+def portal_achievement_room(request):
+    return render(request, "gym/portal/achievements.html")
+
