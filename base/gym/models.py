@@ -14,6 +14,19 @@ class Member(models.Model):
     checkin_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
     membership_Plan = models.ForeignKey("MembershipPlan", on_delete=models.SET_NULL, null=True, blank=True)
+    
+    # Profile Hub Fields
+    GOAL_CHOICES = [
+        ("Weight Loss", "Weight Loss"),
+        ("Muscle Gain", "Muscle Gain"),
+        ("Endurance", "Endurance"),
+        ("Flexibility", "Flexibility"),
+        ("General Fitness", "General Fitness"),
+    ]
+    fitness_goal = models.CharField(max_length=50, choices=GOAL_CHOICES, default="General Fitness")
+    medical_conditions = models.TextField(blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
+    profile_picture = models.URLField(blank=True, null=True, help_text="URL to profile image")
 
     @property
     def active_plan_name(self):
@@ -282,3 +295,63 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Msg from {self.name} - {self.subject}"
+
+# --- New Member Features ---
+
+class LibraryExercise(models.Model):
+    CATEGORY_CHOICES = [
+        ("Strength", "Strength"),
+        ("Cardio", "Cardio"),
+        ("Flexibility", "Flexibility"),
+        ("HIIT", "HIIT"),
+        ("Other", "Other"),
+    ]
+    DIFFICULTY_CHOICES = [
+        ("Beginner", "Beginner"),
+        ("Intermediate", "Intermediate"),
+        ("Advanced", "Advanced"),
+    ]
+    name = models.CharField(max_length=100)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES)
+    description = models.TextField()
+    instructions = models.TextField(help_text="Step-by-step instructions")
+    video_url = models.URLField(blank=True, null=True, help_text="Link to exercise video")
+    thumbnail_url = models.URLField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+class ProgressPhoto(models.Model):
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="progress_photos")
+    date = models.DateField(default=timezone.now)
+    photo_before = models.URLField(help_text="URL to 'before' or current progress photo")
+    photo_after = models.URLField(blank=True, null=True, help_text="URL to 'after' photo (optional)")
+    weight_at_time = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["-date"]
+
+    def __str__(self):
+        return f"Progress for {self.member.full_name} on {self.date}"
+
+class Achievement(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    icon_emoji = models.CharField(max_length=10, default="🏆")
+    requirement_description = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+class MemberAchievement(models.Model):
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="achievements_earned")
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+    earned_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("member", "achievement")
+
+    def __str__(self):
+        return f"{self.member.full_name} - {self.achievement.name}"
