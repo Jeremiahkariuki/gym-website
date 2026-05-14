@@ -1,0 +1,32 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Delete Branch - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Delete Branch</h4>
+            </div>
+            <div class="card-body text-center py-4">
+                <div class="mb-4">
+                    <i class="fas fa-exclamation-triangle text-danger fa-4x"></i>
+                </div>
+                <h3>Are you sure?</h3>
+                <p class="lead">You are about to delete the branch: <strong>{{ branch.name }}</strong></p>
+                <p class="text-muted">This will permanently remove this location and may affect associated members and
+                    staff. Please ensure all data is transferred before proceeding.</p>
+
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'branch_list' %}" class="btn btn-secondary px-4">Cancel</a>
+                        <button type="submit" class="btn btn-danger px-4">Yes, Delete Branch</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

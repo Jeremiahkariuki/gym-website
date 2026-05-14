@@ -37,6 +37,13 @@ urlpatterns = [
     path("portal/payments/", views.portal_payments, name="portal_payments"),
     path("portal/id-card/", views.portal_id_card, name="portal_id_card"),
     path("portal/notifications/", views.portal_notifications_optin, name="portal_notifications_optin"),
+    
+    # Branches
+    path("admin/branches/", views.branch_list, name="branch_list"),
+    path("admin/branches/create/", views.branch_create, name="branch_create"),
+    path("admin/branches/edit/<int:branch_id>/", views.branch_edit, name="branch_edit"),
+    path("admin/branches/delete/<int:branch_id>/", views.branch_delete, name="branch_delete"),
+    path("branch/set/<int:branch_id>/", views.set_active_branch, name="set_active_branch"),
 
     
     # Attendance
