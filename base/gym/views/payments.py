@@ -33,6 +33,15 @@ def record_payment(request, member_id):
                 payment.Membership = membership
 
             payment.save()
+            
+            # Associate branch
+            active_branch_id = request.session.get('active_branch_id')
+            if active_branch_id:
+                payment.branch_id = active_branch_id
+            elif member.branch_id:
+                payment.branch_id = member.branch_id
+            payment.save()
+
             messages.success(request, "Payment recorded successfully.")
             return redirect("member_detail", member_id=member.id)
     else:
