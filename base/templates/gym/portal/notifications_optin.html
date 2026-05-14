@@ -1,0 +1,47 @@
+{% extends 'gym/base.html' %}
+
+{% block title %}Enable Notifications - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 2rem auto; text-align: center;">
+    <div class="card" style="padding: 3rem; border-radius: 20px;">
+        <div style="font-size: 4rem; margin-bottom: 1.5rem;">🔔</div>
+        <h1>Stay Updated</h1>
+        <p style="margin-bottom: 2rem; opacity: 0.8;">Get instant reminders for class bookings, membership renewals, and
+            exclusive gym updates.</p>
+
+        <button onclick="enableNotifications()" class="btn btn-success"
+            style="padding: 1rem 2rem; font-size: 1.1rem; width: 100%;">
+            Enable Push Notifications
+        </button>
+
+        <p id="status-msg" style="margin-top: 1.5rem; font-weight: 500;"></p>
+
+        <div style="margin-top: 2rem;">
+            <a href="{% url 'portal_dashboard' %}" style="color: #666; text-decoration: none;">Maybe Later</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function enableNotifications() {
+        const msg = document.getElementById('status-msg');
+        if (!('Notification' in window)) {
+            msg.innerHTML = "❌ Your browser does not support desktop notifications.";
+            msg.style.color = "#e74c3c";
+            return;
+        }
+
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                msg.innerHTML = "✅ Notifications Enabled! You'll stay in the loop.";
+                msg.style.color = "#27ae60";
+                // In a real app, you'd send the subscription object to your server here
+            } else {
+                msg.innerHTML = "⚠️ Notifications blocked. Please enable them in browser settings.";
+                msg.style.color = "#f39c12";
+            }
+        });
+    }
+</script>
+{% endblock %}

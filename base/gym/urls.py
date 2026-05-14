@@ -36,6 +36,8 @@ urlpatterns = [
     path("portal/diet/", views.portal_diet, name="portal_diet"),
     path("portal/payments/", views.portal_payments, name="portal_payments"),
     path("portal/id-card/", views.portal_id_card, name="portal_id_card"),
+    path("portal/notifications/", views.portal_notifications_optin, name="portal_notifications_optin"),
+
     
     # Attendance
     path("present/<int:member_id>/", views.mark_present, name="mark_present"),

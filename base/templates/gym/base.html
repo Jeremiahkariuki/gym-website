@@ -9,6 +9,14 @@
         content="GYMFLOW - Premium fitness facility centered around your goals. Expert trainers, world-class equipment, and personalized nutrition plans.">
     <meta name="keywords" content="gym, fitness, workout, personal trainer, Nairobi, body transformation">
     <meta name="author" content="Antigravity Team">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <link rel="apple-touch-icon" href="{% static 'icons/icon-512.png' %}">
+
     <title>{% block title %}GYMFLOW | Experience the Peak of Fitness{% endblock %}</title>
     <style>
         * {
@@ -424,6 +432,28 @@
     </footer>
 
     {% block extra_js %}{% endblock %}
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/js/sw.js')
+                    .then(reg => console.log('Service Worker registered', reg))
+                    .catch(err => console.error('Service Worker registration failed', err));
+            });
+        }
+
+        // Notification Permission Request
+        function requestNotificationPermission() {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        console.log('Notification permission granted.');
+                    }
+                });
+            }
+        }
+    </script>
 </body>
 
 </html>

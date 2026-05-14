@@ -36,6 +36,11 @@ def portal_dashboard(request):
     })
 
 @login_required
+def portal_notifications_optin(request):
+    return render(request, "gym/portal/notifications_optin.html")
+
+
+@login_required
 def portal_class_toggle(request, class_id):
     try:
         member = request.user.member_profile
