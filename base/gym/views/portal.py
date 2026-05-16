@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from ..models import (
     Member, WorkoutPlan, DietPlan, Payment, MeasurementLog, GymClass,
-    LibraryExercise, ProgressPhoto, Achievement, MemberAchievement
+    LibraryExercise, ProgressPhoto, Achievement, MemberAchievement, Announcement
 )
 from django import forms
 from django.shortcuts import get_object_or_404
@@ -32,6 +32,9 @@ def portal_dashboard(request):
     # Recent achievements
     recent_achievements = member.achievements_earned.select_related('achievement').order_by('-earned_on')[:3]
     
+    # Announcements
+    announcements = Announcement.objects.filter(is_active=True)[:3]
+    
     return render(request, "gym/portal/dashboard.html", {
         "member": member,
         "active_membership": active_membership,
@@ -43,6 +46,7 @@ def portal_dashboard(request):
         "chart_weight": chart_weight,
         "chart_bmi": chart_bmi,
         "recent_achievements": recent_achievements,
+        "announcements": announcements,
     })
 
 @login_required
@@ -224,4 +228,23 @@ def portal_achievement_room(request):
         "all_achievements": all_achievements,
         "earned_ids": earned_ids
     })
+
+@login_required
+def portal_subscribe(request, plan_id):
+    """
+    Handles the 'Join Now' flow after login/registration.
+    Redirects the member to the payment recording page for the selected plan.
+    """
+    from ..models import MembershipPlan
+    try:
+        member = request.user.member_profile
+    except Member.DoesNotExist:
+        messages.error(request, "Please complete your member profile first.")
+        return redirect("home")
+        
+    # Get the plan to ensure it exists
+    plan = get_object_or_404(MembershipPlan, id=plan_id)
+    
+    # Redirect to record_payment with the plan_id as a query parameter
+    return redirect(f"/members/{member.id}/payment/?plan_id={plan.id}")
 

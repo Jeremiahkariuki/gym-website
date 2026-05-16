@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 
-from ..models import Trainer, Attendance, Membership
+from ..models import Trainer, Attendance, Membership, Announcement
 
 
 def trainer_required(view_func):
@@ -43,12 +43,16 @@ def trainer_portal_dashboard(request):
         end_date__lte=seven_days,
     ).select_related("member", "plan").order_by("end_date")
 
+    # Announcements
+    announcements = Announcement.objects.filter(is_active=True)[:3]
+
     return render(request, "gym/trainer_portal/dashboard.html", {
         "trainer": trainer,
         "assignments": assignments,
         "today_checkins": today_checkins,
         "expiring_soon": expiring_soon,
         "today": today,
+        "announcements": announcements,
     })
 
 

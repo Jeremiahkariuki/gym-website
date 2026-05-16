@@ -45,7 +45,17 @@ def record_payment(request, member_id):
             messages.success(request, "Payment recorded successfully.")
             return redirect("member_detail", member_id=member.id)
     else:
-        form = PaymentForm(member=member)
+        initial_data = {}
+        plan_id = request.GET.get('plan_id')
+        if plan_id:
+            from ..models import MembershipPlan
+            plan = MembershipPlan.objects.filter(id=plan_id).first()
+            if plan:
+                initial_data = {
+                    'plan': plan,
+                    'amount': plan.price
+                }
+        form = PaymentForm(member=member, initial=initial_data)
 
     return render(request, "gym/payment_form.html", {"form": form, "member": member})
 

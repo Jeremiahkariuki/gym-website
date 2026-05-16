@@ -4,31 +4,29 @@ from django.shortcuts import redirect, render
 from ..models import MembershipPlan, GymClass, ContactMessage, Announcement, GymPhoto, Membership
 
 def home_view(request):
-    """Public landing page."""
-    plans = MembershipPlan.objects.all().order_by("price")
-    # Top 3 classes for preview
-    featured_classes = GymClass.objects.all()[:3]
-    # Latest announcements
-    announcements = Announcement.objects.filter(is_active=True)[:3]
-    # Gallery preview
-    gallery = GymPhoto.objects.all()[:6]
+    """
+    Intelligent Home Experience.
+    If logged in, acts as a dispatcher to the appropriate role dashboard.
+    If anonymous, shows the public marketing page.
+    """
+    if not request.user.is_authenticated:
+        # --- Public Landing Page Logic ---
+        plans = MembershipPlan.objects.all().order_by("price")
+        featured_classes = GymClass.objects.all()[:3]
+        announcements = Announcement.objects.filter(is_active=True)[:3]
+        gallery = GymPhoto.objects.all()[:6]
 
-    # Get the logged-in user's active membership (if any)
-    active_membership = None
-    if request.user.is_authenticated:
-        member = getattr(request.user, "member_profile", None)
-        if member:
-            active_membership = Membership.objects.filter(
-                member=member, is_active=True
-            ).select_related("plan").first()
-
-    return render(request, "gym/home.html", {
-        "plans": plans,
-        "featured_classes": featured_classes,
-        "announcements": announcements,
-        "gallery": gallery,
-        "active_membership": active_membership,
-    })
+        return render(request, "gym/home.html", {
+            "plans": plans,
+            "featured_classes": featured_classes,
+            "announcements": announcements,
+            "gallery": gallery,
+        })
+    
+    # --- Authenticated User Dispatcher ---
+    # We use the same logic as login_redirect_view
+    from .auth import login_redirect_view
+    return login_redirect_view(request)
 
 
 def class_schedule_view(request):

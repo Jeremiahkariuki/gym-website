@@ -6,7 +6,8 @@ from .public import home_view, class_schedule_view, contact_view
 from .portal import (
     portal_dashboard, portal_diet, portal_payments, portal_workout, 
     portal_class_toggle, portal_id_card, portal_notifications_optin,
-    portal_exercise_library, portal_progress_gallery, portal_profile_hub, portal_achievement_room
+    portal_exercise_library, portal_progress_gallery, portal_profile_hub, portal_achievement_room,
+    portal_subscribe
 )
 from .trainers import (
     trainer_list, trainer_create, trainer_detail,
@@ -76,6 +77,7 @@ __all__ = [
     "portal_dashboard", "portal_diet", "portal_payments", "portal_workout", 
     "portal_class_toggle", "portal_id_card", "portal_notifications_optin",
     "portal_exercise_library", "portal_progress_gallery", "portal_profile_hub", "portal_achievement_room",
+    "portal_subscribe",
 
     # members
     "MemberForm", "member_list", "member_create", "member_edit",
@@ -111,4 +113,3 @@ __all__ = [
     # branches
     "branch_list", "branch_create", "branch_edit", "branch_delete", "set_active_branch",
 ]
-

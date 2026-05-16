@@ -19,6 +19,18 @@
     </div>
 </div>
 
+{% if announcements %}
+<div class="card" style="margin-bottom: 1.5rem; border-left: 4px solid #f1c40f;">
+    <h2 style="margin-bottom: 0.8rem;">📢 Announcements</h2>
+    {% for announcement in announcements %}
+    <div style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #eee;">
+        <h4 style="margin: 0 0 0.3rem 0;">{{ announcement.title }}</h4>
+        <p style="margin: 0; font-size: 0.9rem; color: #666;">{{ announcement.content }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 {% if expiring_soon %}
 <div class="card" style="margin-bottom:1.5rem;">
     <h2>⏰ Expiring Memberships (Next 7 Days)</h2>

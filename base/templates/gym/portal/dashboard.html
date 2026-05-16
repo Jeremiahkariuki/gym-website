@@ -327,6 +327,25 @@
         {% endif %}
     </div>
 
+    <!-- ═══ Announcements ═══ -->
+    {% if announcements %}
+    <div class="portal-card" style="border-left: 5px solid #f1c40f;">
+        <div class="portal-card-body">
+            <div class="section-header" style="border-bottom-color: rgba(241, 196, 15, 0.1);">
+                <h3>📢 Announcements</h3>
+            </div>
+            <div style="display: grid; gap: 1rem;">
+                {% for announcement in announcements %}
+                <div style="padding: 0.5rem 0;">
+                    <h4 style="font-size: 1rem; color: #2c3e50; margin-bottom: 0.25rem;">{{ announcement.title }}</h4>
+                    <p style="font-size: 0.9rem; color: #666; line-height: 1.4;">{{ announcement.content }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- ═══ Stats ═══ -->
     <div class="stats-row">
         <div class="stat-card">

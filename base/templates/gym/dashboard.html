@@ -38,7 +38,6 @@
                 <a href="{% url 'admin_class_list' %}" class="btn">Manage Classes</a>
                 <a href="{% url 'equipment_list' %}" class="btn">Equipment Inventory</a>
                 <a href="{% url 'plan_list' %}" class="btn">View Plans</a>
-                <a href="{% url 'member_create' %}" class="btn btn-success">Add New Member</a>
                 <a href="{% url 'expense_create' %}" class="btn btn-danger" style="background-color: #e74c3c;">Add
                     Expense</a>
             </div>
@@ -77,6 +76,51 @@
         {% else %}
         <p style="color: #666; margin: 0;">No memberships expiring soon.</p>
         {% endif %}
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+    <div>
+        <h2>✉️ Recent Messages</h2>
+        <div class="card">
+            {% if recent_messages %}
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for msg in recent_messages %}
+                <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                    <a href="{% url 'contact_message_detail' msg.id %}" style="text-decoration: none; color: inherit;">
+                        <strong>{{ msg.name }}</strong> - <span style="color: #666;">{{ msg.subject }}</span>
+                        <div style="font-size: 0.8rem; color: #999;">{{ msg.created_at|timesince }} ago</div>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            <a href="{% url 'contact_message_list' %}" style="display: block; margin-top: 1rem; font-size: 0.9rem;">View
+                All
+                Messages →</a>
+            {% else %}
+            <p style="color: #666;">No new messages.</p>
+            {% endif %}
+        </div>
+    </div>
+    <div>
+        <h2>⚙️ Equipment Maintenance</h2>
+        <div class="card">
+            {% if maintenance_required %}
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for item in maintenance_required %}
+                <li
+                    style="padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                    <span>{{ item.name }}</span>
+                    <span style="color: #e74c3c; font-weight: bold;">Needs service</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <a href="{% url 'equipment_list' %}" style="display: block; margin-top: 1rem; font-size: 0.9rem;">View
+                Inventory →</a>
+            {% else %}
+            <p style="color: #27ae60;">All equipment is in good status.</p>
+            {% endif %}
+        </div>
     </div>
 </div>
 </div>

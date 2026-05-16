@@ -7,11 +7,8 @@
     style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px;">
     <h1>Members ({{ members.paginator.count }})</h1>
     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <a href="{% url 'import_members_csv' %}" class="btn" style="background-color: #3498db; color: white;">⬆ Import
-            CSV</a>
         <a href="{% url 'export_members_csv' %}" class="btn" style="background-color: #27ae60; color: white;">⬇ Export
             CSV</a>
-        <a href="{% url 'member_create' %}" class="btn btn-success">+ Add Member</a>
     </div>
 </div>
 
@@ -125,7 +122,7 @@
     {% if query %}
     <p>No members found for "<strong>{{ query }}</strong>". <a href="{% url 'member_list' %}">Clear search</a></p>
     {% else %}
-    <p>No members yet. <a href="{% url 'member_create' %}">Add the first member</a></p>
+    <p>No members yet. New members must register via the public registration page.</p>
     {% endif %}
 </div>
 {% endif %}

@@ -13,8 +13,6 @@ urlpatterns = [
     
     # Members
     path("members/", views.member_list, name="member_list"),
-    path("members/new/", views.member_create, name="member_create"),
-    path("members/import/", views.import_members_csv, name="import_members_csv"),
     path("members/<int:member_id>/", views.member_detail, name="member_detail"),
     path("members/<int:member_id>/edit/", views.member_edit, name="member_edit"),
     path("members/<int:member_id>/delete/", views.member_delete, name="member_delete"),
@@ -37,6 +35,11 @@ urlpatterns = [
     path("portal/payments/", views.portal_payments, name="portal_payments"),
     path("portal/id-card/", views.portal_id_card, name="portal_id_card"),
     path("portal/notifications/", views.portal_notifications_optin, name="portal_notifications_optin"),
+    path("portal/subscribe/<int:plan_id>/", views.portal_subscribe, name="portal_subscribe"),
+    path("portal/exercise-library/", views.portal_exercise_library, name="portal_exercise_library"),
+    path("portal/progress-gallery/", views.portal_progress_gallery, name="portal_progress_gallery"),
+    path("portal/profile-hub/", views.portal_profile_hub, name="portal_profile_hub"),
+    path("portal/achievements/", views.portal_achievement_room, name="portal_achievement_room"),
     
     # Branches
     path("admin/branches/", views.branch_list, name="branch_list"),

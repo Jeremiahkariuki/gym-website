@@ -21,6 +21,32 @@ class LoginForm(AuthenticationForm):
         })
 
 
+@login_required
+def login_redirect_view(request):
+    from django.urls import reverse
+    # Check if there is a 'next' parameter in the URL
+    next_url = request.GET.get('next')
+    if next_url and next_url != reverse('login_redirect') and next_url != '/':
+        return redirect(next_url)
+
+    # Admins get the main management dashboard
+    if request.user.is_staff:
+        return redirect("dashboard")
+    
+    # Trainers get their own portal
+    if hasattr(request.user, "trainer_profile"):
+        return redirect("trainer_portal_dashboard")
+        
+    # Members get the member portal
+    if hasattr(request.user, "member_profile"):
+        return redirect("portal_dashboard")
+    
+    # Fallback for users with no profile/role
+    # If we are already at / and redirecting to / it might cause issues
+    # but since this is usually called after login, it should be fine.
+    return render(request, "gym/home.html", {"is_authenticated": True})
+
+
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(
         required=True,
@@ -60,19 +86,7 @@ class RegistrationForm(UserCreationForm):
                 raise forms.ValidationError("This phone number is already registered.")
         return phone
 
-@login_required
-def login_redirect_view(request):
-    if request.user.is_staff:
-        return redirect("dashboard")
-    # Trainers get their own portal
-    if hasattr(request.user, "trainer_profile"):
-        return redirect("trainer_portal_dashboard")
-    # Members get the member portal
-    if hasattr(request.user, "member_profile"):
-        return redirect("portal_dashboard")
-    
-    # Fallback for users with no profile/role
-    return redirect("home")
+
 
 
 from ..models import Member
@@ -133,6 +147,7 @@ def staff_create(request):
 
 
 def register_view(request):
+    next_url = request.GET.get('next', '')
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -146,8 +161,11 @@ def register_view(request):
                         email=user.email,
                         phone=form.cleaned_data.get("phone") or None
                     )
-                login(request, user)
-                return redirect("portal_dashboard")
+                messages.success(request, "Account created successfully! Please login to continue.")
+                login_url = redirect("login").url
+                if next_url:
+                    return redirect(f"{login_url}?next={next_url}")
+                return redirect("login")
             except IntegrityError:
                 form.add_error("phone", "This phone number is already in use.")
     else:

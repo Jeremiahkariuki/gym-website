@@ -5,7 +5,7 @@ from django.db import models as db_models
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from ..models import Attendance, Member, Membership
+from ..models import Attendance, Member, Membership, ContactMessage, Equipment
 
 
 @login_required
@@ -44,6 +44,14 @@ def dashboard(request):
         expiring_soon = expiring_soon.filter(member__branch_id=active_branch_id)
     
     expiring_soon = expiring_soon.order_by("end_date")
+    
+    # Recent Contact Messages
+    recent_messages = ContactMessage.objects.all().order_by("-created_at")[:5]
+    
+    # Equipment requiring maintenance
+    maintenance_required = Equipment.objects.filter(status="maintenance")
+    if active_branch_id:
+        maintenance_required = maintenance_required.filter(branch_id=active_branch_id)
 
     return render(
         request,
@@ -57,6 +65,8 @@ def dashboard(request):
             "present_today": present_today,
             "expiring_soon": expiring_soon,
             "active_branch_id": active_branch_id,
+            "recent_messages": recent_messages,
+            "maintenance_required": maintenance_required,
         },
     )
 
