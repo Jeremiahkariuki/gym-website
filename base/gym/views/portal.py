@@ -10,10 +10,13 @@ from django.shortcuts import get_object_or_404
 
 @login_required
 def portal_dashboard(request):
-    try:
-        member = request.user.member_profile
-    except Member.DoesNotExist:
-        return redirect("login")
+    member = getattr(request.user, 'member_profile', None)
+    if not member:
+        # If they are staff but somehow reached here, send back to admin dash
+        if request.user.is_staff:
+            return redirect("dashboard")
+        messages.error(request, "Your member profile is missing. Please contact support.")
+        return redirect("home")
         
     active_membership = member.memberships.filter(is_active=True).first()
     recent_payments = member.payments.all().order_by("-paid_on")[:5]

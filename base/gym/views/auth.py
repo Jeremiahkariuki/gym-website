@@ -34,11 +34,11 @@ def login_redirect_view(request):
         return redirect("dashboard")
     
     # Trainers get their own portal
-    if hasattr(request.user, "trainer_profile"):
+    if getattr(request.user, "trainer_profile", None):
         return redirect("trainer_portal_dashboard")
         
     # Members get the member portal
-    if hasattr(request.user, "member_profile"):
+    if getattr(request.user, "member_profile", None):
         return redirect("portal_dashboard")
     
     # Fallback for users with no profile/role

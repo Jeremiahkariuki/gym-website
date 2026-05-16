@@ -28,7 +28,6 @@
         text-align: center;
         padding: 4rem 1rem;
         margin-top: -2rem;
-        /* offset nav margin */
     }
 
     .hero-content {
@@ -142,6 +141,12 @@
         z-index: 2;
     }
 
+    .plan-card.popular-gym {
+        border: 2px solid var(--accent-green) !important;
+        scale: 1.05;
+        z-index: 2;
+    }
+
     .popular-badge {
         position: absolute;
         top: 20px;
@@ -239,7 +244,6 @@
         </div>
     </div>
 
-    <!-- Announcements Section -->
     {% if announcements %}
     <h2 class="section-title">📢 Latest Updates</h2>
     <div class="row g-4 mb-5">
@@ -261,7 +265,6 @@
     </div>
     {% endif %}
 
-    <!-- Gallery Section -->
     {% if gallery %}
     <h2 class="section-title">🖼️ Peak Into Our Space</h2>
     <div
@@ -287,16 +290,23 @@
         {% else %}
         <h2 class="section-title">Simple, Flexible Pricing</h2>
         {% endif %}
+
         <div class="plans-grid">
             {% for plan in plans %}
-            {% if active_membership and plan.id == active_membership.plan.id %}
-            {# ── Current Plan ── #}
-            <div class="plan-card popular" style="border: 2px solid var(--accent-green);">
+            <div
+                class="plan-card {% if plan.is_active %}popular-gym{% elif forloop.counter == 2 and not active_membership %}popular{% endif %}">
+
+                {% if plan.is_active %}
                 <div class="popular-badge" style="background: var(--accent-green);">YOUR PLAN</div>
+                {% elif forloop.counter == 2 and not active_membership %}
+                <div class="popular-badge">BEST VALUE</div>
+                {% endif %}
+
                 <h3>{{ plan.name }}</h3>
                 <div class="plan-price">KES {{ plan.price }}<span> / {{ plan.duration_days }} days</span></div>
+
                 <ul
-                    style="list-style: none; padding: 0; margin-bottom: 1rem; color: #666; font-size: 0.95rem; line-height: 2;">
+                    style="list-style: none; padding: 0; margin-bottom: 2rem; color: #666; font-size: 0.95rem; line-height: 2;">
                     <li>✓ 24/7 Gym Access</li>
                     <li>✓ Locker Room & Showers</li>
                     <li>✓ Free Trainer Consultation</li>
@@ -305,59 +315,29 @@
                     <li>✓ Personalized Diet Plan</li>
                     {% endif %}
                 </ul>
+
+                {% if user.is_authenticated %}
+                {% if active_membership %}
+                {% if plan.is_active %}
                 <div
                     style="text-align: center; padding: 0.8rem; background: #d5f5e3; border-radius: 12px; color: #1e8449; font-weight: 700;">
-                    ✅ Active until {{ active_membership.end_date|date:"M d, Y" }}
-                </div>
-            </div>
-
-            {% elif active_membership and plan.price > active_membership.plan.price %}
-            {# ── Upgrade Option ── #}
-            <div class="plan-card">
-                <h3>{{ plan.name }}</h3>
-                <div class="plan-price">KES {{ plan.price }}<span> / {{ plan.duration_days }} days</span></div>
-                <ul
-                    style="list-style: none; padding: 0; margin-bottom: 2rem; color: #666; font-size: 0.95rem; line-height: 2;">
-                    <li>✓ 24/7 Gym Access</li>
-                    <li>✓ Locker Room & Showers</li>
-                    <li>✓ Free Trainer Consultation</li>
-                    {% if plan.price > 3000 %}
-                    <li>✓ Group Classes Included</li>
-                    <li>✓ Personalized Diet Plan</li>
-                    {% endif %}
-                </ul>
-                <a href="{% url 'contact' %}" class="btn"
+                    ✅ Active until {{ active_membership.end_date|date:"M d, Y" }}</div>
+                {% else %}
+                <a href="{% url 'portal_subscribe' plan.id %}" class="btn"
                     style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #f39c12, #e67e22);">⬆
                     Upgrade</a>
-            </div>
-
-            {% elif not active_membership %}
-            {# ── Public / Not logged in ── #}
-            <div class="plan-card {% if forloop.counter == 2 %}popular{% endif %}">
-                {% if forloop.counter == 2 %}<div class="popular-badge">BEST VALUE</div>{% endif %}
-                <h3>{{ plan.name }}</h3>
-                <div class="plan-price">KES {{ plan.price }}<span> / {{ plan.duration_days }} days</span></div>
-                <ul
-                    style="list-style: none; padding: 0; margin-bottom: 2rem; color: #666; font-size: 0.95rem; line-height: 2;">
-                    <li>✓ 24/7 Gym Access</li>
-                    <li>✓ Locker Room & Showers</li>
-                    <li>✓ Free Trainer Consultation</li>
-                    {% if plan.price > 3000 %}
-                    <li>✓ Group Classes Included</li>
-                    <li>✓ Personalized Diet Plan</li>
-                    {% endif %}
-                </ul>
-                {% if user.is_authenticated %}
-                <a href="{% url 'login_redirect' %}" class="btn"
-                    style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; {% if forloop.counter == 2 %}background: var(--accent-blue);{% else %}background: #2c3e50;{% endif %}">Go
-                    to My Portal</a>
+                {% endif %}
+                {% else %}
+                <a href="{% url 'portal_subscribe' plan.id %}" class="btn"
+                    style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; background: var(--accent-blue);">{{
+                    plan.freq_label }}</a>
+                {% endif %}
                 {% else %}
                 <a href="{% url 'login' %}?next={% url 'portal_subscribe' plan.id %}" class="btn"
                     style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; {% if forloop.counter == 2 %}background: var(--accent-blue);{% else %}background: #2c3e50;{% endif %}">Join
                     Now</a>
                 {% endif %}
             </div>
-            {% endif %}
             {% endfor %}
         </div>
     </div>
