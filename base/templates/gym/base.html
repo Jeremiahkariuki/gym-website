@@ -424,10 +424,11 @@
                 {% endif %}
 
                 <a href="{% url 'login_redirect' %}" style="margin-left: 0.5rem; color: #3498db;">My Dashboard</a>
-                <a href="{% url 'logout' %}" style="margin-left: 1.5rem; opacity: 0.7;">Logout</a>
+                <a href="{% url 'logout' %}?next={{ request.path }}"
+                    style="margin-left: 1.5rem; opacity: 0.7;">Logout</a>
                 {% else %}
                 <a href="{% url 'login' %}" class="btn"
-                    style="margin-left: 1.5rem; padding: 0.4rem 1.2rem; font-size: 0.9rem;">Member Login</a>
+                    style="margin-left: 1.5rem; padding: 0.4rem 1.2rem; font-size: 0.9rem;">Login</a>
                 {% endif %}
             </div>
         </div>

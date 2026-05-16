@@ -158,4 +158,5 @@ def register_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("login")
+    next_page = request.GET.get('next', 'home')
+    return redirect(next_page)
