@@ -207,7 +207,7 @@
             {% if user.is_authenticated %}
             <a href="{% url 'login_redirect' %}" class="btn btn-large btn-success">My Dashboard</a>
             {% else %}
-            <a href="{% url 'register' %}" class="btn btn-large btn-success">Get Started Today</a>
+            <a href="{% url 'login' %}" class="btn btn-large btn-success">Get Started Today</a>
             {% endif %}
             <a href="{% url 'class_schedule' %}" class="btn btn-large"
                 style="background: transparent; border: 1px solid white;">View Schedule</a>
@@ -351,7 +351,7 @@
                     style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; {% if forloop.counter == 2 %}background: var(--accent-blue);{% else %}background: #2c3e50;{% endif %}">Go
                     to My Portal</a>
                 {% else %}
-                <a href="{% url 'register' %}" class="btn"
+                <a href="{% url 'login' %}" class="btn"
                     style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; {% if forloop.counter == 2 %}background: var(--accent-blue);{% else %}background: #2c3e50;{% endif %}">Join
                     Now</a>
                 {% endif %}
