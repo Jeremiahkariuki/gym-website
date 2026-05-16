@@ -49,6 +49,11 @@
             color: #3498db;
         }
 
+        nav a.active {
+            color: #3498db !important;
+            font-weight: 700;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -379,9 +384,12 @@
             </div>
             <div>
                 <!-- Public Links -->
-                <a href="{% url 'home' %}">Home</a>
-                <a href="{% url 'class_schedule' %}">Classes</a>
-                <a href="{% url 'contact' %}">Contact</a>
+                <a href="{% url 'home' %}"
+                    class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+                <a href="{% url 'class_schedule' %}"
+                    class="{% if request.resolver_match.url_name == 'class_schedule' %}active{% endif %}">Classes</a>
+                <a href="{% url 'contact' %}"
+                    class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a>
 
                 {% if user.is_authenticated %}
                 {% if user.is_staff %}
@@ -423,7 +431,9 @@
                 </style>
                 {% endif %}
 
-                <a href="{% url 'login_redirect' %}" style="margin-left: 0.5rem; color: #3498db;">My Dashboard</a>
+                <a href="{% url 'login_redirect' %}" style="margin-left: 0.5rem;"
+                    class="{% if request.resolver_match.url_name == 'login_redirect' or 'portal' in request.resolver_match.url_name %}active{% endif %}">My
+                    Dashboard</a>
                 <a href="{% url 'logout' %}?next={{ request.path }}"
                     style="margin-left: 1.5rem; opacity: 0.7;">Logout</a>
                 {% else %}
