@@ -134,10 +134,12 @@ def portal_exercise_library(request):
     if category:
         exercises = exercises.filter(category=category)
     
-    categories = LibraryExercise.CATEGORY_CHOICES
+    # Use extremely short keys to prevent template tag splitting
+    category_list = [{"i": c[0], "n": c[1]} for c in LibraryExercise.CATEGORY_CHOICES]
+    
     return render(request, "gym/portal/exercise_library.html", {
         "exercises": exercises,
-        "categories": categories,
+        "categories": category_list,
         "active_category": category
     })
 

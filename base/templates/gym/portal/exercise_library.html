@@ -1,18 +1,14 @@
 {% extends 'gym/base.html' %}
-
 {% block title %}Exercise Library - {{ block.super }}{% endblock %}
-
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Exercise Library</h1>
     <div class="btn-group">
-        <a href="?"
-            class="btn btn-sm {% if not active_category %}btn-primary{% else %}btn-outline-primary{% endif %}">All</a>
-        {% for cat_id, cat_name in categories %}
-        <a href="?category={{ cat_id }}"
-            class="btn btn-sm {% if active_category == cat_id %}btn-primary{% else %}btn-outline-primary{% endif %}">{{
-            cat_name }}</a>
-        {% endfor %}
+        <a href="?" class="btn btn-sm {%if not active_category%}btn-primary{%else%}btn-outline-primary{%endif%}">All</a>
+        {%for cat in categories%}
+        <a href="?category={{cat.i}}"
+            class="btn btn-sm {%if active_category == cat.i%}btn-primary{%else%}btn-outline-primary{%endif%}">{{cat.n}}</a>
+        {%endfor%}
     </div>
 </div>
 
@@ -34,23 +30,19 @@
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <h5 class="card-title mb-0">{{ exercise.name }}</h5>
                     <span
-                        class="badge {% if exercise.difficulty == 'Beginner' %}bg-success{% elif exercise.difficulty == 'Intermediate' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
-                        {{ exercise.difficulty }}
-                    </span>
+                        class="badge {% if exercise.difficulty == 'Beginner' %}bg-success{% elif exercise.difficulty == 'Intermediate' %}bg-warning text-dark{% else %}bg-danger{% endif %}">{{
+                        exercise.difficulty }}</span>
                 </div>
                 <p class="text-muted small mb-2"><i class="fas fa-tag"></i> {{ exercise.category }}</p>
                 <p class="card-text text-truncate-3" style="font-size: 0.9rem;">{{ exercise.description }}</p>
 
                 <div class="d-grid mt-3">
                     <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#exerciseModal{{ exercise.id }}">
-                        View Instructions
-                    </button>
+                        data-bs-target="#exerciseModal{{ exercise.id }}">View Instructions</button>
                     {% if exercise.video_url %}
                     <a href="{{ exercise.video_url }}" target="_blank"
-                        class="btn btn-link btn-sm text-decoration-none mt-1">
-                        <i class="fas fa-video"></i> Watch Video
-                    </a>
+                        class="btn btn-link btn-sm text-decoration-none mt-1"><i class="fas fa-video"></i> Watch
+                        Video</a>
                     {% endif %}
                 </div>
             </div>
@@ -80,9 +72,8 @@
                         </div>
                         <div class="col-md-7">
                             <h6>Instructions</h6>
-                            <div class="instruction-list text-muted" style="line-height: 1.6;">
-                                {{ exercise.instructions|linebreaks }}
-                            </div>
+                            <div class="instruction-list text-muted" style="line-height: 1.6;">{{
+                                exercise.instructions|linebreaks }}</div>
                         </div>
                     </div>
                 </div>
@@ -106,6 +97,7 @@
     .text-truncate-3 {
         display: -webkit-box;
         -webkit-line-clamp: 3;
+        line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
