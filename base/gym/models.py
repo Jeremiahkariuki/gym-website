@@ -211,9 +211,16 @@ class Trainer(models.Model):
 
 
 class TrainerAssignment(models.Model):
+    STATUS_CHOICES = [
+        ("pending", "Pending Approval"),
+        ("accepted", "Accepted"),
+        ("rejected", "Rejected"),
+    ]
     trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, related_name="assignments")
     member = models.OneToOneField(Member, on_delete=models.CASCADE, related_name="trainer_assignment")
     assigned_on = models.DateField(auto_now_add=True)
+    requested_on = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
 
     def __str__(self):
         return f"{self.trainer} → {self.member}"

@@ -19,11 +19,27 @@
         <p>
             <strong>Trainer:</strong>
             {% if member.trainer_assignment %}
-            <a href="{% url 'trainer_detail' member.trainer_assignment.trainer.id %}">{{
-                member.trainer_assignment.trainer.full_name }}</a>
-            {% else %}
-            <span style="color:#7f8c8d;">Not assigned</span>
-            {% endif %}
+            <a href="{% url 'trainer_detail' member.trainer_assignment.trainer.id %}">
+                {{ member.trainer_assignment.trainer.full_name }}
+            </a>
+            {% if member.trainer_assignment.status == 'pending' %}
+            <span
+                style="background: #f1c40f; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; vertical-align: middle; margin-left: 5px;">Pending
+                Approval</span>
+            {% if user.is_staff %}
+        <div style="margin-top: 8px;">
+            <a href="{% url 'trainer_assignment_action' member.trainer_assignment.id 'accept' %}"
+                class="btn btn-success" style="padding: 4px 10px; font-size: 0.8rem;">Approve on behalf</a>
+        </div>
+        {% endif %}
+        {% elif member.trainer_assignment.status == 'accepted' %}
+        <span style="color: #27ae60; font-size: 0.85rem; margin-left: 5px;">(Active)</span>
+        {% elif member.trainer_assignment.status == 'rejected' %}
+        <span style="color: #e74c3c; font-size: 0.85rem; margin-left: 5px;">(Rejected)</span>
+        {% endif %}
+        {% else %}
+        <span style="color:#7f8c8d;">Not assigned</span>
+        {% endif %}
         </p>
         <div class="actions" style="margin-top: 1rem;">
             <a href="{% url 'member_edit' member.id %}" class="btn">Edit</a>

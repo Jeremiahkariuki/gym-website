@@ -5,7 +5,7 @@ from django.db import models as db_models
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from ..models import Attendance, Member, Membership, ContactMessage, Equipment
+from ..models import Attendance, Member, Membership, ContactMessage, Equipment, TrainerAssignment
 
 
 @login_required
@@ -52,6 +52,11 @@ def dashboard(request):
     maintenance_required = Equipment.objects.filter(status="maintenance")
     if active_branch_id:
         maintenance_required = maintenance_required.filter(branch_id=active_branch_id)
+    
+    # Pending Trainer Assignments
+    pending_assignments = TrainerAssignment.objects.filter(status="pending").select_related("member", "trainer")
+    if active_branch_id:
+        pending_assignments = pending_assignments.filter(member__branch_id=active_branch_id)
 
     return render(
         request,
@@ -67,6 +72,7 @@ def dashboard(request):
             "active_branch_id": active_branch_id,
             "recent_messages": recent_messages,
             "maintenance_required": maintenance_required,
+            "pending_assignments": pending_assignments,
         },
     )
 

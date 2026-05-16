@@ -21,6 +21,17 @@
         {{ form.trainer }}
         <small style="color:#7f8c8d;">Choose "--- Remove trainer ---" to unassign the current trainer.</small>
     </div>
+
+    <div class="form-group"
+        style="margin-top: 1rem; border: 1px solid #e0e0e0; padding: 10px; border-radius: 6px; background-color: #f9f9f9;">
+        <label style="display: flex; align-items: center; cursor: pointer; font-weight: normal;">
+            <input type="checkbox" name="direct_assign" style="margin-right: 8px; width: 1.2rem; height: 1.2rem;">
+            <span><strong>Directly Assign</strong> (Accept on behalf of trainer)</span>
+        </label>
+        <p style="margin: 5px 0 0 28px; font-size: 0.85rem; color: #666;">
+            If checked, the assignment will be active immediately. Otherwise, it will be "Pending Approval".
+        </p>
+    </div>
     <div class="actions" style="margin-top:1rem;">
         <button type="submit" class="btn btn-success">Save</button>
         <a href="{% url 'member_detail' member.id %}" class="btn btn-danger">Cancel</a>

@@ -97,6 +97,8 @@ urlpatterns = [
     path("trainers/<int:trainer_id>/edit/", views.trainer_edit, name="trainer_edit"),
     path("trainers/<int:trainer_id>/delete/", views.trainer_delete, name="trainer_delete"),
     path("members/<int:member_id>/assign-trainer/", views.assign_trainer, name="assign_trainer"),
+    path("trainer/assignments/", views.trainer_assignment_list, name="trainer_assignment_list"),
+    path("trainer/assignment/<int:assignment_id>/<str:action>/", views.trainer_assignment_action, name="trainer_assignment_action"),
 
     # Trainer Portal
     path("trainer/dashboard/", views.trainer_portal_dashboard, name="trainer_portal_dashboard"),

@@ -12,6 +12,7 @@ from .portal import (
 from .trainers import (
     trainer_list, trainer_create, trainer_detail,
     trainer_edit, trainer_delete, assign_trainer,
+    trainer_assignment_list, trainer_assignment_action,
 )
 from .trainer_portal import trainer_portal_dashboard, trainer_portal_members
 from .reports import dashboard, mark_present, attendance_report
@@ -98,6 +99,7 @@ __all__ = [
     # trainers (admin)
     "trainer_list", "trainer_create", "trainer_detail",
     "trainer_edit", "trainer_delete", "assign_trainer",
+    "trainer_assignment_list", "trainer_assignment_action",
     # trainer portal
     "trainer_portal_dashboard", "trainer_portal_members",
     # public

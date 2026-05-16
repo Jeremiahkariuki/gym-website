@@ -216,17 +216,31 @@ def assign_trainer(request, member_id):
         form = AssignTrainerForm(request.POST)
         if form.is_valid():
             selected_trainer = form.cleaned_data["trainer"]
+            direct_assign = request.POST.get("direct_assign") == "on"
+            status = "accepted" if direct_assign else "pending"
+            
             if current_assignment:
                 if selected_trainer:
                     current_assignment.trainer = selected_trainer
+                    current_assignment.status = status
                     current_assignment.save()
-                    messages.success(request, f"Trainer updated to {selected_trainer}.")
+                    msg = f"Trainer updated to {selected_trainer}."
+                    if not direct_assign:
+                        msg += " (Pending Trainer Approval)"
+                    messages.success(request, msg)
                 else:
                     current_assignment.delete()
                     messages.success(request, "Trainer removed.")
             elif selected_trainer:
-                TrainerAssignment.objects.create(trainer=selected_trainer, member=member)
-                messages.success(request, f"{selected_trainer} assigned to {member}.")
+                TrainerAssignment.objects.create(
+                    trainer=selected_trainer, 
+                    member=member,
+                    status=status
+                )
+                msg = f"{selected_trainer} assigned to {member}."
+                if not direct_assign:
+                    msg += " (Pending Trainer Approval)"
+                messages.success(request, msg)
             return redirect("member_detail", member_id=member.id)
     else:
         initial = {"trainer": current_assignment.trainer if current_assignment else None}
@@ -237,3 +251,46 @@ def assign_trainer(request, member_id):
         "member": member,
         "current_assignment": current_assignment,
     })
+
+@login_required
+def trainer_assignment_list(request):
+    """View for trainers to see pending member assignments."""
+    try:
+        trainer = request.user.trainer_profile
+    except Trainer.DoesNotExist:
+        messages.error(request, "Only trainers can access this page.")
+        return redirect("home")
+        
+    pending_assignments = trainer.assignments.filter(status="pending").select_related("member")
+    accepted_assignments = trainer.assignments.filter(status="accepted").select_related("member")
+    
+    return render(request, "gym/trainer_portal/assignments.html", {
+        "pending": pending_assignments,
+        "accepted": accepted_assignments,
+    })
+
+@login_required
+def trainer_assignment_action(request, assignment_id, action):
+    """Action for trainers to accept or reject assignments."""
+    assignment = get_object_or_404(TrainerAssignment, id=assignment_id)
+    
+    # Check if user is the assigned trainer OR an admin (for override)
+    is_trainer = hasattr(request.user, 'trainer_profile') and assignment.trainer == request.user.trainer_profile
+    is_admin = request.user.is_staff
+    
+    if not (is_trainer or is_admin):
+        messages.error(request, "Unauthorized.")
+        return redirect("login_redirect")
+        
+    if action == "accept":
+        assignment.status = "accepted"
+        assignment.save()
+        messages.success(request, f"Assignment for {assignment.member.full_name} accepted.")
+    elif action == "reject":
+        assignment.status = "rejected"
+        assignment.save()
+        messages.warning(request, f"Assignment for {assignment.member.full_name} rejected.")
+        
+    if is_admin:
+        return redirect("member_detail", member_id=assignment.member.id)
+    return redirect("trainer_assignment_list")

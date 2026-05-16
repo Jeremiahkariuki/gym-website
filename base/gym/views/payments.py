@@ -24,12 +24,14 @@ def record_payment(request, member_id):
 
             plan = form.cleaned_data.get("plan")
             if plan:
-                membership, _ = Membership.objects.get_or_create(
+                membership, created = Membership.objects.get_or_create(
                     member=member,
                     plan=plan,
-                    is_active=True,
-                    defaults={"start_date": timezone.now()},
+                    defaults={"start_date": timezone.now(), "is_active": True},
                 )
+                if not created:
+                    membership.is_active = True
+                    membership.save()
                 payment.Membership = membership
 
             payment.save()

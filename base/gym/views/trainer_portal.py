@@ -46,9 +46,13 @@ def trainer_portal_dashboard(request):
     # Announcements
     announcements = Announcement.objects.filter(is_active=True)[:3]
 
+    # Pending Assignments
+    pending_assignments = trainer.assignments.filter(status="pending").select_related("member")
+
     return render(request, "gym/trainer_portal/dashboard.html", {
         "trainer": trainer,
         "assignments": assignments,
+        "pending_assignments": pending_assignments,
         "today_checkins": today_checkins,
         "expiring_soon": expiring_soon,
         "today": today,

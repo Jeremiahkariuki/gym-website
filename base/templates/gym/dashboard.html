@@ -123,6 +123,34 @@
         </div>
     </div>
 </div>
+
+<div style="margin-top: 2rem;">
+    <h2>⏳ Pending Trainer Requests</h2>
+    <div class="card" style="border-left: 4px solid #f1c40f;">
+        {% if pending_assignments %}
+        <div style="display: grid; gap: 0.8rem;">
+            {% for assignment in pending_assignments %}
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #fffcf0; border-radius: 8px; border: 1px solid #faebcc;">
+                <div>
+                    <strong>{{ assignment.member.full_name }}</strong> → <em>{{ assignment.trainer.full_name }}</em>
+                    <div style="font-size: 0.8rem; color: #666;">Requested {{ assignment.requested_on|timesince }} ago
+                    </div>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                    <a href="{% url 'trainer_assignment_action' assignment.id 'accept' %}" class="btn btn-success"
+                        style="padding: 4px 10px; font-size: 0.8rem;">Approve on behalf</a>
+                    <a href="{% url 'member_detail' assignment.member.id %}" class="btn"
+                        style="padding: 4px 10px; font-size: 0.8rem;">View</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p style="color: #666; margin: 0;">No pending trainer requests.</p>
+        {% endif %}
+    </div>
+</div>
 </div>
 
 <h2 style="margin-top: 2rem;">📊 Reports</h2>
