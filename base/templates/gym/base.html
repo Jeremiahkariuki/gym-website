@@ -18,6 +18,7 @@
     <link rel="apple-touch-icon" href="{% static 'icons/icon-512.png' %}">
 
     <title>{% block title %}GYMFLOW | Experience the Peak of Fitness{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'gym/css/portal.css' %}">
     <style>
         * {
             margin: 0;
@@ -432,6 +433,7 @@
                 {% endif %}
 
                 <!-- Professional Profile Dropdown -->
+                {% with m_name=user.member_profile.full_name|default:user.username %}
                 <div class="header-profile-dropdown">
                     <a href="javascript:void(0)" class="header-profile-link">
                         <div class="avatar-nav">
@@ -439,20 +441,18 @@
                             <img src="{{ user.member_profile.profile_picture }}" alt=""
                                 style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
                             {% else %}
-                            {{ user.member_profile.full_name|slice:":1"|default:user.username|slice:":1"|upper }}
+                            {{ m_name|slice:":1"|upper }}
                             {% endif %}
                         </div>
-                        <span class="d-none d-lg-inline">{{ user.member_profile.full_name|default:user.username
-                            }}</span>
+                        <span class="d-none d-lg-inline">{{ m_name }}</span>
                         <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
                     </a>
 
                     <div class="profile-dropdown-content">
                         <div class="dropdown-user-info">
-                            <span class="dropdown-user-name">{{ user.member_profile.full_name|default:user.username
-                                }}</span>
+                            <span class="dropdown-user-name">{{ m_name }}</span>
                             <span class="dropdown-user-role">
-                                {% if user.is_staff %}Administrator{% else %}Member{% endif %}
+                                {% if user.is_staff %}Admin{% else %}Member{% endif %}
                             </span>
                         </div>
                         <div class="dropdown-list">
@@ -476,6 +476,7 @@
                         </div>
                     </div>
                 </div>
+                {% endwith %}
                 {% else %}
                 <a href="{% url 'login' %}" class="btn"
                     style="margin-left: 1.5rem; padding: 0.4rem 1.2rem; font-size: 0.9rem;">Login</a>
