@@ -431,11 +431,51 @@
                 </style>
                 {% endif %}
 
-                <a href="{% url 'login_redirect' %}" style="margin-left: 0.5rem;"
-                    class="{% if request.resolver_match.url_name == 'login_redirect' or 'portal' in request.resolver_match.url_name %}active{% endif %}">My
-                    Dashboard</a>
-                <a href="{% url 'logout' %}?next={{ request.path }}"
-                    style="margin-left: 1.5rem; opacity: 0.7;">Logout</a>
+                <!-- Professional Profile Dropdown -->
+                <div class="header-profile-dropdown">
+                    <a href="javascript:void(0)" class="header-profile-link">
+                        <div class="avatar-nav">
+                            {% if user.member_profile.profile_picture %}
+                            <img src="{{ user.member_profile.profile_picture }}" alt=""
+                                style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                            {% else %}
+                            {{ user.member_profile.full_name|slice:":1"|default:user.username|slice:":1"|upper }}
+                            {% endif %}
+                        </div>
+                        <span class="d-none d-lg-inline">{{ user.member_profile.full_name|default:user.username
+                            }}</span>
+                        <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
+                    </a>
+
+                    <div class="profile-dropdown-content">
+                        <div class="dropdown-user-info">
+                            <span class="dropdown-user-name">{{ user.member_profile.full_name|default:user.username
+                                }}</span>
+                            <span class="dropdown-user-role">
+                                {% if user.is_staff %}Administrator{% else %}Member{% endif %}
+                            </span>
+                        </div>
+                        <div class="dropdown-list">
+                            <a href="{% url 'portal_dashboard' %}" class="dropdown-item-premium">
+                                <i class="fas fa-th-large"></i> Dashboard
+                            </a>
+                            <a href="{% url 'portal_profile_hub' %}" class="dropdown-item-premium">
+                                <i class="fas fa-user-circle"></i> Profile Hub
+                            </a>
+                            {% if user.is_staff %}
+                            <div class="dropdown-divider"></div>
+                            <a href="{% url 'dashboard' %}" class="dropdown-item-premium">
+                                <i class="fas fa-shield-alt"></i> Staff Panel
+                            </a>
+                            {% endif %}
+                            <div class="dropdown-divider"></div>
+                            <a href="{% url 'logout' %}?next={{ request.path }}"
+                                class="dropdown-item-premium logout-item">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 {% else %}
                 <a href="{% url 'login' %}" class="btn"
                     style="margin-left: 1.5rem; padding: 0.4rem 1.2rem; font-size: 0.9rem;">Login</a>
