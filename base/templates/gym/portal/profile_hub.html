@@ -13,49 +13,96 @@
 
     /* Compact overrides */
     .profile-hero-section {
-        padding: 2.5rem 2rem;
+        padding: 2rem 2rem;
+        background: linear-gradient(135deg, #1e293b, #0f172a);
+        border-radius: 24px;
+        margin-bottom: 0;
     }
 
     .profile-img-container {
-        width: 110px;
-        height: 110px;
+        width: 100px;
+        height: 100px;
+        border: 4px solid rgba(255, 255, 255, 0.1);
     }
 
     .glass-card {
-        margin-top: -2.5rem;
-        padding: 1.5rem !important;
+        margin-top: -2rem;
+        padding: 1.25rem !important;
+        border-radius: 24px;
     }
 
     .premium-nav-tabs .nav-link {
-        padding: 0.5rem 1.2rem;
-        font-size: 0.9rem;
+        padding: 0.4rem 1rem;
+        font-size: 0.85rem;
+        border-radius: 50px;
+    }
+
+    .form-group-premium {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label-premium {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-label-premium i {
+        color: #6366f1;
+        font-size: 0.85rem;
+    }
+
+    .status-badge-premium {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.8rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="portal-container">
+    {% with joined_date=member.joined_on|date:"M Y" m_count=member.memberships.count
+    a_count=member.achievements_earned.count m_email=member.email|default:"Not set" %}
     <div class="row justify-content-center">
-        <div class="col-lg-7 col-md-10">
+        <div class="col-lg-6 col-md-10">
             <!-- Hero Section -->
             <div class="profile-hero-section fade-in-up">
                 <div class="d-flex flex-column flex-md-row align-items-center gap-4">
-                    <div class="profile-img-container">
+                    <div class="profile-img-container shadow-lg">
                         {% if member.profile_picture %}
-                        <img src="{{ member.profile_picture }}" alt="{{ member.full_name }}">
+                        <img src="{{ member.profile_picture }}" alt="{{ member.full_name }}"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                         {% else %}
-                        <div class="profile-img-placeholder" style="font-size: 2.5rem;">
+                        <div class="profile-img-placeholder" style="font-size: 2rem;">
                             {{ member.full_name|slice:":1" }}
                         </div>
                         {% endif %}
                     </div>
                     <div class="text-center text-md-start">
-                        <h2 class="fw-bold mb-1" style="color: white;">{{ member.full_name }}</h2>
-                        <p class="mb-0 opacity-75" style="color: white;">Member since {{ member.joined_on|date:"F Y" }}
-                        </p>
-                        <div class="mt-2">
-                            <span class="badge bg-white text-primary rounded-pill px-3 shadow-sm">
-                                <i class="fas fa-check-circle me-1"></i> Active Status
+                        <h3 class="fw-bold mb-1" style="color: white; letter-spacing: -0.5px;">{{ member.full_name }}
+                        </h3>
+                        <p class="mb-0 opacity-75 small" style="color: white;">Member since {{ joined_date }}</p>
+                        <div class="mt-2 d-flex flex-wrap justify-content-center justify-content-md-start gap-2">
+                            <span class="status-badge-premium">
+                                <i class="fas fa-check-circle text-success"></i> Active
+                            </span>
+                            <span class="status-badge-premium"
+                                style="background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.3);">
+                                <i class="fas fa-crown text-warning"></i> Premium
                             </span>
                         </div>
                     </div>
@@ -66,7 +113,8 @@
             <div class="glass-card fade-in-up" style="position: relative; z-index: 2;">
                 <!-- Modern Tabs -->
                 <div class="text-center mb-4">
-                    <ul class="nav nav-pills premium-nav-tabs d-inline-flex" id="profileTab" role="tablist">
+                    <ul class="nav nav-pills premium-nav-tabs d-inline-flex" id="profileTab" role="tablist"
+                        style="background: rgba(0,0,0,0.05); padding: 4px; border-radius: 50px;">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" data-bs-toggle="pill"
                                 data-bs-target="#overview">Overview</button>
@@ -75,8 +123,7 @@
                             <button class="nav-link" data-bs-toggle="pill" data-bs-target="#edit">Edit Profile</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#goals">Fitness
-                                Goals</button>
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#goals">Goals</button>
                         </li>
                     </ul>
                 </div>
@@ -90,76 +137,69 @@
                             <div class="row g-4">
                                 <div class="col-md-12">
                                     <section class="mb-4">
-                                        <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                                            <span
-                                                style="width: 3px; height: 18px; background: #6366f1; border-radius: 2px;"></span>
+                                        <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                                            <i class="fas fa-user-tag text-primary" style="font-size: 0.9rem;"></i>
                                             About Me
-                                        </h5>
+                                        </h6>
                                         <div class="p-3 bg-light rounded-4 border-0">
-                                            <p class="text-muted mb-0" style="line-height: 1.6; font-size: 0.95rem;">
-                                                {% if member.bio %}{{ member.bio }}{% else %}Welcome! Update your bio to
-                                                tell us about your fitness journey.{% endif %}
+                                            <p class="text-muted mb-0" style="line-height: 1.5; font-size: 0.9rem;">
+                                                {% if member.bio %}{{ member.bio }}{% else %}Update your bio to tell us
+                                                about your journey.{% endif %}
                                             </p>
                                         </div>
                                     </section>
 
-                                    <section>
-                                        <div class="row g-3">
-                                            <div class="col-6">
-                                                <div class="mini-stat-card shadow-sm p-3">
-                                                    <div class="stat-icon-wrap"
-                                                        style="width: 36px; height: 36px; font-size: 1rem;">
-                                                        <i class="fas fa-dumbbell"></i>
-                                                    </div>
-                                                    <span class="stat-val-premium text-primary"
-                                                        style="font-size: 1.25rem;">{{ member.memberships.count
-                                                        }}</span>
-                                                    <span class="small text-muted fw-bold text-uppercase"
-                                                        style="font-size: 0.7rem;">Active Plans</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="mini-stat-card shadow-sm p-3">
-                                                    <div class="stat-icon-wrap"
-                                                        style="width: 36px; height: 36px; font-size: 1rem; background: rgba(45, 212, 191, 0.1); color: #2dd4bf;">
-                                                        <i class="fas fa-trophy"></i>
-                                                    </div>
-                                                    <span class="stat-val-premium"
-                                                        style="font-size: 1.25rem; color: #0d9488;">{{
-                                                        member.achievements_earned.count }}</span>
-                                                    <span class="small text-muted fw-bold text-uppercase"
-                                                        style="font-size: 0.7rem;">Achievements</span>
-                                                </div>
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-6">
+                                            <div class="mini-stat-card shadow-sm p-2 text-center"
+                                                style="border-radius: 16px;">
+                                                <i class="fas fa-calendar-check text-primary mb-1"
+                                                    style="font-size: 1rem;"></i>
+                                                <div class="fw-bold" style="font-size: 1.1rem; color: #1e293b;">{{
+                                                    m_count }}</div>
+                                                <div class="small text-muted text-uppercase"
+                                                    style="font-size: 0.6rem; letter-spacing: 0.5px;">Active Plans</div>
                                             </div>
                                         </div>
-                                    </section>
+                                        <div class="col-6">
+                                            <div class="mini-stat-card shadow-sm p-2 text-center"
+                                                style="border-radius: 16px;">
+                                                <i class="fas fa-medal text-warning mb-1" style="font-size: 1rem;"></i>
+                                                <div class="fw-bold" style="font-size: 1.1rem; color: #1e293b;">{{
+                                                    a_count }}</div>
+                                                <div class="small text-muted text-uppercase"
+                                                    style="font-size: 0.6rem; letter-spacing: 0.5px;">Earned</div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <section class="mt-4">
-                                        <div class="info-box-premium p-3">
-                                            <h5 class="fw-bold mb-3">Contact Information</h5>
-                                            <div class="row g-2">
-                                                <div class="col-sm-6 mb-2">
-                                                    <div class="info-item mb-0">
-                                                        <div class="info-icon" style="width: 32px; height: 32px;"><i
-                                                                class="fas fa-envelope" style="font-size: 0.8rem;"></i>
+                                    <section>
+                                        <div class="info-box-premium p-3" style="border-radius: 20px;">
+                                            <h6 class="fw-bold mb-3">Quick Contact</h6>
+                                            <div class="row g-3">
+                                                <div class="col-12">
+                                                    <div class="d-flex align-items-center gap-3">
+                                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                                            style="width: 32px; height: 32px;">
+                                                            <i class="fas fa-envelope" style="font-size: 0.8rem;"></i>
                                                         </div>
                                                         <div class="small">
-                                                            <div class="text-muted" style="font-size: 0.7rem;">Email
-                                                            </div>
-                                                            <div class="fw-bold"
-                                                                style="word-break: break-all; font-size: 0.85rem;">{{
-                                                                member.email|default:"Not provided" }}</div>
+                                                            <div class="text-muted" style="font-size: 0.65rem;">Email
+                                                                Address</div>
+                                                            <div class="fw-bold" style="font-size: 0.85rem;">{{ m_email
+                                                                }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <div class="info-item mb-0">
-                                                        <div class="info-icon" style="width: 32px; height: 32px;"><i
-                                                                class="fas fa-phone" style="font-size: 0.8rem;"></i>
+                                                <div class="col-12">
+                                                    <div class="d-flex align-items-center gap-3">
+                                                        <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center"
+                                                            style="width: 32px; height: 32px;">
+                                                            <i class="fas fa-phone" style="font-size: 0.8rem;"></i>
                                                         </div>
                                                         <div class="small">
-                                                            <div class="text-muted" style="font-size: 0.7rem;">Phone
-                                                            </div>
+                                                            <div class="text-muted" style="font-size: 0.65rem;">Phone
+                                                                Number</div>
                                                             <div class="fw-bold" style="font-size: 0.85rem;">{{
                                                                 member.phone }}</div>
                                                         </div>
@@ -175,61 +215,67 @@
                         <!-- Edit Profile Tab -->
                         <div class="tab-pane fade" id="edit">
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label" style="font-size: 0.8rem;">FULL NAME</label>
+                                <div class="col-md-6 form-group-premium">
+                                    <label class="form-label-premium"><i class="fas fa-signature"></i> Full Name</label>
                                     {{ form.full_name }}
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label" style="font-size: 0.8rem;">EMAIL ADDRESS</label>
+                                <div class="col-md-6 form-group-premium">
+                                    <label class="form-label-premium"><i class="fas fa-at"></i> Email</label>
                                     {{ form.email }}
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label" style="font-size: 0.8rem;">PHONE NUMBER</label>
+                                <div class="col-md-6 form-group-premium">
+                                    <label class="form-label-premium"><i class="fas fa-mobile-alt"></i> Phone</label>
                                     {{ form.phone }}
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label" style="font-size: 0.8rem;">PROFILE PICTURE URL</label>
+                                <div class="col-md-6 form-group-premium">
+                                    <label class="form-label-premium"><i class="fas fa-image"></i> Avatar URL</label>
                                     {{ form.profile_picture }}
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label" style="font-size: 0.8rem;">BIO / INTRODUCTION</label>
+                            <div class="form-group-premium">
+                                <label class="form-label-premium"><i class="fas fa-quote-left"></i> About You
+                                    (Bio)</label>
                                 {{ form.bio }}
                             </div>
-                            <div class="mb-4">
-                                <label class="form-label" style="font-size: 0.8rem;">RESIDENTIAL ADDRESS</label>
+                            <div class="form-group-premium">
+                                <label class="form-label-premium"><i class="fas fa-map-marker-alt"></i> Residential
+                                    Address</label>
                                 {{ form.address }}
                             </div>
-                            <!-- All fields are in the same form, no need for hidden duplicates -->
                             <div class="pt-2">
-                                <button type="submit" class="btn btn-premium w-100 py-2">Update Profile
-                                    Settings</button>
+                                <button type="submit" class="btn btn-premium w-100 py-3">
+                                    <i class="fas fa-save me-2"></i> Update Profile
+                                </button>
                             </div>
                         </div>
 
                         <!-- Goals Tab -->
                         <div class="tab-pane fade" id="goals">
-                            <div class="mb-4">
-                                <label class="form-label" style="font-size: 0.8rem;">PRIMARY FITNESS OBJECTIVE</label>
+                            <div class="form-group-premium">
+                                <label class="form-label-premium"><i class="fas fa-bullseye"></i> Main Fitness
+                                    Goal</label>
                                 {{ form.fitness_goal }}
-                                <div class="form-text mt-1 text-muted" style="font-size: 0.75rem;">Examples: "Lose 5kg",
-                                    "Build Muscle"</div>
+                                <div class="form-text mt-1 text-muted small">Example: "Increase muscle mass" or "Lose
+                                    2kg/month"</div>
                             </div>
-                            <div class="mb-4">
-                                <label class="form-label" style="font-size: 0.8rem;">MEDICAL CONDITIONS &
-                                    LIMITATIONS</label>
+                            <div class="form-group-premium">
+                                <label class="form-label-premium"><i class="fas fa-notes-medical"></i> Health
+                                    Considerations</label>
                                 {{ form.medical_conditions }}
-                                <div class="form-text mt-1 text-muted" style="font-size: 0.75rem;">Vital for our
-                                    trainers to ensure your safety.</div>
+                                <div class="form-text mt-1 text-muted small">Help us keep you safe during your workouts.
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-premium w-100 py-2">Save Fitness Goals</button>
+                            <button type="submit" class="btn btn-premium w-100 py-3">
+                                <i class="fas fa-heartbeat me-2"></i> Save Fitness Goals
+                            </button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    {% endwith %}
 </div>
 {% endblock %}

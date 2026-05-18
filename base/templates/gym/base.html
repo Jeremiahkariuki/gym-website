@@ -18,6 +18,10 @@
     <link rel="apple-touch-icon" href="{% static 'icons/icon-512.png' %}">
 
     <title>{% block title %}GYMFLOW | Experience the Peak of Fitness{% endblock %}</title>
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'gym/css/portal.css' %}">
     <style>
         * {
@@ -385,12 +389,18 @@
             </div>
             <div>
                 <!-- Public Links -->
-                <a href="{% url 'home' %}"
-                    class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+                <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                    <i class="fas fa-home" style="font-size: 0.9rem; margin-right: 4px; opacity: 0.7;"></i> Home
+                </a>
                 <a href="{% url 'class_schedule' %}"
-                    class="{% if request.resolver_match.url_name == 'class_schedule' %}active{% endif %}">Classes</a>
+                    class="{% if request.resolver_match.url_name == 'class_schedule' %}active{% endif %}">
+                    <i class="fas fa-calendar-alt" style="font-size: 0.9rem; margin-right: 4px; opacity: 0.7;"></i>
+                    Classes
+                </a>
                 <a href="{% url 'contact' %}"
-                    class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a>
+                    class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+                    <i class="fas fa-envelope" style="font-size: 0.9rem; margin-right: 4px; opacity: 0.7;"></i> Contact
+                </a>
 
                 {% if user.is_authenticated %}
                 {% if user.is_staff %}
@@ -520,18 +530,32 @@
                 <div>
                     <h4 style="margin-bottom: 1rem;">Quick Links</h4>
                     <ul style="list-style: none; padding: 0; opacity: 0.8; font-size: 0.9rem;">
-                        <li style="margin-bottom: 0.5rem;"><a href="{% url 'home' %}"
-                                style="color: inherit; text-decoration: none;">Home</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="{% url 'class_schedule' %}"
-                                style="color: inherit; text-decoration: none;">Classes</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="{% url 'contact' %}"
-                                style="color: inherit; text-decoration: none;">Contact</a></li>
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="{% url 'home' %}" style="color: inherit; text-decoration: none;">
+                                <i class="fas fa-chevron-right"
+                                    style="font-size: 0.7rem; margin-right: 8px; opacity: 0.5;"></i> Home
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="{% url 'class_schedule' %}" style="color: inherit; text-decoration: none;">
+                                <i class="fas fa-chevron-right"
+                                    style="font-size: 0.7rem; margin-right: 8px; opacity: 0.5;"></i> Classes
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="{% url 'contact' %}" style="color: inherit; text-decoration: none;">
+                                <i class="fas fa-chevron-right"
+                                    style="font-size: 0.7rem; margin-right: 8px; opacity: 0.5;"></i> Contact
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <div>
                     <h4 style="margin-bottom: 1rem;">Connect</h4>
                     <div style="display: flex; gap: 1rem; font-size: 1.2rem;">
-                        <span>FB</span> <span>IG</span> <span>X</span>
+                        <a href="#" style="color: white; opacity: 0.8;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="color: white; opacity: 0.8;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="color: white; opacity: 0.8;"><i class="fab fa-x-twitter"></i></a>
                     </div>
                 </div>
             </div>
