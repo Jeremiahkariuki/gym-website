@@ -175,6 +175,11 @@ def register_view(request):
 
 
 def logout_view(request):
+    """
+    Handle logout and redirect to the 'next' page if provided,
+    otherwise fallback to the configured HOME page.
+    """
     logout(request)
-    next_page = request.GET.get('next', 'home')
+    # Get redirect target from 'next' parameter or use the setting
+    next_page = request.GET.get('next') or settings.LOGOUT_REDIRECT_URL
     return redirect(next_page)

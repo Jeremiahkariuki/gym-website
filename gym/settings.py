@@ -147,7 +147,7 @@ STORAGES = {
 
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "login_redirect"
-LOGOUT_REDIRECT_URL = "login"
+LOGOUT_REDIRECT_URL = "home"
 
 # Security settings for production
 if not DEBUG:

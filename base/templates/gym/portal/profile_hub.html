@@ -1,105 +1,135 @@
 {% extends 'gym/base.html' %}
+{% load static %}
 
 {% block title %}Profile Hub - {{ block.super }}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/portal.css' %}">
+<style>
+    .portal-container {
+        padding-top: 2rem;
+        padding-bottom: 5rem;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-9">
-        <div class="card border-0 shadow-lg overflow-hidden" style="border-radius: 20px;">
-            <div class="card-header bg-dark text-white p-5 border-0 position-relative">
-                <div class="d-flex align-items-center gap-4">
-                    <div class="position-relative">
+<div class="portal-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Hero Section -->
+            <div class="profile-hero-section fade-in-up">
+                <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+                    <div class="profile-img-container">
                         {% if member.profile_picture %}
-                        <img src="{{ member.profile_picture }}"
-                            class="rounded-circle border border-4 border-white shadow"
-                            style="width: 120px; height: 120px; object-fit: cover;">
+                        <img src="{{ member.profile_picture }}" alt="{{ member.full_name }}">
                         {% else %}
-                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center border border-4 border-white shadow"
-                            style="width: 120px; height: 120px;">
-                            <span class="display-4 text-white">{{ member.full_name|slice:":1" }}</span>
+                        <div class="profile-img-placeholder">
+                            {{ member.full_name|slice:":1" }}
                         </div>
                         {% endif %}
                     </div>
-                    <div>
-                        <h1 class="mb-1 text-white">{{ member.full_name }}</h1>
-                        <p class="mb-0 opacity-75">Member since {{ member.joined_on|date:"F Y" }}</p>
-                        <span class="badge bg-primary mt-2">Active Member</span>
+                    <div class="text-center text-md-start">
+                        <h1 class="display-5 fw-bold mb-1">{{ member.full_name }}</h1>
+                        <p class="lead mb-0 opacity-75">Dedicated Member since {{ member.joined_on|date:"F Y" }}</p>
+                        <div class="mt-3">
+                            <span class="badge bg-white text-primary rounded-pill px-3 py-2 fw-bold shadow-sm">
+                                <i class="fas fa-check-circle me-1"></i> Active Status
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="card-body p-5">
-                <ul class="nav nav-pills mb-5 gap-2" id="profileTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active px-4" data-bs-toggle="pill"
-                            data-bs-target="#overview">Overview</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link px-4" data-bs-toggle="pill" data-bs-target="#edit">Edit Profile</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link px-4" data-bs-toggle="pill" data-bs-target="#goals">Goals &
-                            Health</button>
-                    </li>
-                </ul>
+            <!-- Content Card -->
+            <div class="glass-card mt-n4 p-4 p-md-5 fade-in-up" style="margin-top: -3rem; position: relative; z-index: 2;">
+                <!-- Modern Tabs -->
+                <div class="text-center mb-4">
+                    <ul class="nav nav-pills premium-nav-tabs d-inline-flex" id="profileTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#overview">Overview</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#edit">Edit Profile</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#goals">Fitness Goals</button>
+                        </li>
+                    </ul>
+                </div>
 
                 <div class="tab-content" id="profileTabContent">
                     <!-- Overview Tab -->
                     <div class="tab-pane fade show active" id="overview">
-                        <div class="row g-4">
+                        <div class="row g-5">
                             <div class="col-md-7">
-                                <h5 class="fw-bold mb-3">About Me</h5>
-                                <p class="text-muted" style="line-height: 1.8;">
-                                    {% if member.bio %}{{ member.bio }}{% else %}No bio provided yet. Tell us about your
-                                    fitness journey!{% endif %}
-                                </p>
+                                <section class="mb-5">
+                                    <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                                        <span style="width: 4px; height: 24px; background: #6366f1; border-radius: 2px;"></span>
+                                        About Your Journey
+                                    </h4>
+                                    <div class="p-4 bg-light rounded-4 border-0">
+                                        <p class="text-muted mb-0" style="line-height: 1.8; font-size: 1.05rem;">
+                                            {% if member.bio %}{{ member.bio }}{% else %}Welcome to your profile hub! Take a moment to update your bio and tell us about your fitness journey.{% endif %}
+                                        </p>
+                                    </div>
+                                </section>
 
-                                <div class="mt-4">
-                                    <h5 class="fw-bold mb-3">Statistics</h5>
+                                <section>
+                                    <h4 class="fw-bold mb-4">Your Records</h4>
                                     <div class="row g-3">
-                                        <div class="col-6">
-                                            <div class="p-3 bg-light rounded-3 text-center">
-                                                <div class="h3 fw-bold text-primary mb-0">{{ member.memberships.count }}
+                                        <div class="col-sm-6">
+                                            <div class="mini-stat-card shadow-sm">
+                                                <div class="stat-icon-wrap">
+                                                    <i class="fas fa-dumbbell"></i>
                                                 </div>
-                                                <div class="small text-muted">Total Plans</div>
+                                                <span class="stat-val-premium text-primary">{{ member.memberships.count }}</span>
+                                                <span class="small text-muted fw-bold">Active Plans</span>
                                             </div>
                                         </div>
-                                        <div class="col-6">
-                                            <div class="p-3 bg-light rounded-3 text-center">
-                                                <div class="h3 fw-bold text-success mb-0">{{
-                                                    member.achievements_earned.count }}</div>
-                                                <div class="small text-muted">Achievements</div>
+                                        <div class="col-sm-6">
+                                            <div class="mini-stat-card shadow-sm">
+                                                <div class="stat-icon-wrap" style="background: rgba(45, 212, 191, 0.1); color: #2dd4bf;">
+                                                    <i class="fas fa-trophy"></i>
+                                                </div>
+                                                <span class="stat-val-premium" style="color: #0d9488;">{{ member.achievements_earned.count }}</span>
+                                                <span class="small text-muted fw-bold">Achievements</span>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </section>
                             </div>
+
                             <div class="col-md-5">
-                                <div class="p-4 bg-light rounded-4">
-                                    <h5 class="fw-bold mb-3">Contact Info</h5>
-                                    <ul class="list-unstyled mb-0">
-                                        <li class="mb-3 d-flex align-items-center gap-3">
-                                            <i class="fas fa-envelope text-primary"></i>
-                                            <div>
-                                                <div class="small text-muted">Email</div>
-                                                <div>{{ member.email|default:"Not set" }}</div>
-                                            </div>
-                                        </li>
-                                        <li class="mb-3 d-flex align-items-center gap-3">
-                                            <i class="fas fa-phone text-primary"></i>
-                                            <div>
-                                                <div class="small text-muted">Phone</div>
-                                                <div>{{ member.phone }}</div>
-                                            </div>
-                                        </li>
-                                        <li class="mb-0 d-flex align-items-center gap-3">
-                                            <i class="fas fa-map-marker-alt text-primary"></i>
-                                            <div>
-                                                <div class="small text-muted">Address</div>
-                                                <div>{{ member.address|default:"Not set" }}</div>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                <div class="info-box-premium">
+                                    <h4 class="fw-bold mb-4">Contact Details</h4>
+                                    <div class="info-item">
+                                        <div class="info-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div>
+                                            <div class="small text-muted">Email</div>
+                                            <div class="fw-bold">{{ member.email|default:"Not provided" }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-icon">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                        <div>
+                                            <div class="small text-muted">Phone</div>
+                                            <div class="fw-bold">{{ member.phone }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="info-item mb-0">
+                                        <div class="info-icon">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div>
+                                            <div class="small text-muted">Location</div>
+                                            <div class="fw-bold">{{ member.address|default:"Not set" }}</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -107,56 +137,57 @@
 
                     <!-- Edit Profile Tab -->
                     <div class="tab-pane fade" id="edit">
-                        <form method="post">
+                        <form method="post" class="premium-form">
                             {% csrf_token %}
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Full Name</label>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">FULL NAME</label>
                                     {{ form.full_name }}
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Email Address</label>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">EMAIL ADDRESS</label>
                                     {{ form.email }}
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Phone</label>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">PHONE NUMBER</label>
                                     {{ form.phone }}
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Profile Picture URL</label>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">PROFILE PICTURE URL</label>
                                     {{ form.profile_picture }}
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Bio</label>
+                            <div class="mb-4">
+                                <label class="form-label">BIO / INTRODUCTION</label>
                                 {{ form.bio }}
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Street Address</label>
+                            <div class="mb-4">
+                                <label class="form-label">RESIDENTIAL ADDRESS</label>
                                 {{ form.address }}
                             </div>
-                            <hr class="my-4">
-                            <button type="submit" class="btn btn-primary px-5">Update Profile</button>
+                            <div class="pt-3">
+                                <button type="submit" class="btn btn-premium w-100 w-md-auto">Update Profile Settings</button>
+                            </div>
                         </form>
                     </div>
 
                     <!-- Goals Tab -->
                     <div class="tab-pane fade" id="goals">
-                        <form method="post">
+                        <form method="post" class="premium-form">
                             {% csrf_token %}
                             <div class="mb-4">
-                                <label class="form-label fw-bold">Your Primary Fitness Goal</label>
+                                <label class="form-label">PRIMARY FITNESS OBJECTIVE</label>
                                 {{ form.fitness_goal }}
-                                <div class="form-text">e.g., "Build 3kg of muscle", "Run a 5k", "General fitness"</div>
+                                <div class="form-text mt-2">Examples: "Lose 5kg", "Bench press 100kg", "Run a marathon"</div>
                             </div>
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Medical Conditions & Injuries</label>
+                            <div class="mb-5">
+                                <label class="form-label">MEDICAL CONDITIONS & LIMITATIONS</label>
                                 {{ form.medical_conditions }}
-                                <div class="form-text">Please list any conditions our trainers should be aware of.</div>
+                                <div class="form-text mt-2">Vital for our trainers to ensure your safety.</div>
                             </div>
-                            <button type="submit" class="btn btn-primary px-5">Save Goals</button>
+                            <button type="submit" class="btn btn-premium w-100 w-md-auto">Save Fitness Goals</button>
                         </form>
                     </div>
                 </div>
@@ -164,22 +195,4 @@
         </div>
     </div>
 </div>
-
-<style>
-    .nav-pills .nav-link.active {
-        background-color: #3498db;
-        border-radius: 10px;
-    }
-
-    .nav-pills .nav-link {
-        color: #6c757d;
-        font-weight: 500;
-        border-radius: 10px;
-    }
-
-    .form-control:focus {
-        border-color: #3498db;
-        box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.1);
-    }
-</style>
 {% endblock %}
