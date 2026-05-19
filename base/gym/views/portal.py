@@ -18,7 +18,7 @@ def portal_dashboard(request):
         messages.error(request, "Your member profile is missing. Please contact support.")
         return redirect("home")
         
-    active_membership = member.memberships.filter(is_active=True).first()
+    active_membership = member.active_membership
     recent_payments = member.payments.all().order_by("-paid_on")[:5]
     
     # Health Progress Data

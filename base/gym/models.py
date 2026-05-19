@@ -43,8 +43,21 @@ class Member(models.Model):
 
     @property
     def active_plan_name(self):
-        active = self.memberships.filter(is_active=True).first()
+        active = self.active_membership
         return active.plan.name if active else None
+
+    @property
+    def active_membership(self):
+        """Returns the current valid membership if one exists."""
+        return self.memberships.filter(is_active=True).first()
+    
+    @property
+    def is_currently_active(self):
+        """Checks if the member has a valid, non-expired membership."""
+        active = self.active_membership
+        if active and not active.is_expired:
+            return True
+        return False
 
     def __str__(self):
         return self.full_name 
@@ -69,6 +82,13 @@ class Membership(models.Model):
         if not self.end_date and self.plan_id and self.start_date:
             self.end_date = self.start_date + timedelta(days=self.plan.duration_days)
         super().save(*args, **kwargs)
+
+    @property
+    def is_expired(self):
+        """Returns True if the membership end date has passed."""
+        if self.end_date:
+            return self.end_date < timezone.now().date()
+        return False
 
     def __str__(self):
         return f"{self.member} - {self.plan}"

@@ -98,9 +98,21 @@
                             Member since {{ member.joined_on|date:"M Y" }}
                         </p>
                         <div class="mt-2 d-flex flex-wrap justify-content-center justify-content-md-start gap-2">
+                            {% if member.is_currently_active %}
                             <span class="status-badge-premium">
                                 <i class="fas fa-check-circle text-success"></i> Active
                             </span>
+                            {% elif member.active_membership and member.active_membership.is_expired %}
+                            <span class="status-badge-premium"
+                                style="border-color: rgba(231,76,60,0.5); color: #ff7675;">
+                                <i class="fas fa-exclamation-circle" style="color: #ff7675;"></i> Expired
+                            </span>
+                            {% else %}
+                            <span class="status-badge-premium"
+                                style="border-color: rgba(255,255,255,0.1); opacity: 0.6;">
+                                <i class="fas fa-times-circle text-danger"></i> Inactive
+                            </span>
+                            {% endif %}
                             <span class="status-badge-premium"
                                 style="background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.3);">
                                 <i class="fas fa-crown text-warning"></i> Premium
