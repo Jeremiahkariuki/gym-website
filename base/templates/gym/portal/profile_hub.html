@@ -75,7 +75,6 @@
 
 {% block content %}
 <div class="portal-container">
-    {% with joined_date=member.joined_on|date:"M Y" m_count=member.memberships.count a_count=member.achievements_earned.count m_email=member.email|default:"Not set" %}
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-10">
             <!-- Hero Section -->
@@ -94,7 +93,9 @@
                     <div class="text-center text-md-start">
                         <h3 class="fw-bold mb-1" style="color: white; letter-spacing: -0.5px;">{{ member.full_name }}
                         </h3>
-                        <p class="mb-0 opacity-75 small" style="color: white;">Member since {{ joined_date }}</p>
+                        <p class="mb-0 opacity-75 small" style="color: white;">
+                            Member since {{ member.joined_on|date:"M Y" }}
+                        </p>
                         <div class="mt-2 d-flex flex-wrap justify-content-center justify-content-md-start gap-2">
                             <span class="status-badge-premium">
                                 <i class="fas fa-check-circle text-success"></i> Active
@@ -154,8 +155,9 @@
                                                 style="border-radius: 16px;">
                                                 <i class="fas fa-calendar-check text-primary mb-1"
                                                     style="font-size: 1rem;"></i>
-                                                <div class="fw-bold" style="font-size: 1.1rem; color: #1e293b;">{{
-                                                    m_count }}</div>
+                                                <div class="fw-bold" style="font-size: 1.1rem; color: #1e293b;">
+                                                    {{ m_count }}
+                                                </div>
                                                 <div class="small text-muted text-uppercase"
                                                     style="font-size: 0.6rem; letter-spacing: 0.5px;">Active Plans</div>
                                             </div>
@@ -164,8 +166,9 @@
                                             <div class="mini-stat-card shadow-sm p-2 text-center"
                                                 style="border-radius: 16px;">
                                                 <i class="fas fa-medal text-warning mb-1" style="font-size: 1rem;"></i>
-                                                <div class="fw-bold" style="font-size: 1.1rem; color: #1e293b;">{{
-                                                    a_count }}</div>
+                                                <div class="fw-bold" style="font-size: 1.1rem; color: #1e293b;">
+                                                    {{ a_count }}
+                                                </div>
                                                 <div class="small text-muted text-uppercase"
                                                     style="font-size: 0.6rem; letter-spacing: 0.5px;">Earned</div>
                                             </div>
@@ -185,8 +188,9 @@
                                                         <div class="small">
                                                             <div class="text-muted" style="font-size: 0.65rem;">Email
                                                                 Address</div>
-                                                            <div class="fw-bold" style="font-size: 0.85rem;">{{ m_email
-                                                                }}</div>
+                                                            <div class="fw-bold" style="font-size: 0.85rem;">
+                                                                {{ m_email }}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -199,8 +203,9 @@
                                                         <div class="small">
                                                             <div class="text-muted" style="font-size: 0.65rem;">Phone
                                                                 Number</div>
-                                                            <div class="fw-bold" style="font-size: 0.85rem;">{{
-                                                                member.phone }}</div>
+                                                            <div class="fw-bold" style="font-size: 0.85rem;">
+                                                                {{ member.phone }}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -275,6 +280,5 @@
             </div>
         </div>
     </div>
-    {% endwith %}
 </div>
 {% endblock %}

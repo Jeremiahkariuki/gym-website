@@ -212,7 +212,10 @@ def portal_profile_hub(request):
         
     return render(request, "gym/portal/profile_hub.html", {
         "member": member,
-        "form": form
+        "form": form,
+        "m_count": member.memberships.count(),
+        "a_count": member.achievements_earned.count(),
+        "m_email": member.email if member.email else "Not set"
     })
 
 @login_required
