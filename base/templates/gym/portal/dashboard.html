@@ -317,8 +317,7 @@
         <div class="portal-hero-badge" style="border-color: rgba(231,76,60,0.6); background: rgba(231,76,60,0.1);">
             <div class="plan-label" style="color: #ff7675;">Plan Expired</div>
             <div class="plan-name" style="color: #ff7675;">{{ active_membership.plan.name }}</div>
-            <div class="plan-expiry" style="opacity: 1; font-weight: 700; color: #ff7675;">Expired on {{
-                active_membership.end_date|date:"M d, Y" }}</div>
+            <div class="plan-expiry" style="opacity: 1; font-weight: 700; color: #ff7675;">Expired on {{ active_membership.end_date|date:"M d, Y" }}</div>
             <a href="{% url 'portal_payments' %}" class="btn btn-sm btn-danger mt-2"
                 style="font-size: 0.7rem; padding: 0.2rem 0.8rem; border-radius: 20px;">Activate Now</a>
         </div>
