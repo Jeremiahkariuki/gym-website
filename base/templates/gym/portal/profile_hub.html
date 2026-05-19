@@ -82,7 +82,8 @@
                 <div class="d-flex flex-column flex-md-row align-items-center gap-4">
                     <div class="profile-img-container shadow-lg">
                         {% if member.profile_picture %}
-                        <img src="{{ member.profile_picture }}" alt="{{ member.full_name }}"
+                        <img src="{% if member.profile_picture %}{{ member.profile_picture.url }}{% endif %}"
+                            alt="{{ member.full_name }}"
                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                         {% else %}
                         <div class="profile-img-placeholder" style="font-size: 2rem;">
@@ -129,7 +130,7 @@
                 </div>
 
                 <!-- SINGLE FORM WRAPPER -->
-                <form method="post" class="premium-form">
+                <form method="post" enctype="multipart/form-data" class="premium-form">
                     {% csrf_token %}
                     <div class="tab-content" id="profileTabContent">
                         <!-- Overview Tab -->

@@ -39,7 +39,7 @@ class Member(models.Model):
     fitness_goal = models.CharField(max_length=50, choices=GOAL_CHOICES, default="General Fitness")
     medical_conditions = models.TextField(blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
-    profile_picture = models.URLField(blank=True, null=True, help_text="URL to profile image")
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True, help_text="Upload profile image")
 
     @property
     def active_plan_name(self):

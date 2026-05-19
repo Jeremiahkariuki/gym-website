@@ -191,7 +191,7 @@ class MemberProfileForm(forms.ModelForm):
             'fitness_goal': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Lose 5kg, Build Muscle'}),
             'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'medical_conditions': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'profile_picture': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Link to profile image'}),
+            'profile_picture': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
 @login_required
@@ -202,7 +202,7 @@ def portal_profile_hub(request):
         return redirect("login")
         
     if request.method == "POST":
-        form = MemberProfileForm(request.POST, instance=member)
+        form = MemberProfileForm(request.POST, request.FILES, instance=member)
         if form.is_valid():
             form.save()
             messages.success(request, "Profile updated successfully!")
