@@ -3,7 +3,9 @@
 {% block title %}{% if form.instance.id %}Edit Member{% else %}Add New Member{% endif %} - Gym Management{% endblock %}
 
 {% block content %}
-<a href="{% url 'member_list' %}" class="back-link">← Back to Members</a>
+<a href="{% url 'member_list' %}" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Members
+</a>
 
 <h1>{% if form.instance.id %}Edit Member{% else %}Add New Member{% endif %}</h1>
 

@@ -5,7 +5,9 @@
 {% block content %}
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
     <h1>📥 Import Members from CSV</h1>
-    <a href="{% url 'member_list' %}" class="btn">Cancel</a>
+    <a href="{% url 'member_list' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Members
+    </a>
 </div>
 
 <div class="card" style="max-width: 600px; margin: 0 auto;">

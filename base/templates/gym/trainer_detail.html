@@ -1,7 +1,9 @@
 {% extends "gym/base.html" %}
 {% block title %}{{ trainer.full_name }}{% endblock %}
 {% block content %}
-<a href="{% url 'trainer_list' %}" class="back-link">← All Trainers</a>
+<a href="{% url 'trainer_list' %}" class="back-link">
+    <i class="fas fa-arrow-left"></i> All Trainers
+</a>
 
 <div
     style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;">

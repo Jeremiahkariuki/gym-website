@@ -184,14 +184,37 @@
         }
 
         .back-link {
-            display: inline-block;
-            margin-bottom: 1rem;
-            color: #3498db;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            color: #64748b;
             text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0.6rem 1.25rem;
+            border-radius: 12px;
+            background: rgba(241, 245, 249, 0.8);
+            border: 1px solid #e2e8f0;
+            backdrop-filter: blur(8px);
         }
 
         .back-link:hover {
-            text-decoration: underline;
+            color: #4f46e5;
+            background: #ffffff;
+            border-color: #6366f1;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.12);
+            transform: translateX(-5px);
+        }
+
+        .back-link i {
+            font-size: 0.85rem;
+            transition: transform 0.3s ease;
+        }
+
+        .back-link:hover i {
+            transform: translateX(-2px);
         }
 
         .alert {

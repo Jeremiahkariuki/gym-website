@@ -2,7 +2,9 @@
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
 <a href="{% if trainer %}{% url 'trainer_detail' trainer.id %}{% else %}{% url 'trainer_list' %}{% endif %}"
-    class="back-link">← Back</a>
+    class="back-link">
+    <i class="fas fa-arrow-left"></i> Back
+</a>
 <h1>{{ title }}</h1>
 
 <form method="post">
