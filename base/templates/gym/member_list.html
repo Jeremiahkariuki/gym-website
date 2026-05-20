@@ -12,7 +12,12 @@
     </div>
 </div>
 
-<a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+<div style="margin-bottom: 2rem; margin-top: 1rem;">
+    <a href="{% url 'dashboard' %}"
+        style="display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #2c3e50; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-decoration: none; border: 1px solid #e0e6ed; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s ease;">
+        <i class="fas fa-arrow-left" style="opacity: 0.7;"></i> Back to Dashboard
+    </a>
+</div>
 
 {# Search Form #}
 <form method="get" action="" style="margin: 1.2rem 0; display: flex; gap: 8px; flex-wrap: wrap;">
@@ -21,8 +26,16 @@
 
     <select name="status" style="padding: 8px; border: 1px solid #ccc; border-radius: 6px;">
         <option value="">All Statuses</option>
-        <option value="active" {% if status == 'active' %}selected{% endif %}>Active</option>
-        <option value="inactive" {% if status == 'inactive' %}selected{% endif %}>Inactive</option>
+        {% if status == 'active' %}
+        <option value="active" selected>Active</option>
+        <option value="inactive">Inactive</option>
+        {% elif status == 'inactive' %}
+        <option value="active">Active</option>
+        <option value="inactive" selected>Inactive</option>
+        {% else %}
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+        {% endif %}
     </select>
 
     <button type="submit" class="btn btn-success" style="padding: 8px 16px;">🔍 Search</button>
