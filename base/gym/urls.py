@@ -42,10 +42,10 @@ urlpatterns = [
     path("portal/achievements/", views.portal_achievement_room, name="portal_achievement_room"),
     
     # Branches
-    path("admin/branches/", views.branch_list, name="branch_list"),
-    path("admin/branches/create/", views.branch_create, name="branch_create"),
-    path("admin/branches/edit/<int:branch_id>/", views.branch_edit, name="branch_edit"),
-    path("admin/branches/delete/<int:branch_id>/", views.branch_delete, name="branch_delete"),
+    path("manage/branches/", views.branch_list, name="branch_list"),
+    path("manage/branches/create/", views.branch_create, name="branch_create"),
+    path("manage/branches/edit/<int:branch_id>/", views.branch_edit, name="branch_edit"),
+    path("manage/branches/delete/<int:branch_id>/", views.branch_delete, name="branch_delete"),
     path("branch/set/<int:branch_id>/", views.set_active_branch, name="set_active_branch"),
 
     
@@ -105,36 +105,36 @@ urlpatterns = [
     path("trainer/members/", views.trainer_portal_members, name="trainer_portal_members"),
 
     # Admin Expansion - Classes
-    path("admin/classes/", views.gym_class_list, name="admin_class_list"),
-    path("admin/classes/new/", views.gym_class_create, name="admin_class_create"),
-    path("admin/classes/<int:pk>/edit/", views.gym_class_edit, name="admin_class_edit"),
-    path("admin/classes/<int:pk>/delete/", views.gym_class_delete, name="admin_class_delete"),
+    path("manage/classes/", views.gym_class_list, name="admin_class_list"),
+    path("manage/classes/new/", views.gym_class_create, name="admin_class_create"),
+    path("manage/classes/<int:pk>/edit/", views.gym_class_edit, name="admin_class_edit"),
+    path("manage/classes/<int:pk>/delete/", views.gym_class_delete, name="admin_class_delete"),
 
     # Admin Expansion - Equipment
-    path("admin/equipment/", views.equipment_list, name="equipment_list"),
-    path("admin/equipment/new/", views.equipment_create, name="equipment_create"),
-    path("admin/equipment/<int:pk>/edit/", views.equipment_edit, name="equipment_edit"),
-    path("admin/equipment/<int:pk>/delete/", views.equipment_delete, name="equipment_delete"),
+    path("manage/equipment/", views.equipment_list, name="equipment_list"),
+    path("manage/equipment/new/", views.equipment_create, name="equipment_create"),
+    path("manage/equipment/<int:pk>/edit/", views.equipment_edit, name="equipment_edit"),
+    path("manage/equipment/<int:pk>/delete/", views.equipment_delete, name="equipment_delete"),
 
     # Admin Expansion - Announcements
-    path("admin/announcements/", views.announcement_list, name="admin_announcement_list"),
-    path("admin/announcements/new/", views.announcement_create, name="admin_announcement_create"),
-    path("admin/announcements/<int:pk>/edit/", views.announcement_edit, name="admin_announcement_edit"),
-    path("admin/announcements/<int:pk>/delete/", views.announcement_delete, name="admin_announcement_delete"),
+    path("manage/announcements/", views.announcement_list, name="admin_announcement_list"),
+    path("manage/announcements/new/", views.announcement_create, name="admin_announcement_create"),
+    path("manage/announcements/<int:pk>/edit/", views.announcement_edit, name="admin_announcement_edit"),
+    path("manage/announcements/<int:pk>/delete/", views.announcement_delete, name="admin_announcement_delete"),
 
     # Admin Expansion - Gallery
-    path("admin/gallery/", views.gym_photo_list, name="admin_gallery"),
-    path("admin/gallery/<int:pk>/delete/", views.gym_photo_delete, name="admin_gallery_delete"),
+    path("manage/gallery/", views.gym_photo_list, name="admin_gallery"),
+    path("manage/gallery/<int:pk>/delete/", views.gym_photo_delete, name="admin_gallery_delete"),
 
     # Admin Expansion - Settings
-    path("admin/settings/", views.system_settings_edit, name="system_settings"),
+    path("manage/settings/", views.system_settings_edit, name="system_settings"),
 
     # Admin Expansion - QR Check-in
-    path("admin/scanner/", views.qr_scanner, name="qr_scanner"),
-    path("admin/checkin-api/", views.qr_checkin_api, name="qr_checkin_api"),
+    path("manage/scanner/", views.qr_scanner, name="qr_scanner"),
+    path("manage/checkin-api/", views.qr_checkin_api, name="qr_checkin_api"),
 
     # Admin Expansion - Contact Messages
-    path("admin/messages/", views.contact_message_list, name="contact_message_list"),
-    path("admin/messages/<int:pk>/", views.contact_message_detail, name="contact_message_detail"),
-    path("admin/messages/<int:pk>/delete/", views.contact_message_delete, name="contact_message_delete"),
+    path("manage/messages/", views.contact_message_list, name="contact_message_list"),
+    path("manage/messages/<int:pk>/", views.contact_message_detail, name="contact_message_detail"),
+    path("manage/messages/<int:pk>/delete/", views.contact_message_delete, name="contact_message_delete"),
 ]

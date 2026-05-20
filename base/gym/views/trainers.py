@@ -109,9 +109,14 @@ class AssignTrainerForm(forms.Form):
 # ---------------------------------------------------------------------------
 
 def admin_required(view_func):
-    """Only allow is_staff users; others are redirected to their dashboard."""
-    @login_required
+    """
+    Only allow is_staff users.
+    Redirects unauthenticated users to the custom login page.
+    Redirects authenticated non-staff users to their dashboard-redirect.
+    """
     def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect("login")
         if not request.user.is_staff:
             return redirect("login_redirect")
         return view_func(request, *args, **kwargs)
