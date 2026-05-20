@@ -509,7 +509,7 @@
             <div class="plan-expiry" style="opacity: 1; font-weight: 700; color: #ff7675;">
                 Expired on {{ active_membership.end_date|date:"M d, Y" }}
             </div>
-            <a href="{% url 'portal_payments' %}" class="btn btn-sm btn-danger mt-2"
+            <a href="{% url 'portal_subscribe' active_membership.plan.id %}" class="btn btn-sm btn-danger mt-2"
                 style="font-size: 0.7rem; padding: 0.2rem 0.8rem; border-radius: 20px;">Activate Now</a>
         </div>
         {% else %}
