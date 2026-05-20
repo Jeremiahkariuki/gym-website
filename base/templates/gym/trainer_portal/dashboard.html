@@ -1,40 +1,47 @@
 {% extends "gym/base.html" %}
+{% load static %}
+
 {% block title %}Trainer Dashboard{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'gym/css/details.css' %}">
+{% endblock %}
+
 {% block content %}
 <h1>Welcome, {{ trainer.full_name }} 👋</h1>
-<p style="color:#7f8c8d;margin-bottom:2rem;">{{ today }}</p>
+<p class="text-muted mb-2">{{ today }}</p>
 
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem;">
-    <div class="card" style="text-align:center;">
-        <div style="font-size:2.5rem;font-weight:bold;color:#3498db;">{{ assignments.count }}</div>
-        <div style="color:#7f8c8d;">Assigned Members</div>
+<div class="stats-grid mb-2">
+    <div class="card stat-card-admin">
+        <div class="stat-value" style="color:#3498db;">{{ assignments.count }}</div>
+        <div class="stat-label">Assigned Members</div>
     </div>
-    <div class="card" style="text-align:center;">
-        <div style="font-size:2.5rem;font-weight:bold;color:#27ae60;">{{ today_checkins }}</div>
-        <div style="color:#7f8c8d;">Checked In Today</div>
+    <div class="card stat-card-admin">
+        <div class="stat-value" style="color:#27ae60;">{{ today_checkins }}</div>
+        <div class="stat-label">Checked In Today</div>
     </div>
-    <div class="card" style="text-align:center;">
-        <div style="font-size:2.5rem;font-weight:bold;color:#e74c3c;">{{ expiring_soon.count }}</div>
-        <div style="color:#7f8c8d;">Memberships Expiring Soon</div>
+    <div class="card stat-card-admin">
+        <div class="stat-value" style="color:#e74c3c;">{{ expiring_soon.count }}</div>
+        <div class="stat-label">Memberships Expiring Soon</div>
     </div>
 </div>
 
 {% if announcements %}
-<div class="card" style="margin-bottom: 1.5rem; border-left: 4px solid #f1c40f;">
-    <h2 style="margin-bottom: 0.8rem;">📢 Announcements</h2>
+<div class="card mb-1" style="border-left: 4px solid #f1c40f;">
+    <h2 class="mb-1">📢 Announcements</h2>
     {% for announcement in announcements %}
-    <div style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #eee;">
-        <h4 style="margin: 0 0 0.3rem 0;">{{ announcement.title }}</h4>
-        <p style="margin: 0; font-size: 0.9rem; color: #666;">{{ announcement.content }}</p>
+    <div class="announcement-item mb-1 pb-1 border-bottom">
+        <h4 class="m-0 mb-small">{{ announcement.title }}</h4>
+        <p class="m-0 text-muted-small">{{ announcement.content }}</p>
     </div>
     {% endfor %}
 </div>
 {% endif %}
 
 {% if expiring_soon %}
-<div class="card" style="margin-bottom:1.5rem;">
+<div class="card mb-1">
     <h2>⏰ Expiring Memberships (Next 7 Days)</h2>
-    <table style="box-shadow:none;margin:0;">
+    <table class="card-table">
         <thead>
             <tr>
                 <th>Member</th>
@@ -47,7 +54,7 @@
             <tr>
                 <td>{{ m.member.full_name }}</td>
                 <td>{{ m.plan.name }}</td>
-                <td style="color:#e74c3c;font-weight:600;">{{ m.end_date }}</td>
+                <td class="badge-rejected">{{ m.end_date }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -56,12 +63,12 @@
 {% endif %}
 
 <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+    <div class="d-flex justify-between align-center mb-1">
         <h2>My Members</h2>
-        <a href="{% url 'trainer_portal_members' %}" class="btn" style="font-size:0.9rem;">View All →</a>
+        <a href="{% url 'trainer_portal_members' %}" class="btn btn-sm">View All →</a>
     </div>
     {% if assignments %}
-    <table style="box-shadow:none;margin:0;">
+    <table class="card-table">
         <thead>
             <tr>
                 <th>Name</th>
@@ -71,18 +78,16 @@
         </thead>
         <tbody>
             {% for a in assignments|slice:":8" %}
-            {% with active=a.member.memberships.all %}
             <tr>
                 <td>{{ a.member.full_name }}</td>
                 <td>{{ a.member.phone|default:"—" }}</td>
                 <td>{{ a.member.active_plan_name|default:"None" }}</td>
             </tr>
-            {% endwith %}
             {% endfor %}
         </tbody>
     </table>
     {% else %}
-    <p style="color:#7f8c8d;">No members assigned yet.</p>
+    <p class="text-muted">No members assigned yet.</p>
     {% endif %}
 </div>
 {% endblock %}

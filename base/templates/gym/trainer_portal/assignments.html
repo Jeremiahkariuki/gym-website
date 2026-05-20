@@ -1,96 +1,64 @@
 {% extends 'gym/base.html' %}
+{% load static %}
 
 {% block title %}Member Assignments - Trainer Portal{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'gym/css/details.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="portal-container">
-    <div class="portal-header">
+<div class="container nav-container" style="justify-content: flex-start; gap: 2rem;">
+    <div>
         <h1>Member Assignments</h1>
-        <p>Manage your assigned members and pending requests.</p>
-    </div>
-
-    <a href="{% url 'trainer_portal_dashboard' %}" class="back-link">← Back to Dashboard</a>
-
-    <!-- ═══ Pending Requests ═══ -->
-    <div class="portal-card" style="margin-top: 1.5rem; border-left: 4px solid #f1c40f;">
-        <div class="portal-card-body">
-            <h2 style="margin-bottom: 1rem;">⏳ Pending Requests ({{ pending|length }})</h2>
-            {% if pending %}
-            <div style="display: grid; gap: 1rem;">
-                {% for assignment in pending %}
-                <div
-                    style="background: #fdfae6; padding: 1rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h4 style="margin: 0;">{{ assignment.member.full_name }}</h4>
-                        <p style="margin: 0; font-size: 0.9rem; color: #666;">Requested on {{
-                            assignment.requested_on|date:"d M Y" }}</p>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <a href="{% url 'trainer_assignment_action' assignment.id 'accept' %}" class="btn btn-success"
-                            style="padding: 6px 12px;">Accept</a>
-                        <a href="{% url 'trainer_assignment_action' assignment.id 'reject' %}" class="btn btn-danger"
-                            style="padding: 6px 12px; background-color: #e74c3c;">Reject</a>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            {% else %}
-            <p style="color: #666; font-style: italic;">No pending assignment requests.</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- ═══ Accepted Members ═══ -->
-    <div class="portal-card" style="margin-top: 2rem;">
-        <div class="portal-card-body">
-            <h2 style="margin-bottom: 1rem;">✅ My Members ({{ accepted|length }})</h2>
-            {% if accepted %}
-            <div style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
-                {% for assignment in accepted %}
-                <div class="member-mini-card" style="border: 1px solid #eee; padding: 1rem; border-radius: 10px;">
-                    <h4 style="margin: 0 0 0.5rem 0;">{{ assignment.member.full_name }}</h4>
-                    <p style="margin: 0; font-size: 0.85rem; color: #7f8c8d;">Phone: {{ assignment.member.phone }}</p>
-                    <a href="{% url 'trainer_portal_members' %}" class="btn"
-                        style="display: block; margin-top: 0.8rem; text-align: center; font-size: 0.8rem; padding: 6px;">View
-                        Member Plan</a>
-                </div>
-                {% endfor %}
-            </div>
-            {% else %}
-            <p style="color: #666;">You have no active member assignments.</p>
-            {% endif %}
-        </div>
+        <p class="text-muted">Manage your assigned members and pending requests.</p>
     </div>
 </div>
 
-<style>
-    .portal-container {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 1rem;
-    }
+<div class="mt-1">
+    <a href="{% url 'trainer_portal_dashboard' %}" class="back-link">← Back to Dashboard</a>
+</div>
 
-    .portal-header {
-        margin-bottom: 2rem;
-    }
+<!-- ═══ Pending Requests ═══ -->
+<div class="card mt-1" style="border-left: 4px solid #f1c40f;">
+    <h2 class="mb-1">⏳ Pending Requests ({{ pending|length }})</h2>
+    {% if pending %}
+    <div style="display: grid; gap: 1rem;">
+        {% for assignment in pending %}
+        <div class="pending-card d-flex justify-between align-center">
+            <div>
+                <h4 class="m-0">{{ assignment.member.full_name }}</h4>
+                <p class="m-0 text-muted-small">Requested on {{ assignment.requested_on|date:"d M Y" }}</p>
+            </div>
+            <div class="d-flex gap-small">
+                <a href="{% url 'trainer_assignment_action' assignment.id 'accept' %}"
+                    class="btn btn-success btn-sm">Accept</a>
+                <a href="{% url 'trainer_assignment_action' assignment.id 'reject' %}"
+                    class="btn btn-danger btn-sm">Reject</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted italic">No pending assignment requests.</p>
+    {% endif %}
+</div>
 
-    .portal-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-    }
-
-    .portal-card-body {
-        padding: 1.5rem;
-    }
-
-    .back-link {
-        display: inline-block;
-        margin-bottom: 1rem;
-        color: #3498db;
-        text-decoration: none;
-        font-weight: 500;
-    }
-</style>
+<!-- ═══ Accepted Members ═══ -->
+<div class="card mt-2">
+    <h2 class="mb-1">✅ My Members ({{ accepted|length }})</h2>
+    {% if accepted %}
+    <div style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
+        {% for assignment in accepted %}
+        <div class="member-mini-card">
+            <h4 class="mb-small">{{ assignment.member.full_name }}</h4>
+            <p class="text-muted-small m-0">Phone: {{ assignment.member.phone }}</p>
+            <a href="{% url 'trainer_portal_members' %}" class="btn w-full mt-1 text-center btn-sm">View Member Plan</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted">You have no active member assignments.</p>
+    {% endif %}
+</div>
 {% endblock %}

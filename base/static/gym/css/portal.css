@@ -308,6 +308,64 @@
     overflow: hidden;
 }
 
+/* ── ID Card View ── */
+.id-card-view {
+    max-width: 400px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.id-card-premium {
+    padding: 2rem;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #1e293b, #334155);
+    color: white;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.id-card-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.id-card-label {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.qr-container {
+    background: white;
+    padding: 1.25rem;
+    border-radius: 16px;
+    margin: 1.5rem auto;
+    width: 210px;
+    height: 210px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.id-card-footer {
+    text-align: left;
+    margin-top: 1.5rem;
+}
+
+.id-card-footer h3 {
+    margin: 0;
+    color: white;
+}
+
+.id-card-footer p {
+    margin: 0;
+    opacity: 0.6;
+    font-size: 0.9rem;
+}
+
 /* ── Tables & Lists ── */
 .class-row,
 .payment-row {

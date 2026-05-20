@@ -64,6 +64,58 @@
     text-decoration: none;
 }
 
+/* ── Admin Stat Cards ── */
+.stat-card-admin {
+    text-align: center;
+}
+
+/* ── Utility Classes ── */
+.d-flex {
+    display: flex;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.m-0 {
+    margin: 0;
+}
+
+.mb-small {
+    margin-bottom: 0.3rem;
+}
+
+.pb-1 {
+    padding-bottom: 0.5rem;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #eee;
+}
+
+.italic {
+    font-style: italic;
+}
+
+/* ── Trainer Portal Specific ── */
+.pending-card {
+    background: #fdfae6;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #f1c40f;
+}
+
+.member-mini-card {
+    border: 1px solid #eee;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
 .btn-premium:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);

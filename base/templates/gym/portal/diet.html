@@ -1,19 +1,21 @@
 {% extends "gym/base.html" %}
+{% load static %}
+
+{% block title %}My Diet Plan | GYMFLOW{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{% static 'gym/css/portal.css' %}">
+{% endblock %}
+
+{% block body_class %}portal-theme{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'portal_dashboard' %}" class="text-decoration-none">Portal</a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">Diet Plan</li>
-        </ol>
-    </nav>
-
+<div class="portal-page container">
     <div class="row mb-4">
         <div class="col-12">
-            <h1 class="fw-bold">My Diet Plan</h1>
-            <p class="text-muted">Fuel your body for performance.</p>
+            <h1 class="fw-bold text-white">My Diet Plan</h1>
+            <p class="text-white opacity-50">Fuel your body for performance.</p>
         </div>
     </div>
 
@@ -21,53 +23,54 @@
     <div class="row g-4">
         <!-- Macros Summary -->
         <div class="col-lg-4">
-            <div class="card shadow-sm border-0 text-center h-100">
-                <div class="card-header bg-success text-white py-3">
-                    <h5 class="mb-0 fw-bold">Daily Goal</h5>
-                </div>
-                <div class="card-body py-5">
+            <div class="portal-card h-100 text-center">
+                <div class="portal-card-body py-5">
+                    <div class="mb-2 text-white opacity-50 small text-uppercase fw-bold letter-spacing-1">Daily Goal
+                    </div>
                     <div class="mb-4">
-                        <span class="display-3 fw-bold text-success">{{ diet_plan.calories }}</span>
-                        <span class="text-muted">kcal</span>
+                        <span class="display-3 fw-bold" style="color: #2ecc71;">{{ diet_plan.calories }}</span>
+                        <span class="text-white opacity-50">kcal</span>
                     </div>
                     <div class="row g-2">
                         <div class="col-4">
-                            <div class="p-2 bg-light rounded">
-                                <div class="fw-bold">{{ diet_plan.protein|default:"0" }}g</div>
-                                <small class="text-muted">Protein</small>
+                            <div class="p-2 bg-white bg-opacity-5 rounded-4 border border-white border-opacity-10">
+                                <div class="fw-bold text-white">{{ diet_plan.protein|default:"0" }}g</div>
+                                <small class="text-white opacity-40" style="font-size: 0.65rem;">Protein</small>
                             </div>
                         </div>
                         <div class="col-4">
-                            <div class="p-2 bg-light rounded">
-                                <div class="fw-bold">{{ diet_plan.carbs|default:"0" }}g</div>
-                                <small class="text-muted">Carbs</small>
+                            <div class="p-2 bg-white bg-opacity-5 rounded-4 border border-white border-opacity-10">
+                                <div class="fw-bold text-white">{{ diet_plan.carbs|default:"0" }}g</div>
+                                <small class="text-white opacity-40" style="font-size: 0.65rem;">Carbs</small>
                             </div>
                         </div>
                         <div class="col-4">
-                            <div class="p-2 bg-light rounded">
-                                <div class="fw-bold">{{ diet_plan.fats|default:"0" }}g</div>
-                                <small class="text-muted">Fats</small>
+                            <div class="p-2 bg-white bg-opacity-5 rounded-4 border border-white border-opacity-10">
+                                <div class="fw-bold text-white">{{ diet_plan.fats|default:"0" }}g</div>
+                                <small class="text-white opacity-40" style="font-size: 0.65rem;">Fats</small>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer bg-white border-0 py-3">
-                    <small class="text-muted">Last updated: {{ diet_plan.updated_at|date:"M d, Y" }}</small>
+                <div class="portal-card-footer border-top border-white border-opacity-5 py-3">
+                    <small class="text-white opacity-30">Last updated: {{ diet_plan.updated_at|date:"M d, Y" }}</small>
                 </div>
             </div>
         </div>
 
         <!-- Notes & Instructions -->
         <div class="col-lg-8">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold">Nutritionist's Notes</h5>
-                </div>
-                <div class="card-body">
+            <div class="portal-card h-100">
+                <div class="portal-card-body">
+                    <h5 class="mb-4 fw-bold text-white d-flex align-items-center gap-2">
+                        <i class="bi bi-journal-text text-primary"></i>
+                        Nutritionist's Notes
+                    </h5>
                     {% if diet_plan.notes %}
-                    <div class="lead" style="white-space: pre-wrap;">{{ diet_plan.notes }}</div>
+                    <div class="text-white opacity-75"
+                        style="white-space: pre-wrap; line-height: 1.6; font-size: 1.05rem;">{{ diet_plan.notes }}</div>
                     {% else %}
-                    <p class="text-muted">No specific notes provided for this diet plan.</p>
+                    <p class="text-white opacity-40 italic">No specific notes provided for this diet plan.</p>
                     {% endif %}
                 </div>
             </div>
@@ -76,11 +79,18 @@
     {% else %}
     <div class="row">
         <div class="col-12 text-center py-5">
-            <div class="display-1 text-muted mb-3"><i class="bi bi-egg"></i></div>
-            <h4>No Diet Plan Assigned</h4>
-            <p class="text-muted">Ask your nutritionist or trainer to upload a diet plan for you.</p>
+            <div class="display-1 text-white opacity-10 mb-3"><i class="bi bi-egg"></i></div>
+            <h4 class="text-white">No Diet Plan Assigned</h4>
+            <p class="text-white opacity-40">Ask your nutritionist or trainer to upload a diet plan for you.</p>
         </div>
     </div>
     {% endif %}
+
+    <div class="mt-5">
+        <a href="{% url 'portal_dashboard' %}" class="back-link"
+            style="background: rgba(255,255,255,0.05); color: white; border-color: rgba(255,255,255,0.1);">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
 </div>
 {% endblock %}

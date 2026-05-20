@@ -1,15 +1,21 @@
 {% extends "gym/base.html" %}
+{% load static %}
+
 {% block title %}My Members — {{ trainer.full_name }}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/dashboard.css' %}">
+{% endblock %}
+
 {% block content %}
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+<div class="d-flex justify-between align-center mb-1">
     <div>
         <a href="{% url 'trainer_portal_dashboard' %}" class="back-link">← Dashboard</a>
-        <h1>My Members</h1>
+        <h1 class="mt-1">My Members</h1>
     </div>
 </div>
 
 {% if assignments %}
-<table>
+<table class="card-table">
     <thead>
         <tr>
             <th>Name</th>
@@ -33,7 +39,7 @@
 </table>
 {% else %}
 <div class="card">
-    <p style="color:#7f8c8d;">You have no members assigned yet. Ask an admin to assign members to you.</p>
+    <p class="text-muted">You have no members assigned yet. Ask an admin to assign members to you.</p>
 </div>
 {% endif %}
 {% endblock %}

@@ -1,24 +1,32 @@
 {% extends 'gym/base.html' %}
+{% load static %}
 
-{% block title %}Enable Notifications - {{ block.super }}{% endblock %}
+{% block title %}Enable Notifications | GYMFLOW{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/portal.css' %}">
+{% endblock %}
+
+{% block body_class %}portal-theme{% endblock %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 2rem auto; text-align: center;">
-    <div class="card" style="padding: 3rem; border-radius: 20px;">
+<div class="portal-page id-card-view">
+    <div class="glass-card shadow-lg" style="margin-top: 0; padding: 3rem !important;">
         <div style="font-size: 4rem; margin-bottom: 1.5rem;">🔔</div>
-        <h1>Stay Updated</h1>
-        <p style="margin-bottom: 2rem; opacity: 0.8;">Get instant reminders for class bookings, membership renewals, and
+        <h1 class="text-white">Stay Updated</h1>
+        <p class="text-white opacity-60 mb-2">Get instant reminders for class bookings, membership renewals, and
             exclusive gym updates.</p>
 
-        <button onclick="enableNotifications()" class="btn btn-success"
-            style="padding: 1rem 2rem; font-size: 1.1rem; width: 100%;">
+        <button onclick="enableNotifications()" class="btn btn-premium w-100 py-3 mt-1"
+            style="background: linear-gradient(135deg, #4f46e5, #7c3aed); border: none; color: white; border-radius: 12px; font-weight: 700; font-size: 1.1rem;">
             Enable Push Notifications
         </button>
 
-        <p id="status-msg" style="margin-top: 1.5rem; font-weight: 500;"></p>
+        <p id="status-msg" class="mt-1 fw-bold"></p>
 
-        <div style="margin-top: 2rem;">
-            <a href="{% url 'portal_dashboard' %}" style="color: #666; text-decoration: none;">Maybe Later</a>
+        <div class="mt-2">
+            <a href="{% url 'portal_dashboard' %}"
+                class="text-white opacity-40 text-decoration-none hover-opacity-100">Maybe Later</a>
         </div>
     </div>
 </div>
@@ -28,18 +36,17 @@
         const msg = document.getElementById('status-msg');
         if (!('Notification' in window)) {
             msg.innerHTML = "❌ Your browser does not support desktop notifications.";
-            msg.style.color = "#e74c3c";
+            msg.style.color = "#ef4444";
             return;
         }
 
         Notification.requestPermission().then(permission => {
             if (permission === 'granted') {
                 msg.innerHTML = "✅ Notifications Enabled! You'll stay in the loop.";
-                msg.style.color = "#27ae60";
-                // In a real app, you'd send the subscription object to your server here
+                msg.style.color = "#10b981";
             } else {
                 msg.innerHTML = "⚠️ Notifications blocked. Please enable them in browser settings.";
-                msg.style.color = "#f39c12";
+                msg.style.color = "#f59e0b";
             }
         });
     }
