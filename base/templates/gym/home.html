@@ -147,6 +147,12 @@
         z-index: 2;
     }
 
+    .plan-card.popular-expired {
+        border: 2px solid #e74c3c !important;
+        scale: 1.05;
+        z-index: 2;
+    }
+
     .popular-badge {
         position: absolute;
         top: 20px;
@@ -294,10 +300,14 @@
         <div class="plans-grid">
             {% for plan in plans %}
             <div
-                class="plan-card {% if plan.is_active %}popular-gym{% elif forloop.counter == 2 and not active_membership %}popular{% endif %}">
+                class="plan-card {% if plan.is_active %}{% if active_membership.is_expired %}popular-expired{% else %}popular-gym{% endif %}{% elif forloop.counter == 2 and not active_membership %}popular{% endif %}">
 
                 {% if plan.is_active %}
+                {% if active_membership.is_expired %}
+                <div class="popular-badge" style="background: #e74c3c;">EXPIRED</div>
+                {% else %}
                 <div class="popular-badge" style="background: var(--accent-green);">YOUR PLAN</div>
+                {% endif %}
                 {% elif forloop.counter == 2 and not active_membership %}
                 <div class="popular-badge">BEST VALUE</div>
                 {% endif %}
@@ -319,9 +329,19 @@
                 {% if user.is_authenticated %}
                 {% if active_membership %}
                 {% if plan.is_active %}
+                {% if active_membership.is_expired %}
+                <div
+                    style="text-align: center; padding: 0.8rem; background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.2); border-radius: 12px; color: #e74c3c; font-weight: 700; display: flex; flex-direction: column; gap: 0.5rem; justify-content: center; align-items: center;">
+                    <span style="font-size: 0.9rem;">⚠️ Expired on {{ active_membership.end_date|date:"M d, Y" }}</span>
+                    <a href="{% url 'portal_payments' %}" class="btn"
+                        style="background: #e74c3c; border-radius: 8px; font-size: 0.85rem; font-weight: 700; padding: 0.4rem 1rem; color: white;">Renew
+                        Plan</a>
+                </div>
+                {% else %}
                 <div
                     style="text-align: center; padding: 0.8rem; background: #d5f5e3; border-radius: 12px; color: #1e8449; font-weight: 700;">
                     ✅ Active until {{ active_membership.end_date|date:"M d, Y" }}</div>
+                {% endif %}
                 {% else %}
                 <a href="{% url 'portal_subscribe' plan.id %}" class="btn"
                     style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #f39c12, #e67e22);">⬆
