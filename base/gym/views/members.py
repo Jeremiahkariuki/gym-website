@@ -9,6 +9,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
+from .trainers import admin_required, staff_or_trainer_required
+
 from ..models import (
     DietPlan,
     Member,
@@ -33,7 +35,7 @@ class MemberForm(forms.ModelForm):
         fields = ["full_name", "phone", "email", "address"]
 
 
-@login_required
+@staff_or_trainer_required
 def member_list(request):
     query = request.GET.get("q", "").strip()
     status = request.GET.get("status", "").strip()
@@ -66,7 +68,7 @@ def member_list(request):
     return render(request, "gym/member_list.html", {"members": members, "query": query, "status": status})
 
 
-@login_required
+@admin_required
 def member_create(request):
     if request.method == "POST":
         form = MemberForm(request.POST)
@@ -92,7 +94,7 @@ def member_create(request):
     return render(request, "gym/member_form.html", {"form": form})
 
 
-@login_required
+@admin_required
 def member_edit(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     active_membership = member.memberships.filter(is_active=True).first()
@@ -129,7 +131,7 @@ def member_edit(request, member_id):
     return render(request, "gym/member_form.html", {"form": form, "member": member})
 
 
-@login_required
+@admin_required
 def member_delete(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     if request.method == "POST":
@@ -141,6 +143,14 @@ def member_delete(request, member_id):
 @login_required
 def member_detail(request, member_id):
     member = get_object_or_404(Member, id=member_id)
+
+    # Allow access only to: admins, trainers, or the member viewing their own profile
+    is_admin = request.user.is_staff
+    is_trainer = hasattr(request.user, 'trainer_profile')
+    is_self = hasattr(request.user, 'member_profile') and request.user.member_profile.id == member.id
+    if not (is_admin or is_trainer or is_self):
+        messages.error(request, "You don't have permission to view this profile.")
+        return redirect("portal_dashboard")
     memberships = member.memberships.all()
     payments = member.payments.all()
     attendance = member.attendance_set.all().order_by("-date")[:30]
@@ -167,7 +177,7 @@ def member_detail(request, member_id):
     )
 
 
-@login_required
+@admin_required
 def export_members_csv(request):
     """Download all members as a CSV file."""
     response = HttpResponse(content_type="text/csv")
@@ -195,7 +205,7 @@ def export_members_csv(request):
 
     return response
 
-@login_required
+@admin_required
 def import_members_csv(request):
     if request.method == "POST" and request.FILES.get("csv_file"):
         csv_file = request.FILES["csv_file"]

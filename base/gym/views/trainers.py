@@ -123,6 +123,25 @@ def admin_required(view_func):
     return wrapper
 
 
+def staff_or_trainer_required(view_func):
+    """
+    Allow access for staff (admins) and trainers.
+    Redirects unauthenticated users to custom login.
+    Redirects regular members to their portal dashboard.
+    """
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect("login")
+        if request.user.is_staff:
+            return view_func(request, *args, **kwargs)
+        if hasattr(request.user, 'trainer_profile'):
+            return view_func(request, *args, **kwargs)
+        # Regular member — not allowed
+        messages.error(request, "You don't have permission to access this page.")
+        return redirect("portal_dashboard")
+    return wrapper
+
+
 # ---------------------------------------------------------------------------
 # Views
 # ---------------------------------------------------------------------------
