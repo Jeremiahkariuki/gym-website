@@ -1,0 +1,67 @@
+/* admin-lists.css - Shared styles for admin list/form pages */
+
+/* ── Page Header (title + action button side by side) ── */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+/* ── Toolbar (search/filter bar) ── */
+.toolbar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.toolbar-form {
+    display: flex;
+    gap: 0.5rem;
+    background: none;
+    padding: 0;
+    box-shadow: none;
+    max-width: none;
+}
+
+.toolbar-input {
+    width: 260px;
+}
+
+/* ── Small action buttons inside table cells ── */
+.btn-table {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.9rem;
+}
+
+.btn-table-md {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+}
+
+/* ── Expense amount highlight ── */
+.amount-danger {
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+/* ── Pagination (shared across list pages) ── */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 1.5rem;
+}
+
+.pagination-btn {
+    padding: 6px 14px;
+}
+
+.pagination-info {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 2.2rem;
+}

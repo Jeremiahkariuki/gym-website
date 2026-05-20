@@ -1,0 +1,328 @@
+/* dashboard.css - Extracted from dashboard.html */
+
+/* ── Stats Grid ── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.stat-primary {
+    color: #3498db;
+}
+
+.stat-success {
+    color: #27ae60;
+}
+
+.stat-danger {
+    color: #e74c3c;
+}
+
+/* ── Two Column Layout ── */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.two-col-mt {
+    margin-top: 2rem;
+}
+
+/* ── Date Display ── */
+.date-display {
+    font-size: 1.3rem;
+}
+
+/* ── Quick Actions ── */
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.btn-premium {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 1rem;
+    font-size: 1.1rem;
+    border-radius: 16px;
+    text-decoration: none;
+}
+
+/* ── Admin Stat Cards ── */
+.stat-card-admin {
+    text-align: center;
+}
+
+/* ── Utility Classes ── */
+.d-flex {
+    display: flex;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.m-0 {
+    margin: 0;
+}
+
+.mb-small {
+    margin-bottom: 0.3rem;
+}
+
+.pb-1 {
+    padding-bottom: 0.5rem;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #eee;
+}
+
+.italic {
+    font-style: italic;
+}
+
+/* ── Trainer Portal Specific ── */
+.pending-card {
+    background: #fdfae6;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #f1c40f;
+}
+
+.member-mini-card {
+    border: 1px solid #eee;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.btn-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    color: #475569;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-action i {
+    font-size: 1.25rem;
+    color: #6366f1;
+}
+
+.btn-action:hover {
+    background: white;
+    border-color: #6366f1;
+    color: #6366f1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.btn-action-expense {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* ── Section Header ── */
+.section-heading {
+    margin-top: 2rem;
+}
+
+/* ── Management Grid ── */
+.mgmt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.btn-announce {
+    background-color: #34495e;
+}
+
+.btn-gallery {
+    background-color: #9b59b6;
+}
+
+.btn-settings {
+    background-color: #7f8c8d;
+}
+
+/* ── Renewals List ── */
+.renewals-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.renewal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.renewal-plan {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.renewal-right {
+    text-align: right;
+}
+
+.renewal-expires {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.renewal-link {
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: #3498db;
+}
+
+/* ── Messages / Equipment List ── */
+.list-clean {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.list-item-flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+.list-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.list-subject {
+    color: #666;
+}
+
+.list-meta {
+    font-size: 0.8rem;
+    color: #999;
+}
+
+.list-view-all {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.text-muted {
+    color: #666;
+}
+
+.text-muted-zero {
+    color: #666;
+    margin: 0;
+}
+
+.text-ok {
+    color: #27ae60;
+}
+
+.text-warning {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* ── Trainer Requests ── */
+.section-mt {
+    margin-top: 2rem;
+}
+
+.card-warning {
+    border-left: 4px solid #f1c40f;
+}
+
+.requests-grid {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.request-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #fffcf0;
+    border-radius: 8px;
+    border: 1px solid #faebcc;
+}
+
+.request-meta {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.request-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+}
+
+/* ── Reports Grid ── */
+.report-btn {
+    display: block;
+    text-align: center;
+    padding: 1rem;
+}
+
+.report-btn-financial {
+    background-color: #f1c40f;
+    color: #333;
+}
