@@ -1,9 +1,12 @@
 {% extends 'gym/base.html' %}
+{% load static %}
 
 {% block title %}Expenses - Gym Management{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/admin-lists.css' %}">{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+<div class="page-header">
     <h1>💸 Expenses</h1>
     <a href="{% url 'expense_create' %}" class="btn btn-success">+ Add Expense</a>
 </div>
@@ -26,12 +29,10 @@
                 <td>{{ expense.date }}</td>
                 <td>{{ expense.category }}</td>
                 <td>{{ expense.description|default:"-" }}</td>
-                <td style="font-weight: bold; color: #e74c3c;">{{ expense.amount }}</td>
+                <td class="amount-danger">{{ expense.amount }}</td>
                 <td>
-                    <a href="{% url 'expense_edit' expense.id %}" class="btn"
-                        style="padding: 0.3rem 0.6rem; font-size: 0.9rem;">Edit</a>
-                    <a href="{% url 'expense_delete' expense.id %}" class="btn btn-danger"
-                        style="padding: 0.3rem 0.6rem; font-size: 0.9rem;">Delete</a>
+                    <a href="{% url 'expense_edit' expense.id %}" class="btn btn-table">Edit</a>
+                    <a href="{% url 'expense_delete' expense.id %}" class="btn btn-danger btn-table">Delete</a>
                 </td>
             </tr>
             {% endfor %}
@@ -40,17 +41,17 @@
 
     {# Pagination Controls #}
     {% if expenses.paginator.num_pages > 1 %}
-    <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 1.5rem;">
+    <div class="pagination">
         {% if expenses.has_previous %}
-        <a href="?page={{ expenses.previous_page_number }}" class="btn" style="padding: 6px 14px;">← Previous</a>
+        <a href="?page={{ expenses.previous_page_number }}" class="btn pagination-btn">← Previous</a>
         {% endif %}
 
-        <span style="font-size: 0.95rem; color: #555;">
+        <span class="pagination-info">
             Page <strong>{{ expenses.number }}</strong> of <strong>{{ expenses.paginator.num_pages }}</strong>
         </span>
 
         {% if expenses.has_next %}
-        <a href="?page={{ expenses.next_page_number }}" class="btn btn-success" style="padding: 6px 14px;">Next →</a>
+        <a href="?page={{ expenses.next_page_number }}" class="btn btn-success pagination-btn">Next →</a>
         {% endif %}
     </div>
     {% endif %}

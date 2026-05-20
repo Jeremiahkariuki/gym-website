@@ -1,39 +1,40 @@
 {% extends 'gym/base.html' %}
+{% load static %}
 
 {% block title %}Dashboard - Gym Management{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/dashboard.css' %}">{% endblock %}
 
 {% block content %}
 <h1>📊 Dashboard</h1>
 
-<div
-    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+<div class="stats-grid">
     <div class="card">
         <h3>Total Members</h3>
-        <div style="font-size: 2.5rem; color: #3498db; font-weight: bold;">{{ total_members }}</div>
+        <div class="stat-value stat-primary">{{ total_members }}</div>
     </div>
     <div class="card">
         <h3>New Members Today</h3>
-        <div style="font-size: 2.5rem; color: #27ae60; font-weight: bold;">{{ members_joined_today }}</div>
+        <div class="stat-value stat-success">{{ members_joined_today }}</div>
     </div>
     <div class="card">
         <h3>Attendance Today</h3>
-        <div style="font-size: 2.5rem; color: #e74c3c; font-weight: bold;">{{ today_attendance }}</div>
+        <div class="stat-value stat-danger">{{ today_attendance }}</div>
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+<div class="two-col">
     <div>
         <h2>📅 Today's Date</h2>
         <div class="card">
-            <p style="font-size: 1.3rem;"><strong>{{ today|date:"l, F d, Y" }}</strong></p>
+            <p class="date-display"><strong>{{ today|date:"l, F d, Y" }}</strong></p>
         </div>
     </div>
     <div>
         <h2>⚡ Quick Actions</h2>
-        <div class="card" style="padding: 1.5rem;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <a href="{% url 'qr_scanner' %}" class="btn btn-premium"
-                    style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 1rem; font-size: 1.1rem; border-radius: 16px;">
+        <div class="card">
+            <div class="quick-actions-grid">
+                <a href="{% url 'qr_scanner' %}" class="btn-premium">
                     <i class="fas fa-qrcode"></i> Launch QR Scanner
                 </a>
                 <a href="{% url 'member_list' %}" class="btn-action">
@@ -48,113 +49,63 @@
                 <a href="{% url 'plan_list' %}" class="btn-action">
                     <i class="fas fa-tags"></i> View Plans
                 </a>
-                <a href="{% url 'expense_create' %}" class="btn-action"
-                    style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">
+                <a href="{% url 'expense_create' %}" class="btn-action btn-action-expense">
                     <i class="fas fa-plus-circle"></i> Add Expense
                 </a>
             </div>
-            <style>
-                .btn-premium {
-                    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-                    color: white;
-                    border: none;
-                    transition: all 0.3s ease;
-                }
-
-                .btn-premium:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-                    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-                }
-
-                .btn-action {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 1rem;
-                    background: #f8fafc;
-                    border: 1px solid #e2e8f0;
-                    border-radius: 12px;
-                    color: #475569;
-                    text-decoration: none;
-                    font-size: 0.85rem;
-                    font-weight: 600;
-                    gap: 8px;
-                    transition: all 0.2s ease;
-                }
-
-                .btn-action i {
-                    font-size: 1.25rem;
-                    color: #6366f1;
-                }
-
-                .btn-action:hover {
-                    background: white;
-                    border-color: #6366f1;
-                    color: #6366f1;
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
-                }
-            </style>
         </div>
     </div>
 </div>
 
-<h2 style="margin-top: 2rem;">🛠️ Advanced Management</h2>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-    <a href="{% url 'admin_announcement_list' %}" class="btn" style="background-color: #34495e;">📢 Announcements</a>
-    <a href="{% url 'admin_gallery' %}" class="btn" style="background-color: #9b59b6;">🖼️ Gym Gallery</a>
-    <a href="{% url 'system_settings' %}" class="btn" style="background-color: #7f8c8d;">⚙️ System Settings</a>
+<h2 class="section-heading">🛠️ Advanced Management</h2>
+<div class="mgmt-grid">
+    <a href="{% url 'admin_announcement_list' %}" class="btn btn-announce">📢 Announcements</a>
+    <a href="{% url 'admin_gallery' %}" class="btn btn-gallery">🖼️ Gym Gallery</a>
+    <a href="{% url 'system_settings' %}" class="btn btn-settings">⚙️ System Settings</a>
 </div>
 
 <div>
     <h2>⏰ Pending Renewals (Next 7 Days)</h2>
     <div class="card">
         {% if expiring_soon %}
-        <ul style="list-style-type: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+        <ul class="renewals-list">
             {% for membership in expiring_soon %}
-            <li
-                style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee;">
+            <li class="renewal-item">
                 <div>
                     <strong>{{ membership.member.full_name }}</strong><br>
-                    <span style="font-size: 0.85rem; color: #666;">{{ membership.plan.name }}</span>
+                    <span class="renewal-plan">{{ membership.plan.name }}</span>
                 </div>
-                <div style="text-align: right;">
-                    <span style="color: #e74c3c; font-weight: bold; font-size: 0.9rem;">Expires: {{
-                        membership.end_date|date:"d/m" }}</span><br>
-                    <a href="{% url 'member_detail' membership.member.id %}"
-                        style="font-size: 0.8rem; text-decoration: none; color: #3498db;">View Profile</a>
+                <div class="renewal-right">
+                    <span class="renewal-expires">Expires: {{ membership.end_date|date:"d/m" }}</span><br>
+                    <a href="{% url 'member_detail' membership.member.id %}" class="renewal-link">View Profile</a>
                 </div>
             </li>
             {% endfor %}
         </ul>
         {% else %}
-        <p style="color: #666; margin: 0;">No memberships expiring soon.</p>
+        <p class="text-muted-zero">No memberships expiring soon.</p>
         {% endif %}
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+<div class="two-col two-col-mt">
     <div>
         <h2>✉️ Recent Messages</h2>
         <div class="card">
             {% if recent_messages %}
-            <ul style="list-style: none; padding: 0; margin: 0;">
+            <ul class="list-clean">
                 {% for msg in recent_messages %}
-                <li style="padding: 10px 0; border-bottom: 1px solid #eee;">
-                    <a href="{% url 'contact_message_detail' msg.id %}" style="text-decoration: none; color: inherit;">
-                        <strong>{{ msg.name }}</strong> - <span style="color: #666;">{{ msg.subject }}</span>
-                        <div style="font-size: 0.8rem; color: #999;">{{ msg.created_at|timesince }} ago</div>
+                <li class="list-item">
+                    <a href="{% url 'contact_message_detail' msg.id %}" class="list-link">
+                        <strong>{{ msg.name }}</strong> - <span class="list-subject">{{ msg.subject }}</span>
+                        <div class="list-meta">{{ msg.created_at|timesince }} ago</div>
                     </a>
                 </li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'contact_message_list' %}" style="display: block; margin-top: 1rem; font-size: 0.9rem;">View
-                All
-                Messages →</a>
+            <a href="{% url 'contact_message_list' %}" class="list-view-all">View All Messages →</a>
             {% else %}
-            <p style="color: #666;">No new messages.</p>
+            <p class="text-muted">No new messages.</p>
             {% endif %}
         </div>
     </div>
@@ -162,63 +113,55 @@
         <h2>⚙️ Equipment Maintenance</h2>
         <div class="card">
             {% if maintenance_required %}
-            <ul style="list-style: none; padding: 0; margin: 0;">
+            <ul class="list-clean">
                 {% for item in maintenance_required %}
-                <li
-                    style="padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                <li class="list-item list-item-flex">
                     <span>{{ item.name }}</span>
-                    <span style="color: #e74c3c; font-weight: bold;">Needs service</span>
+                    <span class="text-warning">Needs service</span>
                 </li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'equipment_list' %}" style="display: block; margin-top: 1rem; font-size: 0.9rem;">View
-                Inventory →</a>
+            <a href="{% url 'equipment_list' %}" class="list-view-all">View Inventory →</a>
             {% else %}
-            <p style="color: #27ae60;">All equipment is in good status.</p>
+            <p class="text-ok">All equipment is in good status.</p>
             {% endif %}
         </div>
     </div>
 </div>
 
-<div style="margin-top: 2rem;">
+<div class="section-mt">
     <h2>⏳ Pending Trainer Requests</h2>
-    <div class="card" style="border-left: 4px solid #f1c40f;">
+    <div class="card card-warning">
         {% if pending_assignments %}
-        <div style="display: grid; gap: 0.8rem;">
+        <div class="requests-grid">
             {% for assignment in pending_assignments %}
-            <div
-                style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #fffcf0; border-radius: 8px; border: 1px solid #faebcc;">
+            <div class="request-item">
                 <div>
                     <strong>{{ assignment.member.full_name }}</strong> → <em>{{ assignment.trainer.full_name }}</em>
-                    <div style="font-size: 0.8rem; color: #666;">Requested {{ assignment.requested_on|timesince }} ago
-                    </div>
+                    <div class="request-meta">Requested {{ assignment.requested_on|timesince }} ago</div>
                 </div>
-                <div style="display: flex; gap: 6px;">
-                    <a href="{% url 'trainer_assignment_action' assignment.id 'accept' %}" class="btn btn-success"
-                        style="padding: 4px 10px; font-size: 0.8rem;">Approve on behalf</a>
-                    <a href="{% url 'member_detail' assignment.member.id %}" class="btn"
-                        style="padding: 4px 10px; font-size: 0.8rem;">View</a>
+                <div class="request-actions">
+                    <a href="{% url 'trainer_assignment_action' assignment.id 'accept' %}"
+                        class="btn btn-success btn-sm">Approve on behalf</a>
+                    <a href="{% url 'member_detail' assignment.member.id %}" class="btn btn-sm">View</a>
                 </div>
             </div>
             {% endfor %}
         </div>
         {% else %}
-        <p style="color: #666; margin: 0;">No pending trainer requests.</p>
+        <p class="text-muted-zero">No pending trainer requests.</p>
         {% endif %}
     </div>
 </div>
 </div>
 
-<h2 style="margin-top: 2rem;">📊 Reports</h2>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-    <a href="{% url 'attendance_report' %}" class="btn" style="display: block; text-align: center; padding: 1rem;">👥
-        Attendance Report</a>
-    <a href="{% url 'revenue_report' %}" class="btn"
-        style="display: block; text-align: center; padding: 1rem; background-color: #f1c40f; color: #333;">💰 Financial
-        Report (P&L)</a>
+<h2 class="section-heading">📊 Reports</h2>
+<div class="mgmt-grid">
+    <a href="{% url 'attendance_report' %}" class="btn report-btn">👥 Attendance Report</a>
+    <a href="{% url 'revenue_report' %}" class="btn report-btn report-btn-financial">💰 Financial Report (P&L)</a>
 </div>
 
-<h2 style="margin-top: 2rem;">👥 Present Today</h2>
+<h2 class="section-heading">👥 Present Today</h2>
 {% if present_today %}
 <table>
     <thead>

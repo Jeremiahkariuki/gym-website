@@ -1,30 +1,30 @@
 {% extends 'gym/base.html' %}
+{% load static %}
 
 {% block title %}Members - Gym Management{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/member_list.css' %}">{% endblock %}
 
 {% block content %}
-<div
-    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px;">
+<div class="member-header">
     <h1>Members ({{ members.paginator.count }})</h1>
-    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <a href="{% url 'export_members_csv' %}" class="btn" style="background-color: #27ae60; color: white;">⬇ Export
+    <div class="btn-row">
+        <a href="{% url 'export_members_csv' %}" class="export-btn">⬇ Export
             CSV</a>
     </div>
 </div>
 
-<div style="margin-bottom: 2rem; margin-top: 1rem;">
-    <a href="{% url 'dashboard' %}"
-        style="display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #2c3e50; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-decoration: none; border: 1px solid #e0e6ed; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s ease;">
-        <i class="fas fa-arrow-left" style="opacity: 0.7;"></i> Back to Dashboard
+<div class="back-section">
+    <a href="{% url 'dashboard' %}" class="back-dashboard">
+        <i class="fas fa-arrow-left nav-icon"></i> Back to Dashboard
     </a>
 </div>
 
 {# Search Form #}
-<form method="get" action="" style="margin: 1.2rem 0; display: flex; gap: 8px; flex-wrap: wrap;">
-    <input type="text" name="q" value="{{ query }}" placeholder="Search by name or phone..."
-        style="flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem;">
+<form method="get" action="" class="search-form">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by name or phone..." class="search-input">
 
-    <select name="status" style="padding: 8px; border: 1px solid #ccc; border-radius: 6px;">
+    <select name="status" class="status-select">
         <option value="">All Statuses</option>
         {% if status == 'active' %}
         <option value="active" selected>Active</option>
@@ -38,21 +38,21 @@
         {% endif %}
     </select>
 
-    <button type="submit" class="btn btn-success" style="padding: 8px 16px;">🔍 Search</button>
+    <button type="submit" class="search-btn">🔍 Search</button>
     {% if query or status %}
-    <a href="{% url 'member_list' %}" class="btn" style="padding: 8px 12px;">✕ Clear</a>
+    <a href="{% url 'member_list' %}" class="clear-btn">✕ Clear</a>
     {% endif %}
 </form>
 
 {% if query %}
-<p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
+<p class="search-results-info">
     Showing results for "<strong>{{ query }}</strong>" — {{ members.paginator.count }} match{{
     members.paginator.count|pluralize:"es" }} found.
 </p>
 {% endif %}
 
 {% if members %}
-<table>
+<table class="member-table">
     <thead>
         <tr>
             <th>Name</th>
@@ -74,7 +74,7 @@
             <td>{{ m.active_plan_name|default:"None" }}</td>
             <td>
                 {% if m.diet_plan %}
-                <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div class="diet-cell">
                     <span class="diet-badge">🔥 {{ m.diet_plan.calories }} kcal</span>
                     <div class="diet-macros">
                         {% if m.diet_plan.protein %}
@@ -93,17 +93,12 @@
                 {% endif %}
             </td>
             <td>
-                <div class="actions"
-                    style="display: flex; flex-wrap: nowrap; gap: 6px; justify-content: flex-start; align-items: center;">
-                    <a href="{% url 'member_detail' m.id %}" class="btn"
-                        style="background-color: var(--primary-bg, #3498db); color: white; padding: 4px 8px; font-size: 0.8rem; white-space: nowrap;">👁
+                <div class="actions">
+                    <a href="{% url 'member_detail' m.id %}" class="action-btn action-view">👁
                         View</a>
-                    <a href="{% url 'mark_present' m.id %}" class="btn btn-success"
-                        style="padding: 4px 8px; font-size: 0.8rem; white-space: nowrap;">✓ Check In</a>
-                    <a href="{% url 'member_edit' m.id %}" class="btn"
-                        style="padding: 4px 8px; font-size: 0.8rem; white-space: nowrap;">Edit</a>
-                    <a href="{% url 'member_delete' m.id %}" class="btn btn-danger"
-                        style="padding: 4px 8px; font-size: 0.8rem; white-space: nowrap;">Delete</a>
+                    <a href="{% url 'mark_present' m.id %}" class="action-btn action-checkin">✓ Check In</a>
+                    <a href="{% url 'member_edit' m.id %}" class="action-btn action-edit">Edit</a>
+                    <a href="{% url 'member_delete' m.id %}" class="action-btn action-delete">Delete</a>
                 </div>
             </td>
         </tr>
@@ -113,18 +108,18 @@
 
 {# Pagination Controls #}
 {% if members.paginator.num_pages > 1 %}
-<div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 1.5rem;">
+<div class="pagination">
     {% if members.has_previous %}
-    <a href="?page={{ members.previous_page_number }}&q={{ query }}" class="btn" style="padding: 6px 14px;">←
+    <a href="?page={{ members.previous_page_number }}&q={{ query }}" class="pagination-btn">←
         Previous</a>
     {% endif %}
 
-    <span style="font-size: 0.95rem; color: #555;">
+    <span class="page-info">
         Page <strong>{{ members.number }}</strong> of <strong>{{ members.paginator.num_pages }}</strong>
     </span>
 
     {% if members.has_next %}
-    <a href="?page={{ members.next_page_number }}&q={{ query }}" class="btn btn-success" style="padding: 6px 14px;">Next
+    <a href="?page={{ members.next_page_number }}&q={{ query }}" class="pagination-btn success">Next
         →</a>
     {% endif %}
 </div>

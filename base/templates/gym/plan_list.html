@@ -1,17 +1,19 @@
 {% extends 'gym/base.html' %}
+{% load static %}
 
 {% block title %}Membership Plans - Gym Management{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/admin-lists.css' %}">{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+<div class="page-header">
     <h1>Membership Plans ({{ plans.count }})</h1>
     <a href="{% url 'plan_create' %}" class="btn btn-success">+ Add Plan</a>
 </div>
 
-<div style="margin-bottom: 2rem; margin-top: 1rem;">
-    <a href="{% url 'dashboard' %}"
-        style="display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #2c3e50; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-decoration: none; border: 1px solid #e0e6ed; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s ease;">
-        <i class="fas fa-arrow-left" style="opacity: 0.7;"></i> Back to Dashboard
+<div class="back-section">
+    <a href="{% url 'dashboard' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
     </a>
 </div>
 
@@ -33,8 +35,8 @@
             <td>{{ p.duration_days }}</td>
             <td>
                 <div class="actions">
-                    <a href="{% url 'plan_edit' p.id %}" class="btn">Edit</a>
-                    <a href="{% url 'plan_delete' p.id %}" class="btn btn-danger">Delete</a>
+                    <a href="{% url 'plan_edit' p.id %}" class="btn btn-table">Edit</a>
+                    <a href="{% url 'plan_delete' p.id %}" class="btn btn-danger btn-table">Delete</a>
                 </div>
             </td>
         </tr>

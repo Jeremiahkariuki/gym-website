@@ -1,12 +1,17 @@
 {% extends "gym/base.html" %}
+{% load static %}
+
 {% block title %}Trainers{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/admin-lists.css' %}">{% endblock %}
+
 {% block content %}
 <h1>Trainers</h1>
 
-<div style="display:flex;gap:1rem;margin-bottom:1.5rem;align-items:center;flex-wrap:wrap;">
+<div class="toolbar">
     <a href="{% url 'trainer_create' %}" class="btn">+ Add Trainer</a>
-    <form method="get" style="display:flex;gap:0.5rem;background:none;padding:0;box-shadow:none;max-width:none;">
-        <input type="text" name="q" value="{{ query }}" placeholder="Search trainers…" style="width:260px;">
+    <form method="get" class="toolbar-form">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search trainers…" class="toolbar-input">
         <button type="submit" class="btn">Search</button>
         {% if query %}<a href="{% url 'trainer_list' %}" class="btn btn-danger">Clear</a>{% endif %}
     </form>
@@ -35,9 +40,9 @@
             <td>{{ trainer.member_count }}</td>
             <td>{{ trainer.joined_on }}</td>
             <td class="actions">
-                <a href="{% url 'trainer_detail' trainer.id %}" class="btn" style="padding:0.4rem 0.8rem;font-size:0.9rem;">View</a>
-                <a href="{% url 'trainer_edit' trainer.id %}" class="btn btn-success" style="padding:0.4rem 0.8rem;font-size:0.9rem;">Edit</a>
-                <a href="{% url 'trainer_delete' trainer.id %}" class="btn btn-danger" style="padding:0.4rem 0.8rem;font-size:0.9rem;">Delete</a>
+                <a href="{% url 'trainer_detail' trainer.id %}" class="btn btn-table-md">View</a>
+                <a href="{% url 'trainer_edit' trainer.id %}" class="btn btn-success btn-table-md">Edit</a>
+                <a href="{% url 'trainer_delete' trainer.id %}" class="btn btn-danger btn-table-md">Delete</a>
             </td>
         </tr>
         {% endfor %}
@@ -45,13 +50,15 @@
 </table>
 
 {% if trainers.has_other_pages %}
-<div style="display:flex;gap:0.5rem;margin-top:1rem;">
+<div class="pagination">
     {% if trainers.has_previous %}
-        <a href="?page={{ trainers.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" class="btn">← Prev</a>
+    <a href="?page={{ trainers.previous_page_number }}{% if query %}&q={{ query }}{% endif %}"
+        class="btn pagination-btn">← Prev</a>
     {% endif %}
-    <span style="line-height:2.2rem;">Page {{ trainers.number }} of {{ trainers.paginator.num_pages }}</span>
+    <span class="pagination-info">Page {{ trainers.number }} of {{ trainers.paginator.num_pages }}</span>
     {% if trainers.has_next %}
-        <a href="?page={{ trainers.next_page_number }}{% if query %}&q={{ query }}{% endif %}" class="btn">Next →</a>
+    <a href="?page={{ trainers.next_page_number }}{% if query %}&q={{ query }}{% endif %}"
+        class="btn pagination-btn">Next →</a>
     {% endif %}
 </div>
 {% endif %}

@@ -5,76 +5,12 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'gym/css/portal.css' %}">
-<style>
-    .portal-container {
-        padding-top: 1.5rem;
-        padding-bottom: 4rem;
-    }
-
-    /* Compact overrides */
-    .profile-hero-section {
-        padding: 2rem 2rem;
-        background: linear-gradient(135deg, #1e293b, #0f172a);
-        border-radius: 24px;
-        margin-bottom: 0;
-    }
-
-    .profile-img-container {
-        width: 100px;
-        height: 100px;
-        border: 4px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .glass-card {
-        margin-top: -2rem;
-        padding: 1.25rem !important;
-        border-radius: 24px;
-    }
-
-    .premium-nav-tabs .nav-link {
-        padding: 0.4rem 1rem;
-        font-size: 0.85rem;
-        border-radius: 50px;
-    }
-
-    .form-group-premium {
-        margin-bottom: 1.25rem;
-    }
-
-    .form-label-premium {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #64748b;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.5rem;
-    }
-
-    .form-label-premium i {
-        color: #6366f1;
-        font-size: 0.85rem;
-    }
-
-    .status-badge-premium {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.35rem 0.8rem;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: white;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 600;
-    }
-</style>
 {% endblock %}
 
+{% block body_class %}portal-theme{% endblock %}
+
 {% block content %}
-<div class="portal-container">
+<div class="portal-container portal-page">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-10">
             <!-- Hero Section -->
@@ -82,9 +18,8 @@
                 <div class="d-flex flex-column flex-md-row align-items-center gap-4">
                     <div class="profile-img-container shadow-lg">
                         {% if member.profile_picture %}
-                        <img src="{% if member.profile_picture %}{{ member.profile_picture.url }}{% endif %}"
-                            alt="{{ member.full_name }}"
-                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        <img src="{{ member.profile_picture.url }}" alt="{{ member.full_name }}"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                         {% else %}
                         <div class="profile-img-placeholder" style="font-size: 2rem;">
                             {{ member.full_name|slice:":1" }}
@@ -127,7 +62,7 @@
                 <!-- Modern Tabs -->
                 <div class="text-center mb-4">
                     <ul class="nav nav-pills premium-nav-tabs d-inline-flex" id="profileTab" role="tablist"
-                        style="background: rgba(0,0,0,0.05); padding: 4px; border-radius: 50px;">
+                        style="background: rgba(0,0,0,0.1); padding: 4px; border-radius: 50px;">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" data-bs-toggle="pill"
                                 data-bs-target="#overview">Overview</button>
@@ -154,8 +89,10 @@
                                             <i class="fas fa-user-tag text-primary" style="font-size: 0.9rem;"></i>
                                             About Me
                                         </h6>
-                                        <div class="p-3 bg-light rounded-4 border-0">
-                                            <p class="text-muted mb-0" style="line-height: 1.5; font-size: 0.9rem;">
+                                        <div
+                                            class="p-3 bg-white bg-opacity-5 rounded-4 border border-white border-opacity-10">
+                                            <p class="text-white opacity-75 mb-0"
+                                                style="line-height: 1.5; font-size: 0.9rem;">
                                                 {% if member.bio %}{{ member.bio }}{% else %}Update your bio to tell us
                                                 about your journey.{% endif %}
                                             </p>
@@ -164,44 +101,45 @@
 
                                     <div class="row g-3 mb-4">
                                         <div class="col-6">
-                                            <div class="mini-stat-card shadow-sm p-2 text-center"
-                                                style="border-radius: 16px;">
+                                            <div class="stat-card shadow-sm p-3 text-center"
+                                                style="border-radius: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
                                                 <i class="fas fa-calendar-check text-primary mb-1"
                                                     style="font-size: 1rem;"></i>
-                                                <div class="fw-bold" style="font-size: 1.1rem; color: #1e293b;">
+                                                <div class="fw-bold text-white" style="font-size: 1.1rem;">
                                                     {{ m_count }}
                                                 </div>
-                                                <div class="small text-muted text-uppercase"
+                                                <div class="small text-white opacity-50 text-uppercase"
                                                     style="font-size: 0.6rem; letter-spacing: 0.5px;">Active Plans</div>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="mini-stat-card shadow-sm p-2 text-center"
-                                                style="border-radius: 16px;">
+                                            <div class="stat-card shadow-sm p-3 text-center"
+                                                style="border-radius: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
                                                 <i class="fas fa-medal text-warning mb-1" style="font-size: 1rem;"></i>
-                                                <div class="fw-bold" style="font-size: 1.1rem; color: #1e293b;">
+                                                <div class="fw-bold text-white" style="font-size: 1.1rem;">
                                                     {{ a_count }}
                                                 </div>
-                                                <div class="small text-muted text-uppercase"
+                                                <div class="small text-white opacity-50 text-uppercase"
                                                     style="font-size: 0.6rem; letter-spacing: 0.5px;">Earned</div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <section>
-                                        <div class="info-box-premium p-3" style="border-radius: 20px;">
-                                            <h6 class="fw-bold mb-3">Quick Contact</h6>
+                                        <div class="p-3 shadow-sm"
+                                            style="border-radius: 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+                                            <h6 class="fw-bold mb-3 text-white">Quick Contact</h6>
                                             <div class="row g-3">
                                                 <div class="col-12">
                                                     <div class="d-flex align-items-center gap-3">
-                                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                                        <div class="bg-primary bg-opacity-20 text-primary rounded-circle d-flex align-items-center justify-content-center"
                                                             style="width: 32px; height: 32px;">
                                                             <i class="fas fa-envelope" style="font-size: 0.8rem;"></i>
                                                         </div>
                                                         <div class="small">
-                                                            <div class="text-muted" style="font-size: 0.65rem;">Email
-                                                                Address</div>
-                                                            <div class="fw-bold" style="font-size: 0.85rem;">
+                                                            <div class="text-white opacity-50"
+                                                                style="font-size: 0.65rem;">Email Address</div>
+                                                            <div class="fw-bold text-white" style="font-size: 0.85rem;">
                                                                 {{ m_email }}
                                                             </div>
                                                         </div>
@@ -209,14 +147,14 @@
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="d-flex align-items-center gap-3">
-                                                        <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center"
+                                                        <div class="bg-success bg-opacity-20 text-success rounded-circle d-flex align-items-center justify-content-center"
                                                             style="width: 32px; height: 32px;">
                                                             <i class="fas fa-phone" style="font-size: 0.8rem;"></i>
                                                         </div>
                                                         <div class="small">
-                                                            <div class="text-muted" style="font-size: 0.65rem;">Phone
-                                                                Number</div>
-                                                            <div class="fw-bold" style="font-size: 0.85rem;">
+                                                            <div class="text-white opacity-50"
+                                                                style="font-size: 0.65rem;">Phone Number</div>
+                                                            <div class="fw-bold text-white" style="font-size: 0.85rem;">
                                                                 {{ member.phone }}
                                                             </div>
                                                         </div>
@@ -262,7 +200,8 @@
                                 {{ form.address }}
                             </div>
                             <div class="pt-2">
-                                <button type="submit" class="btn btn-premium w-100 py-3">
+                                <button type="submit" class="btn btn-premium w-100 py-3"
+                                    style="background: linear-gradient(135deg, #4f46e5, #7c3aed); border: none; color: white; border-radius: 12px; font-weight: 700;">
                                     <i class="fas fa-save me-2"></i> Update Profile
                                 </button>
                             </div>
@@ -274,17 +213,18 @@
                                 <label class="form-label-premium"><i class="fas fa-bullseye"></i> Main Fitness
                                     Goal</label>
                                 {{ form.fitness_goal }}
-                                <div class="form-text mt-1 text-muted small">Example: "Increase muscle mass" or "Lose
-                                    2kg/month"</div>
+                                <div class="form-text mt-1 text-white opacity-50 small">Example: "Increase muscle mass"
+                                    or "Lose 2kg/month"</div>
                             </div>
                             <div class="form-group-premium">
                                 <label class="form-label-premium"><i class="fas fa-notes-medical"></i> Health
                                     Considerations</label>
                                 {{ form.medical_conditions }}
-                                <div class="form-text mt-1 text-muted small">Help us keep you safe during your workouts.
-                                </div>
+                                <div class="form-text mt-1 text-white opacity-50 small">Help us keep you safe during
+                                    your workouts.</div>
                             </div>
-                            <button type="submit" class="btn btn-premium w-100 py-3">
+                            <button type="submit" class="btn btn-premium w-100 py-3"
+                                style="background: linear-gradient(135deg, #4f46e5, #7c3aed); border: none; color: white; border-radius: 12px; font-weight: 700;">
                                 <i class="fas fa-heartbeat me-2"></i> Save Fitness Goals
                             </button>
                         </div>

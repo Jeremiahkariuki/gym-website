@@ -2,8 +2,11 @@
 
 {% block title %}Member Details - Gym Management{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/details.css' %}">{% endblock %}
+
 {% block content %}
-<div style="margin-bottom: 2rem; margin-top: 1rem;">
+<div class="back-section">
     <a href="{% url 'member_list' %}" class="back-link">
         <i class="fas fa-arrow-left"></i> Back to Members List
     </a>
@@ -11,8 +14,7 @@
 
 <h1>{{ member.full_name }}</h1>
 
-<div
-    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+<div class="info-grid">
     <div class="card">
         <h3>📋 Member Information</h3>
         <p><strong>Phone:</strong> {{ member.phone }}</p>
@@ -27,25 +29,23 @@
                 {{ member.trainer_assignment.trainer.full_name }}
             </a>
             {% if member.trainer_assignment.status == 'pending' %}
-            <span
-                style="background: #f1c40f; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; vertical-align: middle; margin-left: 5px;">Pending
-                Approval</span>
+            <span class="badge badge-pending">Pending Approval</span>
             {% if user.is_staff %}
-        <div style="margin-top: 8px;">
+        <div class="mt-1">
             <a href="{% url 'trainer_assignment_action' member.trainer_assignment.id 'accept' %}"
-                class="btn btn-success" style="padding: 4px 10px; font-size: 0.8rem;">Approve on behalf</a>
+                class="btn btn-success btn-sm">Approve on behalf</a>
         </div>
         {% endif %}
         {% elif member.trainer_assignment.status == 'accepted' %}
-        <span style="color: #27ae60; font-size: 0.85rem; margin-left: 5px;">(Active)</span>
+        <span class="badge-active">(Active)</span>
         {% elif member.trainer_assignment.status == 'rejected' %}
-        <span style="color: #e74c3c; font-size: 0.85rem; margin-left: 5px;">(Rejected)</span>
+        <span class="badge-rejected">(Rejected)</span>
         {% endif %}
         {% else %}
-        <span style="color:#7f8c8d;">Not assigned</span>
+        <span class="text-muted">Not assigned</span>
         {% endif %}
         </p>
-        <div class="actions" style="margin-top: 1rem;">
+        <div class="actions mt-1">
             <a href="{% url 'member_edit' member.id %}" class="btn">Edit</a>
             <a href="{% url 'member_delete' member.id %}" class="btn btn-danger">Delete</a>
         </div>
@@ -53,12 +53,11 @@
 
     <div class="card">
         <h3>⚡ Quick Actions</h3>
-        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <div class="action-stack">
             <a href="{% url 'mark_present' member.id %}" class="btn btn-success">✓ Check In Today</a>
             <a href="{% url 'assign_membership' member.id %}" class="btn">Assign Membership</a>
             <a href="{% url 'record_payment' member.id %}" class="btn">Record Payment</a>
-            <a href="{% url 'assign_trainer' member.id %}" class="btn" style="background-color:#8e44ad;">🏋️ Assign
-                Trainer</a>
+            <a href="{% url 'assign_trainer' member.id %}" class="btn btn-assign">🏋️ Assign Trainer</a>
         </div>
     </div>
 </div>
@@ -83,9 +82,9 @@
             <td>{{ m.end_date|date:"d/m/Y" }}</td>
             <td>
                 {% if m.is_active %}
-                <span style="color: #27ae60; font-weight: bold;">✓ Active</span>
+                <span class="badge-success-bold">✓ Active</span>
                 {% else %}
-                <span style="color: #e74c3c;">Inactive</span>
+                <span class="badge-rejected">Inactive</span>
                 {% endif %}
             </td>
             <td>
@@ -104,7 +103,7 @@
 </div>
 {% endif %}
 
-<h2 style="margin-top: 2rem;">💳 Payment History</h2>
+<h2 class="mt-2">💳 Payment History</h2>
 {% if payments %}
 <table>
     <thead>
@@ -126,9 +125,7 @@
             <td>{{ p.amount }}</td>
             <td>
                 {% if p.balance > 0 %}
-                <span style="color: #e74c3c; font-weight: bold;">{{ p.balance }}</span>
-                {% else %}
-                <span style="color: #27ae60; font-weight: bold;">{{ p.balance }}</span>
+                <span class="badge-success-bold">{{ p.balance }}</span>
                 {% endif %}
             </td>
             <td>{{ p.method }}</td>
@@ -149,7 +146,7 @@
 </div>
 {% endif %}
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+<div class="info-grid mt-2">
     <div class="card diet-card">
         <h3>🍽️ Diet Plan</h3>
         {% if diet_plan %}
@@ -182,8 +179,8 @@
         </div>
         {% endif %}
 
-        <div class="actions" style="margin-top: auto;">
-            <a href="{% url 'diet_plan_edit' member.id %}" class="btn" style="width: 100%; text-align: center;">Edit
+        <div class="actions mt-auto">
+            <a href="{% url 'diet_plan_edit' member.id %}" class="btn w-full">Edit
                 Diet Plan</a>
         </div>
         {% else %}
@@ -198,14 +195,14 @@
     <div class="card">
         <h3>🏋️ Workout Plans</h3>
         {% if workout_plans %}
-        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+        <div class="action-stack mb-1">
             {% for wp in workout_plans %}
-            <div
-                style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px;">
+            <div class="workout-plan-item">
                 <span>
                     <strong>{{ wp.name }}</strong>
-                    <span style="font-size: 0.8em; color: var(--text-muted);">
-                        {% if wp.is_active %}<span style="color:#27ae60;">(Active)</span>{% else %}(Inactive){% endif %}
+                    <span class="text-muted-small">
+                        {% if wp.is_active %}<span class="badge-active-small">(Active)</span>{% else %}(Inactive){%
+                        endif %}
                     </span>
                 </span>
                 <div class="actions">
@@ -223,7 +220,7 @@
     </div>
 </div>
 
-<h2 style="margin-top: 2rem;">📏 Body Measurements Logging</h2>
+<h2 class="mt-2">📏 Body Measurements Logging</h2>
 {% if measurements %}
 <table>
     <thead>
@@ -253,7 +250,7 @@
         {% endfor %}
     </tbody>
 </table>
-<div style="margin-top: 1rem;">
+<div class="mt-1">
     <a href="{% url 'measurement_create' member.id %}" class="btn">Log New Measurement</a>
 </div>
 {% else %}
@@ -262,7 +259,7 @@
 </div>
 {% endif %}
 
-<h2 style="margin-top: 2rem;">👣 Recent Attendance (Last 30 days)</h2>
+<h2 class="mt-2">👣 Recent Attendance (Last 30 days)</h2>
 {% if attendance %}
 <table>
     <thead>
