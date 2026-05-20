@@ -226,7 +226,8 @@ def qr_checkin_api(request):
             return JsonResponse({
                 "success": True,
                 "message": f"Successfully checked in {member.full_name}!",
-                "member_name": member.full_name
+                "member_name": member.full_name,
+                "member_id": member.id
             })
             
         except (json.JSONDecodeError, Member.DoesNotExist):

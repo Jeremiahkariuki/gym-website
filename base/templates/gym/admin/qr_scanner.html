@@ -60,7 +60,15 @@
                 if (data.success) {
                     resultDiv.style.background = '#d4edda';
                     resultDiv.style.color = '#155724';
-                    resultDiv.innerHTML = `✅ ${data.message}`;
+                    resultDiv.innerHTML = `
+                        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+                            <div>✅ ${data.message}</div>
+                            <div style="font-size: 0.9rem; margin-top: 5px;">Redirecting to profile in 5 seconds...</div>
+                            <a href="/members/${data.member_id}/" class="btn" style="background: #27ae60; color: white; width: 100%; text-align: center; margin-top: 10px;">
+                                <i class="fas fa-user-circle"></i> View Profile Now
+                            </a>
+                        </div>
+                    `;
 
                     // Add to log
                     const log = document.getElementById('checkin-log');
@@ -72,17 +80,22 @@
                     li.style.padding = '0.5rem 0';
                     li.style.borderBottom = '1px solid #eee';
                     log.prepend(li);
+
+                    // Automatic redirect after 5 seconds
+                    setTimeout(() => {
+                        window.location.href = `/members/${data.member_id}/`;
+                    }, 5000);
                 } else {
                     resultDiv.style.background = '#f8d7da';
                     resultDiv.style.color = '#721c24';
                     resultDiv.innerHTML = `❌ ${data.message}`;
-                }
 
-                // Restart scanner after 3 seconds
-                setTimeout(() => {
-                    resultDiv.style.display = 'none';
-                    html5QrcodeScanner.render(onScanSuccess);
-                }, 3000);
+                    // Restart scanner after 3 seconds for failures
+                    setTimeout(() => {
+                        resultDiv.style.display = 'none';
+                        html5QrcodeScanner.render(onScanSuccess);
+                    }, 3000);
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
