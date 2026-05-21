@@ -1,13 +1,13 @@
 /* portal.css - Premium Glassmorphism Theme for Member Portal */
 
 /* ── Dashboard Background & Animations ── */
-.portal-theme body {
+body.portal-theme {
     background: #0f1624 !important;
     color: #e0e6ed;
 }
 
 /* Animated gradient mesh behind content */
-.portal-theme body::before {
+body.portal-theme::before {
     content: '';
     position: fixed;
     top: 0;

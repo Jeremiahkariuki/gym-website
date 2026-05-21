@@ -509,30 +509,30 @@ textarea:focus {
 .header-profile-link {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 6px 12px;
-    border-radius: 12px;
+    gap: 10px;
+    padding: 5px 10px;
+    border-radius: 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
 }
 
 .header-profile-link:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.2);
 }
 
 .avatar-nav {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     background: #3498db;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
+    border-radius: 8px;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.9rem;
     overflow: hidden;
 }
 
@@ -547,13 +547,14 @@ textarea:focus {
     position: absolute;
     top: 100%;
     right: 0;
-    background: #2c3e50;
+    background: #233140;
+    /* Slightly darker for better contrast */
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    min-width: 240px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    min-width: 200px;
     z-index: 1010;
-    margin-top: 10px;
+    margin-top: 8px;
     overflow: hidden;
 }
 
@@ -562,63 +563,66 @@ textarea:focus {
 }
 
 .dropdown-user-info {
-    padding: 1.25rem;
-    background: rgba(255, 255, 255, 0.03);
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.02);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .dropdown-user-name {
     display: block;
-    font-weight: 700;
+    font-weight: 600;
     color: white;
-    font-size: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.2;
 }
 
 .dropdown-user-role {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     color: #3498db;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     font-weight: 600;
+    opacity: 0.8;
 }
 
 .dropdown-list {
-    padding: 8px;
+    padding: 6px;
 }
 
 .dropdown-item-premium {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    color: rgba(255, 255, 255, 0.7) !important;
+    gap: 10px;
+    padding: 8px 10px;
+    color: rgba(255, 255, 255, 0.6) !important;
     text-decoration: none;
-    border-radius: 10px;
-    font-size: 0.95rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
     transition: all 0.2s ease;
     margin: 0 !important;
 }
 
 .dropdown-item-premium:hover {
-    background: rgba(52, 152, 219, 0.15);
+    background: rgba(255, 255, 255, 0.05);
     color: white !important;
 }
 
 .dropdown-item-premium i {
-    width: 20px;
+    width: 16px;
     text-align: center;
-    opacity: 0.6;
+    opacity: 0.5;
+    font-size: 0.9rem;
 }
 
 .dropdown-divider {
     height: 1px;
     background: rgba(255, 255, 255, 0.05);
-    margin: 8px;
+    margin: 4px 8px;
 }
 
 .logout-item:hover {
-    background: rgba(231, 76, 60, 0.1);
-    color: #e74c3c !important;
+    background: rgba(231, 76, 60, 0.08);
+    color: #ef4444 !important;
 }
 
 /* ── Responsive ── */
