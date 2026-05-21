@@ -1,75 +1,318 @@
 {% extends 'gym/base.html' %}
 
-{% block title %}Record Payment - Gym Management{% endblock %}
+{% block title %}Record Payment - GYMFLOW{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #3498db, #2ecc71);
+        --dark-gradient: linear-gradient(145deg, #2c3e50, #1a252f);
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        --input-focus: #3498db;
+    }
+
+    .payment-container {
+        max-width: 700px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .back-action {
+        margin-bottom: 1.5rem;
+    }
+
+    .premium-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: var-card-shadow;
+        overflow: hidden;
+        border: 1px solid #edf2f7;
+    }
+
+    .card-header {
+        background: var(--dark-gradient);
+        padding: 2rem;
+        color: white;
+        text-align: center;
+        position: relative;
+    }
+
+    .card-header h1 {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: white; /* Override global h1 color */
+    }
+
+    .card-header p {
+        margin: 0.5rem 0 0;
+        opacity: 0.7;
+        font-size: 0.95rem;
+    }
+
+    .card-body {
+        padding: 2.5rem;
+    }
+
+    /* Active Plan Glassmorphism */
+    .active-plan-badge {
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        border: 1px solid rgba(52, 152, 219, 0.2);
+        padding: 1.25rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .plan-icon {
+        width: 50px;
+        height: 50px;
+        background: white;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #3498db;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .plan-info h4 {
+        margin: 0;
+        color: #2c3e50;
+        font-size: 1rem;
+    }
+
+    .plan-info p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #546e7a;
+    }
+
+    /* Modern Form Styling */
+    .modern-form .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .modern-form label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        margin-bottom: 0.6rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-wrapper i {
+        position: absolute;
+        left: 1.1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        transition: color 0.3s ease;
+    }
+
+    .modern-form input, 
+    .modern-form select {
+        padding: 0.85rem 1rem 0.85rem 3rem !important;
+        border: 2px solid #f1f5f9;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #f8fafc;
+        width: 100%;
+        color: #1e293b;
+    }
+
+    .modern-form input:focus, 
+    .modern-form select:focus {
+        background: white;
+        border-color: var(--input-focus);
+        box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+        outline: none;
+    }
+
+    .modern-form input:focus + i,
+    .modern-form select:focus + i {
+        color: var(--input-focus);
+    }
+
+    .submit-btn {
+        width: 100%;
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        padding: 1rem;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        box-shadow: 0 10px 20px rgba(46, 204, 113, 0.15);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px rgba(46, 204, 113, 0.25);
+        filter: brightness(1.05);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    .error-msg {
+        color: #e53e3e;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: block;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 2rem; margin-top: 1rem;">
-    <a href="{% url 'member_detail' member.id %}"
-        style="display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #2c3e50; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-decoration: none; border: 1px solid #e0e6ed; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s ease;">
-        <i class="fas fa-arrow-left" style="opacity: 0.7;"></i> Back to Member Profile
-    </a>
+<div class="payment-container">
+    <div class="back-action">
+        <a href="{% url 'member_detail' member.id %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Profile
+        </a>
+    </div>
+
+    <div class="premium-card">
+        <div class="card-header">
+            <h1>Record Payment</h1>
+            <p>Processing payment for {{ member.full_name }}</p>
+        </div>
+
+        <div class="card-body">
+            {% for m in member.memberships.all %}
+                {% if m.is_active %}
+                <div class="active-plan-badge">
+                    <div class="plan-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="plan-info">
+                        <h4>{{ m.plan.name }}</h4>
+                        <p>KES {{ m.plan.price }} &bull; Valid til {{ m.end_date|date:"d M Y" }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            {% empty %}
+                {% if member.membership_Plan %}
+                <div class="active-plan-badge" style="background: #fff9db; border-color: #fbd38d;">
+                    <div class="plan-icon" style="color: #ed8936;">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <div class="plan-info">
+                        <h4>{{ member.membership_Plan.name }}</h4>
+                        <p>Plan Assigned &bull; Awaiting Payment</p>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+
+            <form method="post" class="modern-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.plan.id_for_label }}">
+                        <i class="fas fa-list-ul"></i> Subscription Plan
+                    </label>
+                    <div class="input-wrapper">
+                        {{ form.plan }}
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    {% if form.plan.errors %}
+                        <span class="error-msg">{{ form.plan.errors|striptags }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.amount.id_for_label }}">
+                        <i class="fas fa-money-bill-wave"></i> Payment Amount
+                    </label>
+                    <div class="input-wrapper">
+                        {{ form.amount }}
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    {% if form.amount.errors %}
+                        <span class="error-msg">{{ form.amount.errors|striptags }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.method.id_for_label }}">
+                        <i class="fas fa-wallet"></i> Payment Method
+                    </label>
+                    <div class="input-wrapper">
+                        {{ form.method }}
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    {% if form.method.errors %}
+                        <span class="error-msg">{{ form.method.errors|striptags }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.reference.id_for_label }}">
+                        <i class="fas fa-receipt"></i> Transaction Reference
+                    </label>
+                    <div class="input-wrapper">
+                        {{ form.reference }}
+                        <i class="fas fa-hashtag"></i>
+                    </div>
+                    {% if form.reference.errors %}
+                        <span class="error-msg">{{ form.reference.errors|striptags }}</span>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitPayment">
+                    <i class="fas fa-check-circle"></i> Complete Payment
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
+{% endblock %}
 
-<h1>Record Payment for {{ member.full_name }}</h1>
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('.modern-form');
+        const submitBtn = document.getElementById('submitPayment');
+        
+        form.addEventListener('submit', function() {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.style.opacity = '0.7';
+            submitBtn.style.pointerEvents = 'none';
+        });
 
-{% for m in member.memberships.all %}
-{% if m.is_active %}
-<div
-    style="background: #e8f4fd; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
-    <h4 style="margin: 0 0 5px 0; color: #2c3e50;">Active Payment Plan</h4>
-    <p style="margin: 0; font-size: 14px; color: #34495e;">
-        <strong>{{ m.plan.name }}</strong> — KES {{ m.plan.price }}<br>
-        <span style="color: #7f8c8d;">Valid: {{ m.start_date|date:"d/m/Y" }} to {{ m.end_date|date:"d/m/Y" }}</span>
-    </p>
-</div>
-{% endif %}
-{% empty %}
-{% if member.membership_Plan %}
-<div
-    style="background: #e8f4fd; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
-    <h4 style="margin: 0 0 5px 0; color: #2c3e50;">Assigned Plan (No Active Membership)</h4>
-    <p style="margin: 0; font-size: 14px; color: #34495e;">
-        <strong>{{ member.membership_Plan.name }}</strong> — KES {{ member.membership_Plan.price }}
-    </p>
-</div>
-{% endif %}
-{% endfor %}
-
-<form method="post">
-    {% csrf_token %}
-
-    <div class="form-group">
-        <label for="{{ form.plan.id_for_label }}">{{ form.plan.label }}</label>
-        {{ form.plan }}
-        {% if form.plan.errors %}
-        <small style="color: red;">{{ form.plan.errors }}</small>
-        {% endif %}
-    </div>
-
-    <div class="form-group">
-        <label for="{{ form.amount.id_for_label }}">{{ form.amount.label }}</label>
-        {{ form.amount }}
-        {% if form.amount.errors %}
-        <small style="color: red;">{{ form.amount.errors }}</small>
-        {% endif %}
-    </div>
-
-    <div class="form-group">
-        <label for="{{ form.method.id_for_label }}">{{ form.method.label }}</label>
-        {{ form.method }}
-        {% if form.method.errors %}
-        <small style="color: red;">{{ form.method.errors }}</small>
-        {% endif %}
-    </div>
-
-    <div class="form-group">
-        <label for="{{ form.reference.id_for_label }}">{{ form.reference.label }} (Optional)</label>
-        {{ form.reference }}
-        {% if form.reference.errors %}
-        <small style="color: red;">{{ form.reference.errors }}</small>
-        {% endif %}
-    </div>
-
-    <button type="submit" class="btn btn-success">Record Payment</button>
-</form>
+        // Auto-update amount when plan changes (if available)
+        const planSelect = document.querySelector('select[name="plan"]');
+        const amountInput = document.querySelector('input[name="amount"]');
+        
+        if (planSelect && amountInput) {
+            planSelect.addEventListener('change', function() {
+                // This would ideally fetch from a small API or have embedded data
+                // For now, we'll let the user fill it or rely on the initial load
+            });
+        }
+    });
+</script>
 {% endblock %}
