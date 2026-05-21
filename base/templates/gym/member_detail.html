@@ -1,285 +1,660 @@
 {% extends 'gym/base.html' %}
 {% load static %}
 
-{% block title %}Member Details - Gym Management{% endblock %}
+{% block title %}{{ member.full_name }} — Command Center | GYMFLOW{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'gym/css/details.css' %}">{% endblock %}
+<link rel="stylesheet" href="{% static 'gym/css/details.css' %}">
+<style>
+    :root {
+        --hub-bg: #f8fafc;
+        --hub-card-bg: #ffffff;
+        --hub-text-main: #1e293b;
+        --hub-text-muted: #64748b;
+        --hub-accent: #3498db;
+        --hub-success: #2ecc71;
+        --hub-danger: #e74c3c;
+        --hub-warning: #f1c40f;
+        --hub-border: #e2e8f0;
+        --hub-radius: 20px;
+        --hub-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+        background-color: var(--hub-bg);
+    }
+
+    /* Command Center Header */
+    .command-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .command-header-top {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .command-header h1 {
+        font-size: 2.25rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+    }
+
+    .command-hub-badge {
+        background: linear-gradient(135deg, var(--hub-accent), #2980b9);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .command-header p {
+        color: var(--hub-text-muted);
+        font-size: 1.1rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Stats Grid */
+    .stats-hub-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .stat-widget {
+        background: var(--hub-card-bg);
+        padding: 1.5rem;
+        border-radius: var(--hub-radius);
+        box-shadow: var(--hub-shadow);
+        border: 1px solid var(--hub-border);
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-widget:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .icon-blue {
+        background: #ebf5ff;
+        color: #3182ce;
+    }
+
+    .icon-green {
+        background: #f0fff4;
+        color: #38a169;
+    }
+
+    .icon-purple {
+        background: #faf5ff;
+        color: #805ad5;
+    }
+
+    .icon-orange {
+        background: #fffaf0;
+        color: #dd6b20;
+    }
+
+    .stat-content h4 {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--hub-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-content .stat-value {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--hub-text-main);
+        margin-top: 2px;
+    }
+
+    /* Action Center */
+    .action-center {
+        background: #1e293b;
+        padding: 2.5rem;
+        border-radius: var(--hub-radius);
+        margin-bottom: 3rem;
+        color: white;
+    }
+
+    .action-center h3 {
+        color: white;
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+    }
+
+    .action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 1.25rem;
+        border-radius: 16px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+    }
+
+    .action-btn i {
+        font-size: 1.5rem;
+    }
+
+    .btn-hub-success {
+        background: rgba(46, 204, 113, 0.15);
+        color: #2ecc71;
+    }
+
+    .btn-hub-success:hover {
+        background: #2ecc71;
+        color: white;
+    }
+
+    .btn-hub-blue {
+        background: rgba(52, 152, 219, 0.15);
+        color: #3498db;
+    }
+
+    .btn-hub-blue:hover {
+        background: #3498db;
+        color: white;
+    }
+
+    .btn-hub-purple {
+        background: rgba(155, 89, 182, 0.15);
+        color: #9b59b2;
+    }
+
+    .btn-hub-purple:hover {
+        background: #9b59b2;
+        color: white;
+    }
+
+    .btn-hub-yellow {
+        background: rgba(241, 196, 15, 0.15);
+        color: #f1c40f;
+    }
+
+    .btn-hub-yellow:hover {
+        background: #f1c40f;
+        color: white;
+    }
+
+    /* Custom Tables */
+    .section-hub {
+        margin-bottom: 3rem;
+    }
+
+    .section-header-hub {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+    }
+
+    .section-header-hub h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .table-container-hub {
+        background: white;
+        border-radius: var(--hub-radius);
+        box-shadow: var(--hub-shadow);
+        overflow: hidden;
+        border: 1px solid var(--hub-border);
+    }
+
+    .table-hub {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table-hub th {
+        background: #f1f5f9;
+        text-align: left;
+        padding: 1.25rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--hub-text-muted);
+    }
+
+    .table-hub td {
+        padding: 1.25rem;
+        border-top: 1px solid var(--hub-border);
+        color: var(--hub-text-main);
+        font-size: 1rem;
+    }
+
+    .table-hub tr:hover td {
+        background-color: #f8fafc;
+    }
+
+    /* Diet & Workout Hub Cards */
+    .hub-grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+    }
+
+    .hub-card {
+        background: white;
+        border-radius: var(--hub-radius);
+        padding: 2rem;
+        border: 1px solid var(--hub-border);
+        box-shadow: var(--hub-shadow);
+    }
+
+    .hub-card h3 {
+        margin-top: 0;
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    /* Badges */
+    .badge-hub {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .badge-hub-active {
+        background: #c6f6d5;
+        color: #22543d;
+    }
+
+    .badge-hub-inactive {
+        background: #fed7d7;
+        color: #822727;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="back-section">
-    <a href="{% url 'member_list' %}" class="back-link">
-        <i class="fas fa-arrow-left"></i> Back to Members List
-    </a>
+<div class="command-header">
+    <div style="margin-bottom: 1.5rem;">
+        <a href="{% url 'member_list' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Members
+        </a>
+    </div>
+
+    <div class="command-header-top">
+        <h1>Command Center</h1>
+        <span class="command-hub-badge">Member HUB</span>
+    </div>
+    <p><i class="fas fa-user-circle"></i> {{ member.full_name }} <span style="opacity: 0.4; margin: 0 4px;">•</span> ID:
+        #{{ member.id }}</p>
 </div>
 
-<h1>{{ member.full_name }}</h1>
-
-<div class="info-grid">
-    <div class="card">
-        <h3>📋 Member Information</h3>
-        <p><strong>Phone:</strong> {{ member.phone }}</p>
-        <p><strong>Email:</strong> {{ member.email|default:"N/A" }}</p>
-        <p><strong>Address:</strong> {{ member.address|default:"N/A" }}</p>
-        <p><strong>Joined:</strong> {{ member.joined_on|date:"d/m/Y" }}</p>
-        <p><strong>Current Plan:</strong> {{ member.membership_Plan|default:"None" }}</p>
-        <p>
-            <strong>Trainer:</strong>
-            {% if member.trainer_assignment %}
-            <a href="{% url 'trainer_detail' member.trainer_assignment.trainer.id %}">
-                {{ member.trainer_assignment.trainer.full_name }}
-            </a>
-            {% if member.trainer_assignment.status == 'pending' %}
-            <span class="badge badge-pending">Pending Approval</span>
-            {% if user.is_staff %}
-        <div class="mt-1">
-            <a href="{% url 'trainer_assignment_action' member.trainer_assignment.id 'accept' %}"
-                class="btn btn-success btn-sm">Approve on behalf</a>
+<!-- Quick Stats Hub -->
+<div class="stats-hub-grid">
+    <div class="stat-widget">
+        <div class="stat-icon icon-blue">
+            <i class="fas fa-id-card"></i>
         </div>
-        {% endif %}
-        {% elif member.trainer_assignment.status == 'accepted' %}
-        <span class="badge-active">(Active)</span>
-        {% elif member.trainer_assignment.status == 'rejected' %}
-        <span class="badge-rejected">(Rejected)</span>
-        {% endif %}
-        {% else %}
-        <span class="text-muted">Not assigned</span>
-        {% endif %}
-        </p>
-        <div class="actions mt-1">
-            <a href="{% url 'member_edit' member.id %}" class="btn">Edit</a>
-            <a href="{% url 'member_delete' member.id %}" class="btn btn-danger">Delete</a>
+        <div class="stat-content">
+            <h4>Current Plan</h4>
+            <div class="stat-value">{{ member.membership_Plan|default:"No Active Plan" }}</div>
         </div>
     </div>
 
-    <div class="card">
-        <h3>⚡ Quick Actions</h3>
-        <div class="action-stack">
-            <a href="{% url 'mark_present' member.id %}" class="btn btn-success">✓ Check In Today</a>
-            <a href="{% url 'assign_membership' member.id %}" class="btn">Assign Membership</a>
-            <a href="{% url 'record_payment' member.id %}" class="btn">Record Payment</a>
-            <a href="{% url 'assign_trainer' member.id %}" class="btn btn-assign">🏋️ Assign Trainer</a>
+    <div class="stat-widget">
+        <div class="stat-icon icon-green">
+            <i class="fas fa-check-circle"></i>
         </div>
-    </div>
-</div>
-
-<h2>📅 Active Memberships</h2>
-{% if memberships %}
-<table>
-    <thead>
-        <tr>
-            <th>Plan</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for m in memberships %}
-        <tr>
-            <td>{{ m.plan.name }}</td>
-            <td>{{ m.start_date|date:"d/m/Y" }}</td>
-            <td>{{ m.end_date|date:"d/m/Y" }}</td>
-            <td>
-                {% if m.is_active %}
-                <span class="badge-success-bold">✓ Active</span>
+        <div class="stat-content">
+            <h4>Account Status</h4>
+            <div class="stat-value">
+                {% if member.is_currently_active %}
+                <span style="color: var(--hub-success);">● Active</span>
                 {% else %}
-                <span class="badge-rejected">Inactive</span>
+                <span style="color: var(--hub-danger);">● Inactive</span>
                 {% endif %}
-            </td>
-            <td>
-                <div class="actions">
-                    <a href="{% url 'membership_edit' m.id %}" class="btn">Edit</a>
-                    <a href="{% url 'membership_delete' m.id %}" class="btn btn-danger">Delete</a>
-                </div>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<div class="card">
-    <p>No active memberships. <a href="{% url 'assign_membership' member.id %}">Assign one now</a></p>
-</div>
-{% endif %}
-
-<h2 class="mt-2">💳 Payment History</h2>
-{% if payments %}
-<table>
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Plan</th>
-            <th>Amount (KES)</th>
-            <th>Balance</th>
-            <th>Method</th>
-            <th>Reference</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for p in payments %}
-        <tr>
-            <td>{{ p.date|date:"d/m/Y" }}</td>
-            <td>{{ p.plan_name }}</td>
-            <td>{{ p.amount }}</td>
-            <td>
-                {% if p.balance > 0 %}
-                <span class="badge-success-bold">{{ p.balance }}</span>
-                {% endif %}
-            </td>
-            <td>{{ p.method }}</td>
-            <td>{{ p.reference|default:"N/A" }}</td>
-            <td>
-                <div class="actions">
-                    <a href="{% url 'payment_edit' p.id %}" class="btn">Edit</a>
-                    <a href="{% url 'payment_delete' p.id %}" class="btn btn-danger">Delete</a>
-                </div>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<div class="card">
-    <p>No payments recorded. <a href="{% url 'record_payment' member.id %}">Record a payment</a></p>
-</div>
-{% endif %}
-
-<div class="info-grid mt-2">
-    <div class="card diet-card">
-        <h3>🍽️ Diet Plan</h3>
-        {% if diet_plan %}
-        <div class="diet-target">
-            <h4 class="diet-target-title">Daily Target</h4>
-            <div class="diet-target-value">
-                {{ diet_plan.calories }} <span class="diet-target-unit">kcal</span>
             </div>
         </div>
+    </div>
 
-        <div class="diet-grid">
-            <div class="diet-macro-box macro-box-p">
-                <strong class="macro-title macro-title-p">Protein</strong>
-                <span class="macro-val">{{ diet_plan.protein|default:"-" }}g</span>
-            </div>
-            <div class="diet-macro-box macro-box-c">
-                <strong class="macro-title macro-title-c">Carbs</strong>
-                <span class="macro-val">{{ diet_plan.carbs|default:"-" }}g</span>
-            </div>
-            <div class="diet-macro-box macro-box-f">
-                <strong class="macro-title macro-title-f">Fats</strong>
-                <span class="macro-val">{{ diet_plan.fats|default:"-" }}g</span>
+    <div class="stat-widget">
+        <div class="stat-icon icon-purple">
+            <i class="fas fa-user-tie"></i>
+        </div>
+        <div class="stat-content">
+            <h4>Trainer</h4>
+            <div class="stat-value">
+                {% if member.trainer_assignment %}
+                {{ member.trainer_assignment.trainer.full_name }}
+                {% else %}
+                <span style="color: var(--hub-text-muted); font-weight: 400;">Not Assigned</span>
+                {% endif %}
             </div>
         </div>
+    </div>
 
-        {% if diet_plan.notes %}
-        <div class="diet-notes">
-            <h4 class="diet-notes-title">📝 Notes / Guidance</h4>
-            <p class="diet-notes-content">{{ diet_plan.notes|linebreaksbr }}</p>
+    <div class="stat-widget">
+        <div class="stat-icon icon-orange">
+            <i class="fas fa-calendar-alt"></i>
+        </div>
+        <div class="stat-content">
+            <h4>Joined On</h4>
+            <div class="stat-value">{{ member.joined_on|date:"d M Y" }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Center -->
+<div class="action-center">
+    <h3><i class="fas fa-bolt"></i> Quick Operations</h3>
+    <div class="action-grid">
+        <a href="{% url 'mark_present' member.id %}" class="action-btn btn-hub-success">
+            <i class="fas fa-calendar-check"></i>
+            <span>Log Check-In</span>
+        </a>
+        <a href="{% url 'assign_membership' member.id %}" class="action-btn btn-hub-blue">
+            <i class="fas fa-plus-circle"></i>
+            <span>Assign Plan</span>
+        </a>
+        <a href="{% url 'record_payment' member.id %}" class="action-btn btn-hub-yellow">
+            <i class="fas fa-credit-card"></i>
+            <span>Record Payment</span>
+        </a>
+        <a href="{% url 'assign_trainer' member.id %}" class="action-btn btn-hub-purple">
+            <i class="fas fa-dumbbell"></i>
+            <span>Assign Trainer</span>
+        </a>
+    </div>
+</div>
+
+<!-- Data Tables Grid -->
+<div class="section-hub">
+    <div class="section-header-hub">
+        <h2><i class="fas fa-history"></i> Membership Roadmap</h2>
+    </div>
+    <div class="table-container-hub">
+        {% if memberships %}
+        <table class="table-hub">
+            <thead>
+                <tr>
+                    <th>Plan / Program</th>
+                    <th>Period</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Management</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in memberships %}
+                <tr>
+                    <td><strong>{{ m.plan.name }}</strong></td>
+                    <td>{{ m.start_date|date:"d M Y" }} — {{ m.end_date|date:"d M Y" }}</td>
+                    <td>
+                        {% if m.is_active %}
+                        <span class="badge-hub badge-hub-active">ACTIVE</span>
+                        {% else %}
+                        <span class="badge-hub badge-hub-inactive">EXPIRED</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="actions" style="justify-content: flex-end;">
+                            <a href="{% url 'membership_edit' m.id %}" class="btn">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="padding: 2.5rem; text-align: center; color: var(--hub-text-muted);">
+            <i class="fas fa-folder-open"
+                style="font-size: 2rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
+            No memberships assigned yet.
         </div>
         {% endif %}
+    </div>
+</div>
 
-        <div class="actions mt-auto">
-            <a href="{% url 'diet_plan_edit' member.id %}" class="btn w-full">Edit
-                Diet Plan</a>
-        </div>
+<div class="section-hub">
+    <div class="section-header-hub">
+        <h2><i class="fas fa-file-invoice-dollar"></i> Transaction History</h2>
+    </div>
+    <div class="table-container-hub">
+        {% if payments %}
+        <table class="table-hub">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Plan</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th style="text-align: right;">Management</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in payments %}
+                <tr>
+                    <td>{{ p.date|date:"d M Y" }}</td>
+                    <td>{{ p.plan_name }}</td>
+                    <td><span style="font-weight: 700;">KES {{ p.amount }}</span></td>
+                    <td><span class="badge-hub" style="background: #edf2f7; color: #4a5568;">{{ p.method }}</span></td>
+                    <td style="text-align: right;">
+                        <div class="actions" style="justify-content: flex-end;">
+                            <a href="{% url 'payment_edit' p.id %}" class="btn">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         {% else %}
-        <div class="diet-empty">
-            <div class="diet-empty-icon">🥗</div>
-            <p>No diet plan has been created yet.</p>
-            <a href="{% url 'diet_plan_edit' member.id %}" class="btn btn-primary">Create Diet Plan</a>
+        <div style="padding: 2.5rem; text-align: center; color: var(--hub-text-muted);">
+            No payments recorded.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Diet and Workout Hub -->
+<div class="hub-grid-2">
+    <div class="hub-card">
+        <h3><i class="fas fa-utensils" style="color: #ed8936;"></i> Nutrition Strategy</h3>
+        {% if diet_plan %}
+        <div
+            style="background: #f8fafc; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px dashed #cbd5e1;">
+            <div
+                style="font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-bottom: 0.5rem;">
+                Daily Fuel Goal</div>
+            <div style="font-size: 1.75rem; font-weight: 800; color: #1e293b;">{{ diet_plan.calories }} <small
+                    style="font-size: 0.9rem; color: #64748b; font-weight: 500;">kcal</small></div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 1rem;">
+                <div
+                    style="background: white; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0;">
+                    <div style="font-size: 0.65rem; color: #64748b;">Protein</div>
+                    <div style="font-weight: 700; color: #1e293b;">{{ diet_plan.protein|default:"-" }}g</div>
+                </div>
+                <div
+                    style="background: white; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0;">
+                    <div style="font-size: 0.65rem; color: #64748b;">Carbs</div>
+                    <div style="font-weight: 700; color: #1e293b;">{{ diet_plan.carbs|default:"-" }}g</div>
+                </div>
+                <div
+                    style="background: white; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0;">
+                    <div style="font-size: 0.65rem; color: #64748b;">Fats</div>
+                    <div style="font-weight: 700; color: #1e293b;">{{ diet_plan.fats|default:"-" }}g</div>
+                </div>
+            </div>
+        </div>
+        <a href="{% url 'diet_plan_edit' member.id %}" class="btn" style="width: 100%; text-align: center;">Modify
+            Plan</a>
+        {% else %}
+        <div
+            style="text-align: center; padding: 1.5rem; border: 1px dashed #cbd5e1; border-radius: 12px; margin-bottom: 1.5rem;">
+            <p style="color: #64748b; margin-bottom: 1rem;">No nutrition plan defined.</p>
+            <a href="{% url 'diet_plan_edit' member.id %}" class="btn btn-primary">Define Plan</a>
         </div>
         {% endif %}
     </div>
 
-    <div class="card">
-        <h3>🏋️ Workout Plans</h3>
+    <div class="hub-card">
+        <h3><i class="fas fa-dumbbell" style="color: #805ad5;"></i> Training Protocols</h3>
         {% if workout_plans %}
-        <div class="action-stack mb-1">
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
             {% for wp in workout_plans %}
-            <div class="workout-plan-item">
-                <span>
-                    <strong>{{ wp.name }}</strong>
-                    <span class="text-muted-small">
-                        {% if wp.is_active %}<span class="badge-active-small">(Active)</span>{% else %}(Inactive){% endif %}
-                    </span>
-                </span>
+            <div
+                style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <div>
+                    <div style="font-weight: 700; color: #1e293b;">{{ wp.name }}</div>
+                    <div style="font-size: 0.75rem; color: #64748b;">
+                        {% if wp.is_active %}<span style="color: #38a169;">● Active</span>{% else %}Inactive{% endif %}
+                    </div>
+                </div>
                 <div class="actions">
-                    <a href="{% url 'workout_plan_detail' wp.id %}" class="btn">View</a>
-                    <a href="{% url 'workout_plan_delete' wp.id %}" class="btn btn-danger">Del</a>
+                    <a href="{% url 'workout_plan_detail' wp.id %}" class="btn">Detail</a>
                 </div>
             </div>
             {% endfor %}
         </div>
-        <a href="{% url 'workout_plan_create' member.id %}" class="btn">Add New Workout Plan</a>
+        <a href="{% url 'workout_plan_create' member.id %}" class="btn" style="width: 100%; text-align: center;">New
+            Routine</a>
         {% else %}
-        <p>No workout plans assigned.</p>
-        <a href="{% url 'workout_plan_create' member.id %}" class="btn">Add Workout Plan</a>
+        <div
+            style="text-align: center; padding: 1.5rem; border: 1px dashed #cbd5e1; border-radius: 12px; margin-bottom: 1.5rem;">
+            <p style="color: #64748b; margin-bottom: 1rem;">No training routines assigned.</p>
+            <a href="{% url 'workout_plan_create' member.id %}" class="btn">Assign Routine</a>
+        </div>
         {% endif %}
     </div>
 </div>
 
-<h2 class="mt-2">📏 Body Measurements Logging</h2>
-{% if measurements %}
-<table>
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Weight (kg)</th>
-            <th>Height (cm)</th>
-            <th>Body Fat (%)</th>
-            <th>BMI</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for m in measurements %}
-        <tr>
-            <td>{{ m.date|date:"d/m/Y" }}</td>
-            <td>{{ m.weight }}</td>
-            <td>{{ m.height|default:"-" }}</td>
-            <td>{{ m.body_fat|default:"-" }}</td>
-            <td>{{ m.bmi|default:"-" }}</td>
-            <td>
-                <div class="actions">
-                    <a href="{% url 'measurement_delete' m.id %}" class="btn btn-danger">Delete</a>
-                </div>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<div class="mt-1">
-    <a href="{% url 'measurement_create' member.id %}" class="btn">Log New Measurement</a>
+<div class="section-hub mt-2">
+    <div class="section-header-hub">
+        <h2><i class="fas fa-weight"></i> Physical Evolution</h2>
+        <a href="{% url 'measurement_create' member.id %}" class="btn btn-primary">+ Log Progress</a>
+    </div>
+    <div class="table-container-hub">
+        {% if measurements %}
+        <table class="table-hub">
+            <thead>
+                <tr>
+                    <th>Log Date</th>
+                    <th>Weight</th>
+                    <th>Height</th>
+                    <th>Body Fat</th>
+                    <th>BMI</th>
+                    <th style="text-align: right;">Management</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in measurements %}
+                <tr>
+                    <td>{{ m.date|date:"d M Y" }}</td>
+                    <td><strong>{{ m.weight }} kg</strong></td>
+                    <td>{{ m.height|default:"-" }} cm</td>
+                    <td>{{ m.body_fat|default:"-" }} %</td>
+                    <td><span class="badge-hub" style="background: #ebf8ff; color: #2c5282;">{{ m.bmi|default:"-"
+                            }}</span></td>
+                    <td style="text-align: right;">
+                        <div class="actions" style="justify-content: flex-end;">
+                            <a href="{% url 'measurement_delete' m.id %}" class="btn btn-danger">Remove</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="padding: 2.5rem; text-align: center; color: var(--hub-text-muted);">
+            No body progress logs yet.
+        </div>
+        {% endif %}
+    </div>
 </div>
-{% else %}
-<div class="card">
-    <p>No body measurements recorded. <a href="{% url 'measurement_create' member.id %}">Log one now</a></p>
-</div>
-{% endif %}
 
-<h2 class="mt-2">👣 Recent Attendance (Last 30 days)</h2>
-{% if attendance %}
-<table>
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Check-in Time</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for a in attendance %}
-        <tr>
-            <td>{{ a.date|date:"d/m/Y" }}</td>
-            <td>{{ a.date|time:"H:i" }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<div class="card">
-    <p>No attendance records yet.</p>
+<div class="section-hub">
+    <div class="section-header-hub">
+        <h2><i class="fas fa-walking"></i> Attendance Log</h2>
+    </div>
+    <div class="table-container-hub" style="max-height: 400px; overflow-y: auto;">
+        {% if attendance %}
+        <table class="table-hub">
+            <thead>
+                <tr>
+                    <th style="position: sticky; top: 0; z-index: 1;">Date</th>
+                    <th style="position: sticky; top: 0; z-index: 1;">Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in attendance %}
+                <tr>
+                    <td>{{ a.date|date:"l, d M Y" }}</td>
+                    <td><i class="far fa-clock" style="margin-right: 6px; opacity: 0.5;"></i> {{ a.date|time:"H:i" }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="padding: 2.5rem; text-align: center; color: var(--hub-text-muted);">
+            No attendance history found.
+        </div>
+        {% endif %}
+    </div>
 </div>
-{% endif %}
+
+<div
+    style="margin-top: 4rem; display: flex; gap: 1rem; justify-content: center; border-top: 1px solid var(--hub-border); padding-top: 2rem; margin-bottom: 4rem;">
+    <a href="{% url 'member_edit' member.id %}" class="btn"
+        style="min-width: 150px; text-align: center; padding: 0.75rem;">Edit Profile</a>
+    <a href="{% url 'member_delete' member.id %}" class="btn btn-danger"
+        style="min-width: 150px; text-align: center; padding: 0.75rem;">Terminate Profile</a>
+</div>
+
 {% endblock %}
