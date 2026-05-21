@@ -1,39 +1,272 @@
 {% extends 'gym/base.html' %}
 
-{% block title %}Assign Membership - Gym Management{% endblock %}
+{% block title %}Assign Membership - GYMFLOW{% endblock %}
+
+{% block extra_css %}
+<style>
+    .membership-container {
+        max-width: 700px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .premium-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid #edf2f7;
+    }
+
+    .card-header {
+        background: linear-gradient(145deg, #2c3e50, #1a252f);
+        padding: 2rem;
+        color: white;
+        text-align: center;
+    }
+
+    .card-header h1 {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    .card-header p {
+        margin: 0.5rem 0 0;
+        opacity: 0.7;
+        font-size: 0.95rem;
+    }
+
+    .card-body {
+        padding: 2.5rem;
+    }
+
+    /* Current Plan Warning */
+    .current-plan-alert {
+        background: linear-gradient(135deg, #fff9db, #fff3bf);
+        border: 1px solid #fbd38d;
+        padding: 1.25rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .alert-icon {
+        width: 50px;
+        height: 50px;
+        background: white;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ed8936;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        flex-shrink: 0;
+    }
+
+    .alert-info h4 {
+        margin: 0;
+        color: #744210;
+        font-size: 1rem;
+    }
+
+    .alert-info p {
+        margin: 0.25rem 0 0;
+        font-size: 0.85rem;
+        color: #975a16;
+    }
+
+    /* Modern Form */
+    .modern-form {
+        background: none;
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+    }
+
+    .modern-form .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .modern-form label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        margin-bottom: 0.6rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-wrapper i {
+        position: absolute;
+        left: 1.1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        transition: color 0.3s ease;
+        z-index: 1;
+    }
+
+    .modern-form input,
+    .modern-form select {
+        padding: 0.85rem 1rem 0.85rem 3rem !important;
+        border: 2px solid #f1f5f9;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #f8fafc;
+        width: 100%;
+        color: #1e293b;
+    }
+
+    .modern-form input:focus,
+    .modern-form select:focus {
+        background: white;
+        border-color: #3498db;
+        box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+        outline: none;
+    }
+
+    .submit-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #3498db, #2ecc71);
+        color: white;
+        border: none;
+        padding: 1rem;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        box-shadow: 0 10px 20px rgba(46, 204, 113, 0.15);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px rgba(46, 204, 113, 0.25);
+        filter: brightness(1.05);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    .error-msg {
+        color: #e53e3e;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: block;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<a href="{% url 'member_detail' member.id %}" class="back-link">← Back to {{ member.full_name }}</a>
-
-<h1>Assign Membership to {{ member.full_name }}</h1>
-
-<form method="post">
-    {% csrf_token %}
-    <input type="hidden" name="next_url" value="{{ next_url }}">
-    <div class="form-group">
-        <label for="{{ form.plan.id_for_label }}">{{ form.plan.label }}</label>
-        {{ form.plan }}
-        {% if form.plan.errors %}
-        <small style="color: red;">{{ form.plan.errors }}</small>
-        {% endif %}
+<div class="membership-container">
+    <div style="margin-bottom: 1.5rem;">
+        <a href="{% url 'member_detail' member.id %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to {{ member.full_name }}
+        </a>
     </div>
 
-    <div class="form-group">
-        <label for="{{ form.start_date.id_for_label }}">{{ form.start_date.label }}</label>
-        {{ form.start_date }}
-        {% if form.start_date.errors %}
-        <small style="color: red;">{{ form.start_date.errors }}</small>
-        {% endif %}
-    </div>
+    <div class="premium-card">
+        <div class="card-header">
+            <h1>Assign Membership</h1>
+            <p>{{ member.full_name }}</p>
+        </div>
 
-    <div class="form-group">
-        <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</label>
-        {{ form.end_date }}
-        {% if form.end_date.errors %}
-        <small style="color: red;">{{ form.end_date.errors }}</small>
-        {% endif %}
-    </div>
+        <div class="card-body">
+            {% if active_membership %}
+            <div class="current-plan-alert">
+                <div class="alert-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="alert-info">
+                    <h4>Active Plan: {{ active_membership.plan.name }}</h4>
+                    <p>Valid until {{ active_membership.end_date|date:"d M Y" }}. Assigning a new plan will deactivate
+                        this one.</p>
+                </div>
+            </div>
+            {% endif %}
 
-    <button type="submit" class="btn btn-success">Save Membership</button>
-</form>
+            <form method="post" class="modern-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.plan.id_for_label }}">
+                        <i class="fas fa-list-ul"></i> Membership Plan
+                    </label>
+                    <div class="input-wrapper">
+                        {{ form.plan }}
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    {% if form.plan.errors %}
+                    <span class="error-msg">{{ form.plan.errors|striptags }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.start_date.id_for_label }}">
+                        <i class="fas fa-calendar-check"></i> Start Date
+                    </label>
+                    <div class="input-wrapper">
+                        {{ form.start_date }}
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    {% if form.start_date.errors %}
+                    <span class="error-msg">{{ form.start_date.errors|striptags }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.end_date.id_for_label }}">
+                        <i class="fas fa-calendar-times"></i> End Date
+                    </label>
+                    <div class="input-wrapper">
+                        {{ form.end_date }}
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    {% if form.end_date.errors %}
+                    <span class="error-msg">{{ form.end_date.errors|striptags }}</span>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitMembership">
+                    <i class="fas fa-user-check"></i>
+                    {% if active_membership %}Reassign Membership{% else %}Assign Membership{% endif %}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('.modern-form');
+        const submitBtn = document.getElementById('submitMembership');
+
+        form.addEventListener('submit', function () {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.style.opacity = '0.7';
+            submitBtn.style.pointerEvents = 'none';
+        });
+    });
+</script>
 {% endblock %}

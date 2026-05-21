@@ -53,27 +53,40 @@ def plan_delete(request, pk):
 @login_required
 def assign_membership(request, member_id):
     member = get_object_or_404(Member, id=member_id)
-
-    if request.method == "GET" and member.memberships.filter(is_active=True).exists():
-        messages.error(request, "This member already has an active membership.")
-        return redirect("member_detail", member_id=member.id)
+    active_membership = member.memberships.filter(is_active=True).first()
 
     if request.method == "POST":
-        if member.memberships.filter(is_active=True).exists():
-            messages.error(request, "This member already has an active membership.")
-            return redirect("member_detail", member_id=member.id)
-
         form = MembershipForm(request.POST)
         if form.is_valid():
+            # Deactivate any existing active membership
+            if active_membership:
+                active_membership.is_active = False
+                active_membership.save()
+
             membership = form.save(commit=False)
             membership.member = member
+            membership.is_active = True
             membership.save()
-            messages.success(request, "Membership assigned successfully.")
+
+            # Update the member's assigned plan
+            member.membership_Plan = membership.plan
+            member.save()
+
+            messages.success(
+                request,
+                f"Membership '{membership.plan.name}' assigned to {member.full_name} successfully."
+            )
             return redirect("member_detail", member_id=member.id)
     else:
         form = MembershipForm(initial={"member": member})
 
-    return render(request, "gym/membership_form.html", {"form": form, "member": member})
+    plans = MembershipPlan.objects.all().order_by("price")
+    return render(request, "gym/membership_form.html", {
+        "form": form,
+        "member": member,
+        "active_membership": active_membership,
+        "plans": plans,
+    })
 
 
 @login_required
