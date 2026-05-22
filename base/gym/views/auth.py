@@ -112,7 +112,7 @@ class StaffCreateForm(forms.Form):
         return phone
 
 from ..models import Member, Trainer
-from .trainers import admin_required
+from ..decorators import admin_required
 
 @admin_required
 def staff_create(request):

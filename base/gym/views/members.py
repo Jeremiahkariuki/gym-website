@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from .trainers import admin_required, staff_or_trainer_required
+from ..decorators import admin_required, staff_or_trainer_required
 
 from ..models import (
     DietPlan,

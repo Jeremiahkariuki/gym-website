@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from .trainers import admin_required, staff_or_trainer_required
+from ..decorators import admin_required, staff_or_trainer_required
 
 from ..forms import MembershipForm, PlanForm
 from ..models import Member, Membership, MembershipPlan

@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from ..models import GymClass, Equipment, Announcement, GymPhoto, SystemSetting, Attendance, Member
 from ..forms import GymClassForm, EquipmentForm, AnnouncementForm, GymPhotoForm, SystemSettingForm
-from .trainers import admin_required
+from ..decorators import admin_required
 
 # --- Gym Class Management ---
 @admin_required

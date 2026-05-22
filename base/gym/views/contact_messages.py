@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from ..models import ContactMessage
-from .trainers import admin_required
+from ..decorators import admin_required
 
 @admin_required
 def contact_message_list(request):
