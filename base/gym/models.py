@@ -236,7 +236,7 @@ class TrainerAssignment(models.Model):
         ("accepted", "Accepted"),
         ("rejected", "Rejected"),
     ]
-    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, related_name="assignments")
+    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, related_name="assignments", null=True, blank=True)
     member = models.OneToOneField(Member, on_delete=models.CASCADE, related_name="trainer_assignment")
     assigned_on = models.DateField(auto_now_add=True)
     requested_on = models.DateTimeField(default=timezone.now)

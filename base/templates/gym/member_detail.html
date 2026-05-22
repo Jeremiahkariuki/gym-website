@@ -409,7 +409,7 @@
         </a>
         <a href="{% url 'assign_trainer' member.id %}" class="action-btn btn-hub-purple">
             <i class="fas fa-dumbbell"></i>
-            <span>Assign Trainer</span>
+            <span>{% if user.is_staff %}Assign Trainer{% else %}Request Trainer{% endif %}</span>
         </a>
     </div>
 </div>

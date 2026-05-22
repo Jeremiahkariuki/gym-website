@@ -200,12 +200,35 @@ def trainer_delete(request, trainer_id):
     return render(request, "gym/trainer_confirm_delete.html", {"trainer": trainer})
 
 
-@admin_required
+@login_required
 def assign_trainer(request, member_id):
     member = get_object_or_404(Member, id=member_id)
+
+    # Access Check: Admin or the Member themselves
+    is_admin = request.user.is_staff
+    is_self = hasattr(request.user, 'member_profile') and request.user.member_profile.id == member.id
+    
+    if not (is_admin or is_self):
+        messages.error(request, "You don't have permission to access this page.")
+        return redirect("portal_dashboard")
+
     current_assignment = getattr(member, "trainer_assignment", None)
 
     if request.method == "POST":
+        if not is_admin:
+            # Member requesting a trainer
+            if not current_assignment:
+                TrainerAssignment.objects.create(
+                    member=member,
+                    trainer=None,
+                    status='pending'
+                )
+                messages.success(request, "Trainer request sent! An admin will assign a trainer for you soon.")
+            else:
+                messages.info(request, "You already have a trainer or a pending request.")
+            return redirect("member_detail", member_id=member.id)
+
+        # Admin assignment flow
         form = AssignTrainerForm(request.POST)
         if form.is_valid():
             selected_trainer = form.cleaned_data["trainer"]
