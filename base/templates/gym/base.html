@@ -50,6 +50,11 @@
                 </a>
 
                 {% if user.is_authenticated %}
+                <a href="{% url 'portal_dashboard' %}"
+                    class="{% if request.resolver_match.url_name == 'portal_dashboard' %}active{% endif %}">
+                    <i class="fas fa-th-large nav-icon"></i> Dashboard
+                </a>
+
                 {% if user.is_staff %}
                 <!-- Branch Selector -->
                 <div class="branch-selector">
@@ -98,9 +103,6 @@
                             </span>
                         </div>
                         <div class="dropdown-list">
-                            <a href="{% url 'portal_dashboard' %}" class="dropdown-item-premium">
-                                <i class="fas fa-th-large"></i> Dashboard
-                            </a>
                             <a href="{% url 'portal_profile_hub' %}" class="dropdown-item-premium">
                                 <i class="fas fa-user-circle"></i> Profile Hub
                             </a>
