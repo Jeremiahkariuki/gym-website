@@ -37,24 +37,24 @@
             <div class="nav-links">
                 <!-- Public Links -->
                 <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
-                    <i class="fas fa-home nav-icon"></i> Home
+                    <i class="fa-solid fa-house-user nav-icon"></i> Home
                 </a>
 
                 {% if user.is_authenticated %}
                 <a href="{% url 'portal_dashboard' %}"
                     class="{% if request.resolver_match.url_name == 'portal_dashboard' %}active{% endif %}">
-                    <i class="fas fa-th-large nav-icon"></i> Dashboard
+                    <i class="fa-solid fa-gauge-high nav-icon"></i> Dashboard
                 </a>
                 {% endif %}
 
                 <a href="{% url 'class_schedule' %}"
                     class="{% if request.resolver_match.url_name == 'class_schedule' %}active{% endif %}">
-                    <i class="fas fa-calendar-alt nav-icon"></i>
+                    <i class="fa-solid fa-calendar-days nav-icon"></i>
                     Classes
                 </a>
                 <a href="{% url 'contact' %}"
                     class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
-                    <i class="fas fa-envelope nav-icon"></i> Contact
+                    <i class="fa-solid fa-paper-plane nav-icon"></i> Contact
                 </a>
 
                 {% if user.is_authenticated %}
