@@ -4,11 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.db import models as db_models
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from .trainers import admin_required, staff_or_trainer_required
 
 from ..models import Attendance, Member, Membership, ContactMessage, Equipment, TrainerAssignment
 
 
-@login_required
+@staff_or_trainer_required
 def dashboard(request):
     today = timezone.now().date()
     this_month = timezone.now().month
@@ -77,7 +78,7 @@ def dashboard(request):
     )
 
 
-@login_required
+@staff_or_trainer_required
 def mark_present(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     today = timezone.now().date()
@@ -94,7 +95,7 @@ def mark_present(request, member_id):
     return redirect("dashboard")
 
 
-@login_required
+@staff_or_trainer_required
 def attendance_report(request):
     today = timezone.now().date()
     last_7_days = today - timedelta(days=7)

@@ -1,12 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+ 
+from .trainers import admin_required, staff_or_trainer_required
 
 from ..forms import DietPlanForm, ExerciseForm, MeasurementLogForm, WorkoutPlanForm
 from ..models import DietPlan, Exercise, MeasurementLog, Member, WorkoutPlan
 
 
-@login_required
+@staff_or_trainer_required
 def measurement_create(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     if request.method == "POST":
@@ -22,7 +24,7 @@ def measurement_create(request, member_id):
     return render(request, "gym/measurement_form.html", {"form": form, "member": member})
 
 
-@login_required
+@admin_required
 def measurement_delete(request, pk):
     measurement = get_object_or_404(MeasurementLog, pk=pk)
     member = measurement.member
@@ -37,7 +39,7 @@ def measurement_delete(request, pk):
     )
 
 
-@login_required
+@staff_or_trainer_required
 def diet_plan_edit(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     diet_plan, _ = DietPlan.objects.get_or_create(member=member, defaults={"calories": 2000})
@@ -52,7 +54,7 @@ def diet_plan_edit(request, member_id):
     return render(request, "gym/diet_plan_form.html", {"form": form, "member": member})
 
 
-@login_required
+@staff_or_trainer_required
 def workout_plan_create(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     if request.method == "POST":
@@ -72,6 +74,16 @@ def workout_plan_create(request, member_id):
 def workout_plan_detail(request, pk):
     workout = get_object_or_404(WorkoutPlan, pk=pk)
     member = workout.member
+
+    # Access check: Admin, Trainer, or the Member themselves
+    is_admin = request.user.is_staff
+    is_trainer = hasattr(request.user, 'trainer_profile')
+    is_self = hasattr(request.user, 'member_profile') and request.user.member_profile.id == member.id
+    
+    if not (is_admin or is_trainer or is_self):
+        messages.error(request, "You don't have permission to view this workout plan.")
+        return redirect("portal_dashboard")
+        
     exercises = workout.exercises.all()
 
     days_dict = {i: {"name": name, "exercises": []} for i, name in Exercise.DAYS}
@@ -85,7 +97,7 @@ def workout_plan_detail(request, pk):
     )
 
 
-@login_required
+@admin_required
 def workout_plan_delete(request, pk):
     workout = get_object_or_404(WorkoutPlan, pk=pk)
     member = workout.member
@@ -100,7 +112,7 @@ def workout_plan_delete(request, pk):
     )
 
 
-@login_required
+@staff_or_trainer_required
 def exercise_create(request, workout_id):
     workout = get_object_or_404(WorkoutPlan, id=workout_id)
     if request.method == "POST":
@@ -116,7 +128,7 @@ def exercise_create(request, workout_id):
     return render(request, "gym/exercise_form.html", {"form": form, "workout": workout})
 
 
-@login_required
+@admin_required
 def exercise_delete(request, pk):
     exercise = get_object_or_404(Exercise, pk=pk)
     workout = exercise.workout_plan

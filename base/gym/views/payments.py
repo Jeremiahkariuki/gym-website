@@ -7,12 +7,13 @@ from django.db import models as db_models
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from .trainers import admin_required, staff_or_trainer_required
 
 from ..forms import ExpenseForm, PaymentForm
 from ..models import Expense, Member, Membership, Payment
 
 
-@login_required
+@admin_required
 def record_payment(request, member_id):
     member = get_object_or_404(Member, id=member_id)
 
@@ -62,7 +63,7 @@ def record_payment(request, member_id):
     return render(request, "gym/payment_form.html", {"form": form, "member": member})
 
 
-@login_required
+@admin_required
 def payment_edit(request, pk):
     payment = get_object_or_404(Payment, pk=pk)
     member = payment.member
@@ -91,7 +92,7 @@ def payment_edit(request, pk):
     return render(request, "gym/payment_form.html", {"form": form, "member": member})
 
 
-@login_required
+@admin_required
 def payment_delete(request, pk):
     payment = get_object_or_404(Payment, pk=pk)
     member = payment.member
@@ -110,7 +111,7 @@ def payment_delete(request, pk):
 
 from django.core.paginator import Paginator
 
-@login_required
+@admin_required
 def expense_list(request):
     active_branch_id = request.session.get('active_branch_id')
     expenses_list = Expense.objects.all().order_by("-date")
@@ -122,7 +123,7 @@ def expense_list(request):
     return render(request, "gym/expense_list.html", {"expenses": expenses})
 
 
-@login_required
+@admin_required
 def expense_create(request):
     if request.method == "POST":
         form = ExpenseForm(request.POST)
@@ -139,7 +140,7 @@ def expense_create(request):
     return render(request, "gym/expense_form.html", {"form": form})
 
 
-@login_required
+@admin_required
 def expense_edit(request, pk):
     expense = get_object_or_404(Expense, pk=pk)
     if request.method == "POST":
@@ -153,7 +154,7 @@ def expense_edit(request, pk):
     return render(request, "gym/expense_form.html", {"form": form})
 
 
-@login_required
+@admin_required
 def expense_delete(request, pk):
     expense = get_object_or_404(Expense, pk=pk)
     if request.method == "POST":
@@ -165,7 +166,7 @@ def expense_delete(request, pk):
 
 # ── Revenue Report ───────────────────────────────────────────────────────── #
 
-@login_required
+@admin_required
 def revenue_report(request):
     today = timezone.now().date()
     this_month = today.replace(day=1)
@@ -289,7 +290,7 @@ def revenue_report(request):
     )
 
 
-@login_required
+@admin_required
 def export_payments_csv(request):
     """Download all payments as a CSV file."""
     response = HttpResponse(content_type="text/csv")

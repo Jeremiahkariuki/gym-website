@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django import forms
 from ..models import Branch
+from .trainers import admin_required
 
 def is_admin(user):
     return user.is_authenticated and user.is_staff
@@ -55,7 +56,7 @@ def branch_delete(request, branch_id):
         return redirect("branch_list")
     return render(request, "gym/admin/branches/branch_confirm_delete.html", {"branch": branch})
 
-@login_required
+@admin_required
 def set_active_branch(request, branch_id):
     """Sets the active branch for the current session."""
     branch = get_object_or_404(Branch, id=branch_id)

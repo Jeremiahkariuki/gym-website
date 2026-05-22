@@ -35,7 +35,7 @@ class MemberForm(forms.ModelForm):
         fields = ["full_name", "phone", "email", "address"]
 
 
-@staff_or_trainer_required
+@admin_required
 def member_list(request):
     query = request.GET.get("q", "").strip()
     status = request.GET.get("status", "").strip()

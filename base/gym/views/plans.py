@@ -2,18 +2,19 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from .trainers import admin_required, staff_or_trainer_required
 
 from ..forms import MembershipForm, PlanForm
 from ..models import Member, Membership, MembershipPlan
 
 
-@login_required
+@staff_or_trainer_required
 def plan_list(request):
     plans = MembershipPlan.objects.all().order_by("price")
     return render(request, "gym/plan_list.html", {"plans": plans})
 
 
-@login_required
+@admin_required
 def plan_create(request):
     if request.method == "POST":
         form = PlanForm(request.POST)
@@ -26,7 +27,7 @@ def plan_create(request):
     return render(request, "gym/plan_form.html", {"form": form})
 
 
-@login_required
+@admin_required
 def plan_edit(request, pk):
     plan = get_object_or_404(MembershipPlan, pk=pk)
     if request.method == "POST":
@@ -40,7 +41,7 @@ def plan_edit(request, pk):
     return render(request, "gym/plan_form.html", {"form": form})
 
 
-@login_required
+@admin_required
 def plan_delete(request, pk):
     plan = get_object_or_404(MembershipPlan, pk=pk)
     if request.method == "POST":
@@ -50,7 +51,7 @@ def plan_delete(request, pk):
     return render(request, "gym/plan_confirm_delete.html", {"plan": plan})
 
 
-@login_required
+@admin_required
 def assign_membership(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     active_membership = member.memberships.filter(is_active=True).first()
@@ -89,7 +90,7 @@ def assign_membership(request, member_id):
     })
 
 
-@login_required
+@admin_required
 def membership_edit(request, pk):
     membership = get_object_or_404(Membership, pk=pk)
     member = membership.member
@@ -115,7 +116,7 @@ def membership_edit(request, pk):
     )
 
 
-@login_required
+@admin_required
 def membership_delete(request, pk):
     membership = get_object_or_404(Membership, pk=pk)
     member = membership.member
