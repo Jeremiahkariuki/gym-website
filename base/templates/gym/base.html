@@ -89,13 +89,14 @@
                     <a href="javascript:void(0)" class="header-profile-link" id="profileTrigger">
                         <div class="avatar-nav">
                             {% if user.member_profile.profile_picture %}
-                            <img src="{{ user.member_profile.profile_picture }}" alt="" class="avatar-img">
+                            <img src="{{ user.member_profile.profile_picture.url|default:user.member_profile.profile_picture }}"
+                                alt="" class="avatar-img">
                             {% else %}
                             {{ m_name|slice:":1"|upper }}
                             {% endif %}
                         </div>
                         <span class="d-none d-lg-inline">{{ m_name }}</span>
-                        <i class="fas fa-chevron-down chevron-subtle"></i>
+                        <i class="fa-solid fa-chevron-down chevron-subtle"></i>
                     </a>
 
                     <div class="profile-dropdown-content" id="profileDropdown">
@@ -133,11 +134,13 @@
                             trigger.addEventListener('click', function (e) {
                                 e.stopPropagation();
                                 dropdown.classList.toggle('show');
+                                trigger.classList.toggle('active');
                             });
 
                             document.addEventListener('click', function (e) {
                                 if (!dropdown.contains(e.target) && !trigger.contains(e.target)) {
                                     dropdown.classList.remove('show');
+                                    trigger.classList.remove('active');
                                 }
                             });
                         }
