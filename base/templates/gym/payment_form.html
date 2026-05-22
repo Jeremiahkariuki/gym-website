@@ -43,7 +43,8 @@
         margin: 0;
         font-size: 1.75rem;
         font-weight: 700;
-        color: white; /* Override global h1 color */
+        color: white;
+        /* Override global h1 color */
     }
 
     .card-header p {
@@ -78,7 +79,7 @@
         justify-content: center;
         color: #3498db;
         font-size: 1.5rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
 
     .plan-info h4 {
@@ -123,7 +124,7 @@
         transition: color 0.3s ease;
     }
 
-    .modern-form input, 
+    .modern-form input,
     .modern-form select {
         padding: 0.85rem 1rem 0.85rem 3rem !important;
         border: 2px solid #f1f5f9;
@@ -135,7 +136,7 @@
         color: #1e293b;
     }
 
-    .modern-form input:focus, 
+    .modern-form input:focus,
     .modern-form select:focus {
         background: white;
         border-color: var(--input-focus);
@@ -143,8 +144,8 @@
         outline: none;
     }
 
-    .modern-form input:focus + i,
-    .modern-form select:focus + i {
+    .modern-form input:focus+i,
+    .modern-form select:focus+i {
         color: var(--input-focus);
     }
 
@@ -202,29 +203,31 @@
 
         <div class="card-body">
             {% for m in member.memberships.all %}
-                {% if m.is_active %}
-                <div class="active-plan-badge">
-                    <div class="plan-icon">
-                        <i class="fas fa-crown"></i>
-                    </div>
-                    <div class="plan-info">
-                        <h4>{{ m.plan.name }}</h4>
-                        <p>KES {{ m.plan.price }} &bull; Valid til {{ m.end_date|date:"d M Y" }}</p>
-                    </div>
+            {% if m.is_active %}
+            <div class="active-plan-badge">
+                <div class="plan-icon">
+                    <i class="fas fa-crown"></i>
                 </div>
-                {% endif %}
+                <div class="plan-info">
+                    <h4>{{ m.plan.name }}</h4>
+                    <p>KES {{ m.plan.price }}
+                        {% if not m.is_expired %}&bull; Valid til {{ m.end_date|date:"d M Y" }}{% endif %}
+                    </p>
+                </div>
+            </div>
+            {% endif %}
             {% empty %}
-                {% if member.membership_Plan %}
-                <div class="active-plan-badge" style="background: #fff9db; border-color: #fbd38d;">
-                    <div class="plan-icon" style="color: #ed8936;">
-                        <i class="fas fa-tag"></i>
-                    </div>
-                    <div class="plan-info">
-                        <h4>{{ member.membership_Plan.name }}</h4>
-                        <p>Plan Assigned &bull; Awaiting Payment</p>
-                    </div>
+            {% if member.membership_Plan %}
+            <div class="active-plan-badge" style="background: #fff9db; border-color: #fbd38d;">
+                <div class="plan-icon" style="color: #ed8936;">
+                    <i class="fas fa-tag"></i>
                 </div>
-                {% endif %}
+                <div class="plan-info">
+                    <h4>{{ member.membership_Plan.name }}</h4>
+                    <p>Plan Assigned &bull; Awaiting Payment</p>
+                </div>
+            </div>
+            {% endif %}
             {% endfor %}
 
             <form method="post" class="modern-form">
@@ -239,7 +242,7 @@
                         <i class="fas fa-dumbbell"></i>
                     </div>
                     {% if form.plan.errors %}
-                        <span class="error-msg">{{ form.plan.errors|striptags }}</span>
+                    <span class="error-msg">{{ form.plan.errors|striptags }}</span>
                     {% endif %}
                 </div>
 
@@ -252,7 +255,7 @@
                         <i class="fas fa-coins"></i>
                     </div>
                     {% if form.amount.errors %}
-                        <span class="error-msg">{{ form.amount.errors|striptags }}</span>
+                    <span class="error-msg">{{ form.amount.errors|striptags }}</span>
                     {% endif %}
                 </div>
 
@@ -265,7 +268,7 @@
                         <i class="fas fa-credit-card"></i>
                     </div>
                     {% if form.method.errors %}
-                        <span class="error-msg">{{ form.method.errors|striptags }}</span>
+                    <span class="error-msg">{{ form.method.errors|striptags }}</span>
                     {% endif %}
                 </div>
 
@@ -278,7 +281,7 @@
                         <i class="fas fa-hashtag"></i>
                     </div>
                     {% if form.reference.errors %}
-                        <span class="error-msg">{{ form.reference.errors|striptags }}</span>
+                    <span class="error-msg">{{ form.reference.errors|striptags }}</span>
                     {% endif %}
                 </div>
 
@@ -293,11 +296,11 @@
 
 {% block extra_js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const form = document.querySelector('.modern-form');
         const submitBtn = document.getElementById('submitPayment');
-        
-        form.addEventListener('submit', function() {
+
+        form.addEventListener('submit', function () {
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
             submitBtn.style.opacity = '0.7';
             submitBtn.style.pointerEvents = 'none';
@@ -306,9 +309,9 @@
         // Auto-update amount when plan changes (if available)
         const planSelect = document.querySelector('select[name="plan"]');
         const amountInput = document.querySelector('input[name="amount"]');
-        
+
         if (planSelect && amountInput) {
-            planSelect.addEventListener('change', function() {
+            planSelect.addEventListener('change', function () {
                 // This would ideally fetch from a small API or have embedded data
                 // For now, we'll let the user fill it or rely on the initial load
             });
