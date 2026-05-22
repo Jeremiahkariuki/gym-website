@@ -13,17 +13,9 @@ from ..forms import ExpenseForm, PaymentForm
 from ..models import Expense, Member, Membership, Payment
 
 
-@login_required
+@admin_required
 def record_payment(request, member_id):
     member = get_object_or_404(Member, id=member_id)
-
-    # Access Check: Admin or the Member themselves
-    is_admin = request.user.is_staff
-    is_self = hasattr(request.user, 'member_profile') and request.user.member_profile.id == member.id
-    
-    if not (is_admin or is_self):
-        messages.error(request, "You don't have permission to record/view this payment.")
-        return redirect("portal_dashboard")
 
     if request.method == "POST":
         form = PaymentForm(request.POST, member=member)

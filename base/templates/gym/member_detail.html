@@ -41,6 +41,7 @@
         font-weight: 800;
         background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
         margin: 0;
     }
@@ -399,6 +400,7 @@
             <i class="fas fa-calendar-check"></i>
             <span>Log Check-In</span>
         </a>
+        {% if user.is_staff %}
         <a href="{% url 'assign_membership' member.id %}" class="action-btn btn-hub-blue">
             <i class="fas fa-plus-circle"></i>
             <span>Assign Plan</span>
@@ -407,6 +409,7 @@
             <i class="fas fa-credit-card"></i>
             <span>Record Payment</span>
         </a>
+        {% endif %}
         <a href="{% url 'assign_trainer' member.id %}" class="action-btn btn-hub-purple">
             <i class="fas fa-dumbbell"></i>
             <span>{% if user.is_staff %}Assign Trainer{% else %}Request Trainer{% endif %}</span>
