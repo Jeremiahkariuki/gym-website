@@ -1,0 +1,177 @@
+{% extends "gym/base.html" %}
+{% load static %}
+
+{% block title %}Checkout | GYMFLOW{% endblock %}
+
+{% block body_class %}portal-theme{% endblock %}
+
+{% block extra_css %}
+<style>
+    body.portal-theme {
+        background: #0f172a !important;
+        background-image:
+            radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+            radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%) !important;
+        color: #f8fafc !important;
+        min-height: 100vh;
+    }
+
+    .checkout-page {
+        padding: 4rem 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .checkout-card {
+        background: rgba(255, 255, 255, 0.03) !important;
+        backdrop-filter: blur(12px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+        overflow: hidden;
+    }
+
+    .checkout-header {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+        padding: 2rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .checkout-header h2 {
+        color: #f8fafc;
+        font-weight: 800;
+        margin: 0;
+        font-size: 1.8rem;
+    }
+
+    .checkout-body {
+        padding: 2rem;
+    }
+
+    .plan-summary {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .summary-row:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .summary-label {
+        color: #94a3b8;
+        font-weight: 600;
+    }
+
+    .summary-value {
+        color: #f8fafc;
+        font-weight: 700;
+    }
+
+    .total-row {
+        font-size: 1.3rem;
+        color: #34d399;
+    }
+
+    .card-info {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: #60a5fa;
+    }
+
+    .btn-pay {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-pay:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+        color: white;
+    }
+
+    .btn-cancel {
+        display: block;
+        text-align: center;
+        margin-top: 1rem;
+        color: #94a3b8;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .btn-cancel:hover {
+        color: #f8fafc;
+        text-decoration: none;
+    }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="checkout-page">
+    <div class="checkout-card">
+        <div class="checkout-header">
+            <h2>Secure Checkout</h2>
+            <p style="color: #94a3b8; margin-top: 0.5rem; margin-bottom: 0;">Complete your gym membership activation</p>
+        </div>
+        
+        <div class="checkout-body">
+            <div class="plan-summary">
+                <div class="summary-row">
+                    <span class="summary-label">Membership Plan</span>
+                    <span class="summary-value">{{ plan.name }}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Duration</span>
+                    <span class="summary-value">{{ plan.duration_days }} Days</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span class="summary-label" style="color: #cbd5e1;">Total Amount</span>
+                    <span class="summary-value" style="color: #34d399;">KES {{ plan.price }}</span>
+                </div>
+            </div>
+
+            <div class="card-info">
+                <i class="bi bi-shield-check" style="font-size: 1.5rem;"></i>
+                <div>
+                    <div style="font-weight: 600; color: #f8fafc;">Payment Simulation</div>
+                    <div style="font-size: 0.85rem;">Clicking pay will immediately activate your account. No real card required.</div>
+                </div>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-pay">
+                    <i class="bi bi-lock-fill me-2"></i> Confirm & Pay KES {{ plan.price }}
+                </button>
+            </form>
+            
+            <a href="{% url 'portal_dashboard' %}" class="btn-cancel">Cancel and return to dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

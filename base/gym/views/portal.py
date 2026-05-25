@@ -241,8 +241,8 @@ def portal_achievement_room(request):
 def portal_subscribe(request, plan_id):
     """
     Handles the 'Activate Now' flow from the portal.
-    In a real application, this would redirect to a payment gateway (e.g. Stripe).
-    For this demo, it simulates a successful payment and instantly activates the plan.
+    On GET, renders a checkout page for members to review their plan.
+    On POST, simulates a successful online payment and instantly activates the plan.
     """
     from ..models import MembershipPlan, Membership, Payment
     from django.utils import timezone
@@ -255,26 +255,29 @@ def portal_subscribe(request, plan_id):
         
     plan = get_object_or_404(MembershipPlan, id=plan_id)
     
-    # Simulate payment processing and membership activation
-    membership, created = Membership.objects.get_or_create(
-        member=member,
-        plan=plan,
-        defaults={"start_date": timezone.now(), "is_active": True},
-    )
-    if not created:
-        membership.is_active = True
-        membership.start_date = timezone.now()
-        membership.save()
+    if request.method == "POST":
+        # Simulate payment processing and membership activation
+        membership, created = Membership.objects.get_or_create(
+            member=member,
+            plan=plan,
+            defaults={"start_date": timezone.now(), "is_active": True},
+        )
+        if not created:
+            membership.is_active = True
+            membership.start_date = timezone.now()
+            membership.save()
+            
+        # Record mock online payment
+        Payment.objects.create(
+            member=member,
+            amount=plan.price,
+            method="Online Payment",
+            Membership=membership,
+            branch=member.branch
+        )
         
-    # Record mock online payment
-    Payment.objects.create(
-        member=member,
-        amount=plan.price,
-        method="Online Payment",
-        Membership=membership,
-        branch=member.branch
-    )
-    
-    messages.success(request, f"Successfully activated {plan.name}! Your payment was processed.")
-    return redirect("portal_dashboard")
+        messages.success(request, f"Successfully activated {plan.name}! Your payment was processed.")
+        return redirect("portal_dashboard")
+        
+    return render(request, "gym/portal/checkout.html", {"member": member, "plan": plan})
 
