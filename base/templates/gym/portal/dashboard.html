@@ -68,7 +68,7 @@
         <div class="portal-hero-badge">
             <div class="plan-label">Current Plan</div>
             <div class="plan-name">{{ active_membership.plan.name }}</div>
-            <div class="plan-expiry">Expires {{ active_membership.end_date|date:"M d, Y" }}</div>
+            <div class="plan-expiry">Active until {{ active_membership.end_date|date:"M d, Y" }}</div>
         </div>
         {% endif %}
         {% else %}
