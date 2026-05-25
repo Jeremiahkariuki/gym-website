@@ -240,19 +240,41 @@ def portal_achievement_room(request):
 @login_required
 def portal_subscribe(request, plan_id):
     """
-    Handles the 'Join Now' flow after login/registration.
-    Redirects the member to the payment recording page for the selected plan.
+    Handles the 'Activate Now' flow from the portal.
+    In a real application, this would redirect to a payment gateway (e.g. Stripe).
+    For this demo, it simulates a successful payment and instantly activates the plan.
     """
-    from ..models import MembershipPlan
+    from ..models import MembershipPlan, Membership, Payment
+    from django.utils import timezone
+    
     try:
         member = request.user.member_profile
     except Member.DoesNotExist:
         messages.error(request, "Please complete your member profile first.")
         return redirect("home")
         
-    # Get the plan to ensure it exists
     plan = get_object_or_404(MembershipPlan, id=plan_id)
     
-    # Redirect to record_payment with the plan_id as a query parameter
-    return redirect(f"/members/{member.id}/payment/?plan_id={plan.id}")
+    # Simulate payment processing and membership activation
+    membership, created = Membership.objects.get_or_create(
+        member=member,
+        plan=plan,
+        defaults={"start_date": timezone.now(), "is_active": True},
+    )
+    if not created:
+        membership.is_active = True
+        membership.start_date = timezone.now()
+        membership.save()
+        
+    # Record mock online payment
+    Payment.objects.create(
+        member=member,
+        amount=plan.price,
+        method="Online Payment",
+        Membership=membership,
+        branch=member.branch
+    )
+    
+    messages.success(request, f"Successfully activated {plan.name}! Your payment was processed.")
+    return redirect("portal_dashboard")
 
