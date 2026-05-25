@@ -5,6 +5,16 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'gym/css/portal.css' %}">
+<style>
+    .portal-card .table,
+    .portal-card .table th,
+    .portal-card .table td,
+    .portal-card .table tr {
+        background-color: transparent !important;
+        color: white !important;
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+</style>
 {% endblock %}
 
 {% block body_class %}portal-theme{% endblock %}
@@ -24,7 +34,7 @@
                 <div class="portal-card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0"
-                            style="color: white; border-color: rgba(255,255,255,0.05);">
+                            style="--bs-table-bg: transparent; --bs-table-hover-bg: rgba(255,255,255,0.05); color: white; border-color: rgba(255,255,255,0.05);">
                             <thead style="background: rgba(255,255,255,0.05);">
                                 <tr>
                                     <th class="border-0 text-white opacity-50 small text-uppercase">Date</th>
