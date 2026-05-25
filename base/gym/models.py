@@ -79,7 +79,7 @@ class Membership(models.Model):
     is_active = models.BooleanField(default=True, db_index=True)
 
     def save(self, *args, **kwargs):
-        if not self.end_date and self.plan_id and self.start_date:
+        if self.plan_id and self.start_date:
             self.end_date = self.start_date + timedelta(days=self.plan.duration_days)
         super().save(*args, **kwargs)
 

@@ -256,16 +256,15 @@ def portal_subscribe(request, plan_id):
     plan = get_object_or_404(MembershipPlan, id=plan_id)
     
     if request.method == "POST":
-        # Simulate payment processing and membership activation
-        membership, created = Membership.objects.get_or_create(
+        # Deactivate any existing active memberships
+        Membership.objects.filter(member=member, is_active=True).update(is_active=False)
+        # Create a fresh membership for this payment period
+        membership = Membership.objects.create(
             member=member,
             plan=plan,
-            defaults={"start_date": timezone.now(), "is_active": True},
+            start_date=timezone.now().date(),
+            is_active=True,
         )
-        if not created:
-            membership.is_active = True
-            membership.start_date = timezone.now()
-            membership.save()
             
         # Record mock online payment
         Payment.objects.create(
