@@ -47,17 +47,17 @@
                             <tbody>
                                 {% for payment in payments %}
                                 <tr>
-                                    <td class="border-white border-opacity-5 text-white opacity-80 small">{{
-                                        payment.paid_on|date:"M d, Y H:i" }}</td>
-                                    <td class="border-white border-opacity-5 text-white fw-bold">{{ payment.plan_name }}
+                                    <td class="border-white border-opacity-5 text-white opacity-80 small">
+                                        {{payment.paid_on|date:"M d, Y H:i"}}</td>
+                                    <td class="border-white border-opacity-5 text-white fw-bold">{{payment.plan_name}}
                                     </td>
-                                    <td class="border-white border-opacity-5 text-white opacity-60 small">{{
-                                        payment.method }}</td>
-                                    <td class="border-white border-opacity-5 small"><code
-                                            class="text-white opacity-40">{{ payment.reference|default:"--" }}</code>
+                                    <td class="border-white border-opacity-5 text-white opacity-60 small">
+                                        {{payment.method}}</td>
+                                    <td class="border-white border-opacity-5 small">
+                                        <code class="text-white opacity-40">{{payment.reference|default:"--"}}</code>
                                     </td>
                                     <td class="border-white border-opacity-5 text-end fw-bold" style="color: #2ecc71;">
-                                        KES {{ payment.amount }}</td>
+                                        KES {{payment.amount}}</td>
                                 </tr>
                                 {% empty %}
                                 <tr>
