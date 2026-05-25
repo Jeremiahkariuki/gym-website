@@ -213,8 +213,7 @@
                 <div class="payment-row">
                     <div>
                         <div style="font-weight: 600; color: #f0f4f8;">{{ payment.paid_on|date:"M d, Y" }}</div>
-                        <small style="color: rgba(255, 255, 255, 0.4);">{{ payment.get_method_display|default:"Payment"
-                            }}</small>
+                        <small style="color: rgba(255, 255, 255, 0.4);">{{ payment.method|default:"Payment" }}</small>
                     </div>
                     <span style="font-weight: 800; color: #34d399; font-size: 1.1rem;">KES {{ payment.amount }}</span>
                 </div>
