@@ -280,12 +280,12 @@ body.portal-theme::before {
 }
 
 .glass-card {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     margin-top: -2rem;
     padding: 1.5rem !important;
 }
@@ -428,8 +428,16 @@ body.portal-theme::before {
 }
 
 /* ── Form Styles ── */
+.premium-form {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: none !important;
+}
+
 .form-group-premium {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .form-label-premium {
@@ -447,10 +455,11 @@ body.portal-theme::before {
 .portal-theme input,
 .portal-theme select,
 .portal-theme textarea {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
     color: white !important;
-    border-radius: 12px !important;
+    border-radius: 14px !important;
+    padding: 0.8rem 1rem !important;
 }
 
 .portal-theme input:focus {
