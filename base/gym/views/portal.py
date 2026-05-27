@@ -241,42 +241,88 @@ def portal_achievement_room(request):
 def portal_subscribe(request, plan_id):
     """
     Handles the 'Activate Now' flow from the portal.
-    On GET, renders a checkout page for members to review their plan.
-    On POST, simulates a successful online payment and instantly activates the plan.
+    Supports prorated upgrades: if the member has an active, non-expired
+    membership on a *different* plan, it calculates the unused-days credit
+    and charges only the difference.
     """
     from ..models import MembershipPlan, Membership, Payment
     from django.utils import timezone
-    
+    from decimal import Decimal, ROUND_HALF_UP
+
     try:
         member = request.user.member_profile
     except Member.DoesNotExist:
         messages.error(request, "Please complete your member profile first.")
         return redirect("home")
-        
+
     plan = get_object_or_404(MembershipPlan, id=plan_id)
-    
+    today = timezone.now().date()
+
+    # ── Upgrade calculation helper ──────────────────────────────────────
+    def _calc_upgrade(member, new_plan, today):
+        """Return (upgrade_info_dict, net_amount) or (None, new_plan.price)."""
+        active = member.memberships.filter(is_active=True).first()
+        if not active or active.is_expired or active.plan_id == new_plan.id:
+            return None, new_plan.price
+
+        remaining_days = max((active.end_date - today).days, 0)
+        if active.plan.duration_days > 0:
+            daily_rate = active.plan.price / Decimal(active.plan.duration_days)
+        else:
+            daily_rate = Decimal("0.00")
+        credit = (daily_rate * remaining_days).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        net = max(new_plan.price - credit, Decimal("0.00"))
+
+        info = {
+            "old_plan_name": active.plan.name,
+            "old_plan_price": active.plan.price,
+            "remaining_days": remaining_days,
+            "daily_rate": daily_rate.quantize(Decimal("0.01")),
+            "credit": credit,
+            "net_amount": net,
+            "is_upgrade": True,
+        }
+        return info, net
+
+    upgrade_info, net_amount = _calc_upgrade(member, plan, today)
+
     if request.method == "POST":
         # Deactivate any existing active memberships
         Membership.objects.filter(member=member, is_active=True).update(is_active=False)
-        # Create a fresh membership for this payment period
+
+        # Create a fresh membership for the new plan
         membership = Membership.objects.create(
             member=member,
             plan=plan,
-            start_date=timezone.now().date(),
+            start_date=today,
             is_active=True,
         )
-            
-        # Record mock online payment
+
+        # Record payment with the (possibly prorated) net amount
         Payment.objects.create(
             member=member,
-            amount=plan.price,
+            amount=net_amount,
             method="Online Payment",
             Membership=membership,
-            branch=member.branch
+            branch=member.branch,
         )
-        
-        messages.success(request, f"Successfully activated {plan.name}! Your payment was processed.")
+
+        if upgrade_info:
+            messages.success(
+                request,
+                f"Upgraded to {plan.name}! Credit of KES {upgrade_info['credit']} "
+                f"applied from your {upgrade_info['old_plan_name']} plan. "
+                f"Charged KES {net_amount}."
+            )
+        else:
+            messages.success(request, f"Successfully activated {plan.name}! Your payment was processed.")
         return redirect("portal_dashboard")
-        
-    return render(request, "gym/portal/checkout.html", {"member": member, "plan": plan})
+
+    context = {
+        "member": member,
+        "plan": plan,
+        "upgrade_info": upgrade_info,
+        "net_amount": net_amount,
+    }
+    return render(request, "gym/portal/checkout.html", context)
 

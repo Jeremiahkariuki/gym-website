@@ -149,11 +149,43 @@
                     <span class="summary-label">Duration</span>
                     <span class="summary-value">{{ plan.duration_days }} Days</span>
                 </div>
+
+                {% if upgrade_info %}
+                <div class="summary-row">
+                    <span class="summary-label">Plan Price</span>
+                    <span class="summary-value">KES {{ plan.price }}</span>
+                </div>
+                <div class="summary-row" style="border-bottom-color: rgba(52,211,153,0.2);">
+                    <span class="summary-label" style="color: #34d399;">
+                        <i class="bi bi-arrow-up-circle-fill me-1"></i>
+                        Upgrade Credit ({{ upgrade_info.remaining_days }} days left on {{ upgrade_info.old_plan_name }})
+                    </span>
+                    <span class="summary-value" style="color: #34d399;">- KES {{ upgrade_info.credit }}</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span class="summary-label" style="color: #cbd5e1;">Amount to Pay</span>
+                    <span class="summary-value" style="color: #34d399; font-size: 1.4rem;">KES {{ net_amount }}</span>
+                </div>
+                {% else %}
                 <div class="summary-row total-row">
                     <span class="summary-label" style="color: #cbd5e1;">Total Amount</span>
                     <span class="summary-value" style="color: #34d399;">KES {{ plan.price }}</span>
                 </div>
+                {% endif %}
             </div>
+
+            {% if upgrade_info %}
+            <div class="card-info" style="background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.3); color: #34d399;">
+                <i class="bi bi-arrow-up-circle-fill" style="font-size: 1.5rem;"></i>
+                <div>
+                    <div style="font-weight: 600; color: #f8fafc;">Upgrading from {{ upgrade_info.old_plan_name }}</div>
+                    <div style="font-size: 0.85rem;">
+                        You have {{ upgrade_info.remaining_days }} day{{ upgrade_info.remaining_days|pluralize }} remaining.
+                        A credit of KES {{ upgrade_info.credit }} has been applied automatically.
+                    </div>
+                </div>
+            </div>
+            {% endif %}
 
             <div class="card-info">
                 <i class="bi bi-shield-check" style="font-size: 1.5rem;"></i>
@@ -166,7 +198,7 @@
             <form method="POST">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-pay">
-                    <i class="bi bi-lock-fill me-2"></i> Confirm & Pay KES {{ plan.price }}
+                    <i class="bi bi-lock-fill me-2"></i> Confirm & Pay KES {{ net_amount }}
                 </button>
             </form>
             

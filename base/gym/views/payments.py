@@ -25,15 +25,43 @@ def record_payment(request, member_id):
 
             plan = form.cleaned_data.get("plan")
             if plan:
-                membership, created = Membership.objects.get_or_create(
+                from decimal import Decimal, ROUND_HALF_UP
+
+                # ── Prorated upgrade calculation ───────────────────────
+                active = member.memberships.filter(is_active=True).first()
+                upgrade_credit = Decimal("0.00")
+                today = timezone.now().date()
+
+                if (
+                    active
+                    and not active.is_expired
+                    and active.plan_id != plan.id
+                ):
+                    remaining_days = max((active.end_date - today).days, 0)
+                    if active.plan.duration_days > 0:
+                        daily_rate = active.plan.price / Decimal(active.plan.duration_days)
+                    else:
+                        daily_rate = Decimal("0.00")
+                    upgrade_credit = (daily_rate * remaining_days).quantize(
+                        Decimal("0.01"), rounding=ROUND_HALF_UP
+                    )
+                    # Deactivate old membership
+                    active.is_active = False
+                    active.save()
+
+                # ── Create new membership ──────────────────────────────
+                membership = Membership.objects.create(
                     member=member,
                     plan=plan,
-                    defaults={"start_date": timezone.now(), "is_active": True},
+                    start_date=today,
+                    is_active=True,
                 )
-                if not created:
-                    membership.is_active = True
-                    membership.save()
                 payment.Membership = membership
+
+                # Adjust payment amount if credit applies
+                if upgrade_credit > 0:
+                    net = max(plan.price - upgrade_credit, Decimal("0.00"))
+                    payment.amount = net
 
             payment.save()
             
@@ -45,7 +73,14 @@ def record_payment(request, member_id):
                 payment.branch_id = member.branch_id
             payment.save()
 
-            messages.success(request, "Payment recorded successfully.")
+            if plan and upgrade_credit > 0:
+                messages.success(
+                    request,
+                    f"Upgrade payment recorded! Credit of KES {upgrade_credit} "
+                    f"applied. Charged KES {payment.amount} for {plan.name}."
+                )
+            else:
+                messages.success(request, "Payment recorded successfully.")
             return redirect("member_detail", member_id=member.id)
     else:
         initial_data = {}
@@ -61,6 +96,7 @@ def record_payment(request, member_id):
         form = PaymentForm(member=member, initial=initial_data)
 
     return render(request, "gym/payment_form.html", {"form": form, "member": member})
+
 
 
 @admin_required

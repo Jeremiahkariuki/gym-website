@@ -230,6 +230,25 @@
             {% endif %}
             {% endfor %}
 
+            {% for m in member.memberships.all %}
+            {% if m.is_active and not m.is_expired %}
+            <div
+                style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border: 1px solid rgba(46,125,50,0.2); padding: 1.15rem; border-radius: 14px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
+                <div
+                    style="width: 42px; height: 42px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #2e7d32; font-size: 1.25rem; box-shadow: 0 2px 4px rgba(0,0,0,0.06);">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div>
+                    <div style="font-size: 0.85rem; font-weight: 700; color: #2e7d32;">Upgrade Mode Available</div>
+                    <div style="font-size: 0.8rem; color: #546e7a;">
+                        Active plan: <strong>{{ m.plan.name }}</strong> (valid till {{ m.end_date|date:"d M Y" }}).
+                        Selecting a different plan will automatically apply prorated credit for the remaining days.
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+
             <form method="post" class="modern-form">
                 {% csrf_token %}
 
