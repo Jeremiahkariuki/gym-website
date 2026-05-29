@@ -1,189 +1,261 @@
 {% extends 'gym/base.html' %}
 {% load static %}
 
-{% block title %}Dashboard - Gym Management{% endblock %}
+{% block title %}Dashboard | GYMFLOW Admin{% endblock %}
+
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'gym/css/dashboard.css' %}">{% endblock %}
+<link rel="stylesheet" href="{% static 'gym/css/dashboard.css' %}">
+<style>
+    /* Inline overrides if needed for specific dashboard elements */
+    .section-title-premium {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+
+    .section-title-premium i {
+        color: var(--accent-blue);
+        font-size: 1.2rem;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<h1>📊 Dashboard</h1>
+<div style="margin-top: 2rem; margin-bottom: 4rem;">
+    <h1 style="font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem;">📊 Admin Overview</h1>
+    <p style="color: var(--text-dim);">Welcome back. Here is what's happening at GYMFLOW today.</p>
+</div>
 
 <div class="stats-grid">
-    <div class="card">
-        <h3>Total Members</h3>
+    <div class="card stat-card-admin">
+        <span class="stat-label">Total Members</span>
         <div class="stat-value stat-primary">{{ total_members }}</div>
+        <div style="margin-top: auto; font-size: 0.8rem; color: var(--text-dim);">Active across all plans</div>
     </div>
-    <div class="card">
-        <h3>New Members Today</h3>
+    <div class="card stat-card-admin">
+        <span class="stat-label">Acquisitions Today</span>
         <div class="stat-value stat-success">{{ members_joined_today }}</div>
+        <div style="margin-top: auto; font-size: 0.8rem; color: var(--text-dim);">New growth since midnight</div>
     </div>
-    <div class="card">
-        <h3>Attendance Today</h3>
+    <div class="card stat-card-admin" style="border-bottom: 4px solid var(--accent-red);">
+        <span class="stat-label">Daily Attendance</span>
         <div class="stat-value stat-danger">{{ today_attendance }}</div>
+        <div style="margin-top: auto; font-size: 0.8rem; color: var(--text-dim);">Members checked in today</div>
+    </div>
+</div>
+
+<div class="two-col">
+    <div class="card">
+        <h3 class="section-title-premium" style="margin-top: 0;"><i class="fas fa-clock"></i> Today's Schedule</h3>
+        <div class="date-display" style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">
+            {{ today|date:"l" }}
+        </div>
+        <div style="color: var(--accent-blue); font-weight: 600; font-size: 1.1rem;">
+            {{ today|date:"F d, Y" }}
+        </div>
+        <hr style="margin: 2rem 0; opacity: 0.1;">
+        <div
+            style="display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px;">
+            <div
+                style="width: 40px; height: 40px; background: rgba(52, 152, 219, 0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-sun" style="color: var(--accent-blue);"></i>
+            </div>
+            <div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">Operational Status</div>
+                <div style="font-weight: 600;">System Online & Syncing</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 class="section-title-premium" style="margin-top: 0;"><i class="fas fa-bolt"></i> Global Operations</h3>
+        <div class="quick-actions-grid">
+            <a href="{% url 'qr_scanner' %}" class="btn-premium">
+                <i class="fas fa-qrcode"></i> Launch Check-in Scanner
+            </a>
+            <a href="{% url 'member_list' %}" class="btn-action">
+                <i class="fas fa-users"></i>
+                <span>Directory</span>
+            </a>
+            <a href="{% url 'admin_class_list' %}" class="btn-action">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Schedules</span>
+            </a>
+            <a href="{% url 'equipment_list' %}" class="btn-action">
+                <i class="fas fa-tools"></i>
+                <span>Inventory</span>
+            </a>
+            <a href="{% url 'plan_list' %}" class="btn-action">
+                <i class="fas fa-tags"></i>
+                <span>Plan Mgmt</span>
+            </a>
+            <a href="{% url 'expense_create' %}" class="btn-action btn-action-expense"
+                style="grid-column: 1 / -1; flex-direction: row; justify-content: center; padding: 0.8rem;">
+                <i class="fas fa-plus-circle"></i>
+                <span>Record New Financial Expense</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<h2 class="section-title-premium"><i class="fas fa-layer-group"></i> Ecosystem Management</h2>
+<div class="mgmt-grid">
+    <a href="{% url 'admin_announcement_list' %}" class="btn btn-announce"><i class="fas fa-bullhorn"
+            style="margin-right: 8px;"></i> Broadcasts</a>
+    <a href="{% url 'admin_gallery' %}" class="btn btn-gallery"><i class="fas fa-images" style="margin-right: 8px;"></i>
+        Visual Assets</a>
+    <a href="{% url 'system_settings' %}" class="btn btn-settings"><i class="fas fa-sliders-h"
+            style="margin-right: 8px;"></i> Global Config</a>
+</div>
+
+<div class="two-col">
+    <div>
+        <h2 class="section-title-premium"><i class="fas fa-hourglass-start"></i> Critical Renewals</h2>
+        <div class="card">
+            {% if expiring_soon %}
+            <div class="renewals-list">
+                {% for membership in expiring_soon %}
+                <div class="renewal-item">
+                    <div>
+                        <div style="font-weight: 700;">{{ membership.member.full_name }}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-dim);">{{ membership.plan.name }}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="renewal-expires">Exp: {{ membership.end_date|date:"d M" }}</div>
+                        <a href="{% url 'member_detail' membership.member.id %}" class="list-view-all"
+                            style="margin-top: 4px; font-size: 0.75rem;">Profile →</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p style="color: var(--text-dim); text-align: center; padding: 2rem 0;">No memberships expiring in the next
+                7 days.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div>
+        <h2 class="section-title-premium"><i class="fas fa-envelope-open-text"></i> Communication Peak</h2>
+        <div class="card">
+            {% if recent_messages %}
+            <div class="list-clean">
+                {% for msg in recent_messages %}
+                <div class="list-item">
+                    <a href="{% url 'contact_message_detail' msg.id %}" class="list-link">
+                        <div style="font-weight: 700; color: #fff;">{{ msg.name }}</div>
+                        <div class="list-subject">{{ msg.subject|truncatechars:40 }}</div>
+                        <div class="list-meta"><i class="far fa-clock" style="margin-right: 4px;"></i>{{
+                            msg.created_at|timesince }} ago</div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{% url 'contact_message_list' %}" class="list-view-all">Archive Processing →</a>
+            {% else %}
+            <p style="color: var(--text-dim); text-align: center; padding: 2rem 0;">No unread intelligence.</p>
+            {% endif %}
+        </div>
     </div>
 </div>
 
 <div class="two-col">
     <div>
-        <h2>📅 Today's Date</h2>
-        <div class="card">
-            <p class="date-display"><strong>{{ today|date:"l, F d, Y" }}</strong></p>
-        </div>
-    </div>
-    <div>
-        <h2>⚡ Quick Actions</h2>
-        <div class="card">
-            <div class="quick-actions-grid">
-                <a href="{% url 'qr_scanner' %}" class="btn-premium">
-                    <i class="fas fa-qrcode"></i> Launch QR Scanner
-                </a>
-                <a href="{% url 'member_list' %}" class="btn-action">
-                    <i class="fas fa-users"></i> View Members
-                </a>
-                <a href="{% url 'admin_class_list' %}" class="btn-action">
-                    <i class="fas fa-calendar-alt"></i> Manage Classes
-                </a>
-                <a href="{% url 'equipment_list' %}" class="btn-action">
-                    <i class="fas fa-tools"></i> Equipment
-                </a>
-                <a href="{% url 'plan_list' %}" class="btn-action">
-                    <i class="fas fa-tags"></i> View Plans
-                </a>
-                <a href="{% url 'expense_create' %}" class="btn-action btn-action-expense">
-                    <i class="fas fa-plus-circle"></i> Add Expense
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<h2 class="section-heading">🛠️ Advanced Management</h2>
-<div class="mgmt-grid">
-    <a href="{% url 'admin_announcement_list' %}" class="btn btn-announce">📢 Announcements</a>
-    <a href="{% url 'admin_gallery' %}" class="btn btn-gallery">🖼️ Gym Gallery</a>
-    <a href="{% url 'system_settings' %}" class="btn btn-settings">⚙️ System Settings</a>
-</div>
-
-<div>
-    <h2>⏰ Pending Renewals (Next 7 Days)</h2>
-    <div class="card">
-        {% if expiring_soon %}
-        <ul class="renewals-list">
-            {% for membership in expiring_soon %}
-            <li class="renewal-item">
-                <div>
-                    <strong>{{ membership.member.full_name }}</strong><br>
-                    <span class="renewal-plan">{{ membership.plan.name }}</span>
-                </div>
-                <div class="renewal-right">
-                    <span class="renewal-expires">Expires: {{ membership.end_date|date:"d/m" }}</span><br>
-                    <a href="{% url 'member_detail' membership.member.id %}" class="renewal-link">View Profile</a>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p class="text-muted-zero">No memberships expiring soon.</p>
-        {% endif %}
-    </div>
-</div>
-
-<div class="two-col two-col-mt">
-    <div>
-        <h2>✉️ Recent Messages</h2>
-        <div class="card">
-            {% if recent_messages %}
-            <ul class="list-clean">
-                {% for msg in recent_messages %}
-                <li class="list-item">
-                    <a href="{% url 'contact_message_detail' msg.id %}" class="list-link">
-                        <strong>{{ msg.name }}</strong> - <span class="list-subject">{{ msg.subject }}</span>
-                        <div class="list-meta">{{ msg.created_at|timesince }} ago</div>
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-            <a href="{% url 'contact_message_list' %}" class="list-view-all">View All Messages →</a>
-            {% else %}
-            <p class="text-muted">No new messages.</p>
-            {% endif %}
-        </div>
-    </div>
-    <div>
-        <h2>⚙️ Equipment Maintenance</h2>
+        <h2 class="section-title-premium"><i class="fas fa-wrench"></i> Infrastructure Health</h2>
         <div class="card">
             {% if maintenance_required %}
-            <ul class="list-clean">
+            <div class="list-clean">
                 {% for item in maintenance_required %}
-                <li class="list-item list-item-flex">
-                    <span>{{ item.name }}</span>
-                    <span class="text-warning">Needs service</span>
-                </li>
+                <div class="list-item" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 600;">{{ item.name }}</span>
+                    <span
+                        style="color: var(--accent-red); font-size: 0.8rem; font-weight: 700; background: rgba(231, 76, 60, 0.1); padding: 4px 10px; border-radius: 50px;">SERVICE
+                        REQUIRED</span>
+                </div>
                 {% endfor %}
-            </ul>
-            <a href="{% url 'equipment_list' %}" class="list-view-all">View Inventory →</a>
+            </div>
+            <a href="{% url 'equipment_list' %}" class="list-view-all">Asset Registry →</a>
             {% else %}
-            <p class="text-ok">All equipment is in good status.</p>
+            <div style="text-align: center; padding: 1.5rem 0;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🛡️</div>
+                <div style="color: var(--accent-green); font-weight: 700;">Infrastructure Optimal</div>
+                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">All systems reporting green.
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div>
+        <h2 class="section-title-premium"><i class="fas fa-handshake"></i> Field Intelligence</h2>
+        <div class="card">
+            {% if pending_assignments %}
+            <div class="list-clean">
+                {% for assignment in pending_assignments %}
+                <div class="list-item">
+                    <div style="margin-bottom: 1rem;">
+                        <span style="font-weight: 700;">{{ assignment.member.full_name }}</span>
+                        <span style="color: var(--text-dim); margin: 0 8px;">aims for</span>
+                        <span style="font-weight: 700; color: var(--accent-blue);">{{ assignment.trainer.full_name
+                            }}</span>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <a href="{% url 'trainer_assignment_action' assignment.id 'accept' %}"
+                            class="btn btn-success btn-sm"
+                            style="background: var(--accent-green); border: none; border-radius: 8px; font-weight: 700;">Approve</a>
+                        <a href="{% url 'member_detail' assignment.member.id %}" class="btn btn-sm"
+                            style="background: rgba(255,255,255,0.1); color: #fff; border: none; border-radius: 8px;">Analysis</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p style="color: var(--text-dim); text-align: center; padding: 2rem 0;">No active requests from the field.
+            </p>
             {% endif %}
         </div>
     </div>
 </div>
 
-<div class="section-mt">
-    <h2>⏳ Pending Trainer Requests</h2>
-    <div class="card card-warning">
-        {% if pending_assignments %}
-        <div class="requests-grid">
-            {% for assignment in pending_assignments %}
-            <div class="request-item">
-                <div>
-                    <strong>{{ assignment.member.full_name }}</strong> → <em>{{ assignment.trainer.full_name }}</em>
-                    <div class="request-meta">Requested {{ assignment.requested_on|timesince }} ago</div>
-                </div>
-                <div class="request-actions">
-                    <a href="{% url 'trainer_assignment_action' assignment.id 'accept' %}"
-                        class="btn btn-success btn-sm">Approve on behalf</a>
-                    <a href="{% url 'member_detail' assignment.member.id %}" class="btn btn-sm">View</a>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p class="text-muted-zero">No pending trainer requests.</p>
-        {% endif %}
-    </div>
-</div>
-</div>
-
-<h2 class="section-heading">📊 Reports</h2>
+<h2 class="section-title-premium"><i class="fas fa-chart-pie"></i> Intelligence Reports</h2>
 <div class="mgmt-grid">
-    <a href="{% url 'attendance_report' %}" class="btn report-btn">👥 Attendance Report</a>
-    <a href="{% url 'revenue_report' %}" class="btn report-btn report-btn-financial">💰 Financial Report (P&L)</a>
+    <a href="{% url 'attendance_report' %}" class="btn report-btn"><i class="fas fa-users-viewfinder"
+            style="margin-right: 8px;"></i> Operations Audit</a>
+    <a href="{% url 'revenue_report' %}" class="btn report-btn report-btn-financial"><i class="fas fa-vault"
+            style="margin-right: 8px;"></i> Financial Integrity P&L</a>
 </div>
 
-<h2 class="section-heading">👥 Present Today</h2>
+<h2 class="section-title-premium"><i class="fas fa-users-rays"></i> Active Personnel Today</h2>
 {% if present_today %}
-<table>
-    <thead>
-        <tr>
-            <th>Member Name</th>
-            <th>Phone</th>
-            <th>Check-in Time</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for a in present_today %}
-        <tr>
-            <td>{{ a.member.full_name }}</td>
-            <td>{{ a.member.phone }}</td>
-            <td>{{ a.date|time:"H:i" }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="card" style="padding: 0; overflow: hidden;">
+    <table>
+        <thead>
+            <tr>
+                <th>Member Profile</th>
+                <th>Contact Index</th>
+                <th>Check-in Signature</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in present_today %}
+            <tr>
+                <td><span style="font-weight: 700;">{{ a.member.full_name }}</span></td>
+                <td><span style="color: var(--text-dim);">{{ a.member.phone }}</span></td>
+                <td><span style="color: var(--accent-green); font-weight: 700;">{{ a.date|time:"H:i" }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% else %}
-<div class="card">
-    <p>No one has checked in yet today.</p>
+<div class="card" style="text-align: center; padding: 3rem 0;">
+    <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;">👥</div>
+    <p style="color: var(--text-dim);">No active signatures detected in the facility today.</p>
 </div>
 {% endif %}
+
 {% endblock %}
