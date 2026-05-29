@@ -18,7 +18,7 @@ urlpatterns = [
     path("members/<int:member_id>/delete/", views.member_delete, name="member_delete"),
     
     # Authentication
-    path("login/", auth_views.LoginView.as_view(template_name="gym/login.html", form_class=views.LoginForm), name="login"),
+    path("login/", views.CustomLoginView.as_view(), name="login"),
     path("register/", views.register_view, name="register"),
     path("staff/add/", views.staff_create, name="staff_create"),
     path("logout/", views.logout_view, name="logout"), 

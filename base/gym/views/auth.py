@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.views import LoginView
 from django import forms
 from django.db import transaction, IntegrityError
 
@@ -21,18 +22,50 @@ class LoginForm(AuthenticationForm):
         })
 
 
+class CustomLoginView(LoginView):
+    """Custom login view that redirects staff users to admin dashboard."""
+    template_name = "gym/login.html"
+    form_class = LoginForm
+
+    def get_redirect_url(self):
+        """Staff users always go to admin dashboard, ignoring ?next."""
+        if self.request.user.is_authenticated and self.request.user.is_staff:
+            return ''
+        return super().get_redirect_url()
+
+    def get_success_url(self):
+        """After login, route based on user role."""
+        from django.urls import reverse
+        user = self.request.user
+        # Staff/admin always go to admin dashboard
+        if user.is_staff:
+            return reverse('dashboard')
+        # For non-staff, honor the ?next parameter if present
+        redirect_url = super().get_redirect_url()
+        if redirect_url:
+            return redirect_url
+        # Trainers
+        if getattr(user, 'trainer_profile', None):
+            return reverse('trainer_portal_dashboard')
+        # Members
+        if getattr(user, 'member_profile', None):
+            return reverse('portal_dashboard')
+        # Fallback
+        return reverse('login_redirect')
+
 @login_required
 def login_redirect_view(request):
     from django.urls import reverse
-    # Check if there is a 'next' parameter in the URL
+
+    # Admins/staff always go to the admin dashboard
+    if request.user.is_staff:
+        return redirect("dashboard")
+
+    # For non-staff users, honor the 'next' parameter if present
     next_url = request.GET.get('next')
     if next_url and next_url != reverse('login_redirect') and next_url != '/':
         return redirect(next_url)
 
-    # Admins get the main management dashboard
-    if request.user.is_staff:
-        return redirect("dashboard")
-    
     # Trainers get their own portal
     if getattr(request.user, "trainer_profile", None):
         return redirect("trainer_portal_dashboard")
@@ -42,8 +75,6 @@ def login_redirect_view(request):
         return redirect("portal_dashboard")
     
     # Fallback for users with no profile/role
-    # If we are already at / and redirecting to / it might cause issues
-    # but since this is usually called after login, it should be fine.
     return render(request, "gym/home.html", {"is_authenticated": True})
 
 
