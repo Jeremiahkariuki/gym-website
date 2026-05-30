@@ -69,6 +69,14 @@ class MembershipPlan(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.price}"
+
+    @property
+    def freq_label(self):
+        if self.duration_days == 1: return "Daily"
+        if self.duration_days == 7: return "Weekly"
+        if self.duration_days <= 31: return "Monthly"
+        if self.duration_days >= 360: return "Yearly"
+        return "Select Plan"
     
 
 class Membership(models.Model):
