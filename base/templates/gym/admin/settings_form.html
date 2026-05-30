@@ -5,159 +5,178 @@
 {% block extra_css %}
 <style>
     :root {
-        --glass-bg: rgba(255, 255, 255, 0.05);
-        --glass-border: rgba(255, 255, 255, 0.1);
-        --accent-blue: #00d2ff;
-        --accent-purple: #9d50bb;
-        --text-muted: #94a3b8;
+        --bg-deep: #0a0f1c;
+        --card-bg: #161c2d;
+        --border-color: #2d3748;
+        --text-primary: #ffffff;
+        --text-secondary: #94a3b8;
+        --accent-blue: #3b82f6;
+        --input-bg: #1e293b;
     }
 
-    /* Override body background for this page if possible or use a full-width container */
-    .settings-wrapper {
-        background: radial-gradient(circle at top right, #1e293b, #0f172a);
+    body {
+        background-color: var(--bg-deep);
+        color: var(--text-primary);
+    }
+
+    .admin-focus-wrapper {
+        background-color: var(--bg-deep);
         min-height: 100vh;
-        margin: -2rem -1rem;
-        /* Adjust for parent padding if needed */
         padding: 4rem 1rem;
-        color: #f8fafc;
     }
 
     .settings-container {
-        max-width: 1000px;
+        max-width: 900px;
         margin: 0 auto;
     }
 
-    .page-header {
-        margin-bottom: 3rem;
-        text-align: center;
+    .header-section {
+        margin-bottom: 2.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    .page-header h1 {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: #ffffff;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.025em;
+    .header-section h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin: 0;
+        color: #fff;
     }
 
-    .glass-card {
-        background: rgba(30, 41, 59, 0.7);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid var(--glass-border);
-        border-radius: 24px;
-        padding: 3rem;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-        position: relative;
+    .btn-exit {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .btn-exit:hover {
+        color: #fff;
+    }
+
+    .professional-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
         overflow: hidden;
     }
 
-    .glass-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+    .card-header {
+        padding: 2rem;
+        border-bottom: 1px solid var(--border-color);
+        background: rgba(255, 255, 255, 0.02);
     }
 
-    .section-title {
+    .card-header h2 {
         font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .card-header p {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin: 0.5rem 0 0 0;
+    }
+
+    .card-body {
+        padding: 2.5rem;
+    }
+
+    .settings-group {
+        margin-bottom: 3rem;
+    }
+
+    .settings-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .group-title {
+        font-size: 0.75rem;
         font-weight: 700;
-        color: #ffffff;
-        margin-bottom: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--accent-blue);
+        margin-bottom: 1.5rem;
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        border-bottom: 1px solid var(--glass-border);
-        padding-bottom: 1rem;
+        gap: 0.5rem;
     }
 
-    .section-title i {
-        color: var(--accent-blue);
+    .group-title::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border-color);
     }
 
-    .settings-grid {
+    .form-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
+        gap: 1.5rem;
     }
 
-    .full-width {
+    .col-full {
         grid-column: 1 / -1;
     }
 
     .form-group label {
         display: block;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #94a3b8;
-        margin-bottom: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
     }
 
     .form-control {
         width: 100%;
-        background: rgba(15, 23, 42, 0.5) !important;
-        border: 1px solid var(--glass-border) !important;
-        border-radius: 12px !important;
-        padding: 1rem !important;
-        color: #ffffff !important;
-        font-size: 1rem;
-        transition: all 0.3s ease;
+        background-color: var(--input-bg) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 6px !important;
+        padding: 0.75rem 1rem !important;
+        color: #fff !important;
+        font-size: 0.9375rem;
     }
 
     .form-control:focus {
-        background: rgba(15, 23, 42, 0.8) !important;
         border-color: var(--accent-blue) !important;
-        box-shadow: 0 0 0 4px rgba(0, 210, 255, 0.1) !important;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
         outline: none;
     }
 
+    .card-footer {
+        padding: 1.5rem 2.5rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: flex-end;
+    }
+
     .btn-save {
-        background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
-        border: none;
+        background-color: var(--accent-blue);
         color: white;
-        padding: 1.25rem 3rem;
-        border-radius: 12px;
-        font-weight: 700;
-        font-size: 1rem;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9375rem;
         cursor: pointer;
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 0.1rem;
-        width: 100%;
-        box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2);
     }
 
     .btn-save:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 15px 25px rgba(0, 210, 255, 0.3);
-        filter: brightness(1.1);
+        background-color: #2563eb;
     }
 
-    .back-link-wrapper {
-        margin-bottom: 2rem;
+    .error-msg {
+        color: #ef4444;
+        font-size: 0.8125rem;
+        margin-top: 0.375rem;
     }
 
-    .back-link {
-        color: #94a3b8;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-weight: 600;
-        transition: color 0.3s ease;
-    }
-
-    .back-link:hover {
-        color: var(--accent-blue);
-    }
-
-    @media (max-width: 768px) {
-        .settings-grid {
+    @media (max-width: 640px) {
+        .form-grid {
             grid-template-columns: 1fr;
         }
     }
@@ -165,101 +184,98 @@
 {% endblock %}
 
 {% block content %}
-<div class="settings-wrapper">
+<div class="admin-focus-wrapper">
     <div class="settings-container">
-        <div class="back-link-wrapper">
-            <a href="{% url 'dashboard' %}" class="back-link">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
+        <div class="header-section">
+            <h1>Settings</h1>
+            <a href="{% url 'dashboard' %}" class="btn-exit">
+                <i class="fas fa-times"></i> Close
             </a>
         </div>
-
-        <div class="page-header">
-            <h1>⚙️ System Configuration</h1>
-            <p style="color: #94a3b8;">Manage your gym's identity, branding, and global settings</p>
-        </div>
-
-        <div class="glass-card">
+        <div class="professional-card">
+            <div class="card-header">
+                <h2>System Configuration</h2>
+                <p>Manage your gym's official identity and global parameters.</p>
+            </div>
             <form method="post">
                 {% csrf_token %}
-
-                <div class="section-title">
-                    <i class="fas fa-building"></i>
-                    Basic Information
+                <div class="card-body">
+                    <!-- General Group -->
+                    <div class="settings-group">
+                        <div class="group-title">General Information</div>
+                        <div class="form-grid">
+                            <div class="form-group col-full">
+                                <label>Gym Name</label>
+                                {{ form.gym_name }}
+                                {% if form.gym_name.errors %}
+                                <div class="error-msg">{{ form.gym_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Email</label>
+                                {{ form.contact_email }}
+                                {% if form.contact_email.errors %}
+                                <div class="error-msg">{{ form.contact_email.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                <div class="error-msg">{{ form.phone.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-full">
+                                <label>Physical Address</label>
+                                {{ form.address }}
+                                {% if form.address.errors %}
+                                <div class="error-msg">{{ form.address.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Branding Group -->
+                    <div class="settings-group">
+                        <div class="group-title">Branding & Assets</div>
+                        <div class="form-grid">
+                            <div class="form-group col-full">
+                                <label>Logo URL</label>
+                                {{ form.logo_url }}
+                                {% if form.logo_url.errors %}
+                                <div class="error-msg">{{ form.logo_url.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Localization Group -->
+                    <div class="settings-group">
+                        <div class="group-title">Operations & Localization</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Currency Symbol</label>
+                                {{ form.currency_symbol }}
+                                {% if form.currency_symbol.errors %}
+                                <div class="error-msg">{{ form.currency_symbol.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-full">
+                                <label>Opening Hours</label>
+                                {{ form.opening_hours }}
+                                {% if form.opening_hours.errors %}
+                                <div class="error-msg">{{ form.opening_hours.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger"
+                        style="background: rgba(239,68,68,0.1); border: 1px solid #ef4444; color: #ef4444; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
                 </div>
-
-                <div class="settings-grid">
-                    <div class="form-group">
-                        <label for="{{ form.gym_name.id_for_label }}">Gym Name</label>
-                        {{ form.gym_name }}
-                        {% if form.gym_name.errors %}
-                        <div class="text-danger small mt-1">{{ form.gym_name.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.contact_email.id_for_label }}">Contact Email</label>
-                        {{ form.contact_email }}
-                        {% if form.contact_email.errors %}
-                        <div class="text-danger small mt-1">{{ form.contact_email.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.phone.id_for_label }}">Phone Number</label>
-                        {{ form.phone }}
-                        {% if form.phone.errors %}
-                        <div class="text-danger small mt-1">{{ form.phone.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.currency_symbol.id_for_label }}">Currency Symbol</label>
-                        {{ form.currency_symbol }}
-                        {% if form.currency_symbol.errors %}
-                        <div class="text-danger small mt-1">{{ form.currency_symbol.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label for="{{ form.address.id_for_label }}">Physical Address</label>
-                        {{ form.address }}
-                        {% if form.address.errors %}
-                        <div class="text-danger small mt-1">{{ form.address.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="section-title mt-5">
-                    <i class="fas fa-paint-brush"></i>
-                    Branding & Hours
-                </div>
-
-                <div class="settings-grid">
-                    <div class="form-group full-width">
-                        <label for="{{ form.logo_url.id_for_label }}">Logo URL</label>
-                        {{ form.logo_url }}
-                        {% if form.logo_url.errors %}
-                        <div class="text-danger small mt-1">{{ form.logo_url.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label for="{{ form.opening_hours.id_for_label }}">Opening Hours</label>
-                        {{ form.opening_hours }}
-                        {% if form.opening_hours.errors %}
-                        <div class="text-danger small mt-1">{{ form.opening_hours.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                {% if form.non_field_errors %}
-                <div class="alert alert-danger mt-4">
-                    {{ form.non_field_errors }}
-                </div>
-                {% endif %}
-
-                <div style="margin-top: 4rem;">
-                    <button type="submit" class="btn-save">Update Settings</button>
+                <div class="card-footer">
+                    <button type="submit" class="btn-save">Save changes</button>
                 </div>
             </form>
         </div>
