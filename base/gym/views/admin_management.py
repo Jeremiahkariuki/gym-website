@@ -157,7 +157,7 @@ def gym_photo_list(request):
         photos = photos.filter(branch_id=active_branch_id)
         
     if request.method == 'POST':
-        form = GymPhotoForm(request.POST)
+        form = GymPhotoForm(request.POST, request.FILES)
         if form.is_valid():
             photo = form.save(commit=False)
             if active_branch_id:

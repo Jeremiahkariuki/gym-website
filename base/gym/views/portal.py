@@ -148,8 +148,8 @@ class ProgressPhotoForm(forms.ModelForm):
         model = ProgressPhoto
         fields = ['photo_before', 'photo_after', 'weight_at_time', 'notes']
         widgets = {
-            'photo_before': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'URL to current photo'}),
-            'photo_after': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'URL to previous/after photo (optional)'}),
+            'photo_before': forms.FileInput(attrs={'class': 'form-control'}),
+            'photo_after': forms.FileInput(attrs={'class': 'form-control'}),
             'weight_at_time': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
         }
@@ -164,7 +164,7 @@ def portal_progress_gallery(request):
     photos = member.progress_photos.all()
     
     if request.method == "POST":
-        form = ProgressPhotoForm(request.POST)
+        form = ProgressPhotoForm(request.POST, request.FILES)
         if form.is_valid():
             photo = form.save(commit=False)
             photo.member = member

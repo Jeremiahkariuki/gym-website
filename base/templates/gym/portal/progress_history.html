@@ -14,15 +14,15 @@
     <div class="card shadow-sm border-0" style="border-radius: 12px;">
         <div class="card-body">
             <h5 class="card-title mb-3">Add New Progress Entry</h5>
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Current Photo URL</label>
+                        <label class="form-label">Current Photo</label>
                         {{ form.photo_before }}
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Comparison Photo URL (Optional)</label>
+                        <label class="form-label">Comparison Photo (Optional)</label>
                         {{ form.photo_after }}
                     </div>
                 </div>
@@ -52,19 +52,19 @@
                         {% if photo.photo_after %}
                         <div class="row g-0 w-100 h-100">
                             <div class="col-6 border-end border-dark">
-                                <img src="{{ photo.photo_after }}" class="w-100 h-100" style="object-fit: cover;"
+                                <img src="{{ photo.photo_after.url }}" class="w-100 h-100" style="object-fit: cover;"
                                     alt="Previous">
                                 <span
                                     class="badge bg-dark position-absolute top-0 start-0 m-2 opacity-75">PREVIOUS</span>
                             </div>
                             <div class="col-6">
-                                <img src="{{ photo.photo_before }}" class="w-100 h-100" style="object-fit: cover;"
+                                <img src="{{ photo.photo_before.url }}" class="w-100 h-100" style="object-fit: cover;"
                                     alt="Current">
                                 <span class="badge bg-primary position-absolute top-0 end-0 m-2">CURRENT</span>
                             </div>
                         </div>
                         {% else %}
-                        <img src="{{ photo.photo_before }}" class="w-100"
+                        <img src="{{ photo.photo_before.url }}" class="w-100"
                             style="max-height: 500px; object-fit: contain;" alt="Progress">
                         <span class="badge bg-primary position-absolute top-0 end-0 m-2">CURRENT</span>
                         {% endif %}

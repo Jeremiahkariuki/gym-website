@@ -313,9 +313,16 @@ class Announcement(models.Model):
 
 class GymPhoto(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="photos", null=True, blank=True)
-    url = models.URLField(max_length=500, help_text="Direct link to the gym image")
+    url = models.URLField(max_length=500, blank=True, null=True, help_text="Direct link to the gym image (optional if image is uploaded)")
+    image = models.ImageField(upload_to='gym_gallery/', blank=True, null=True)
     caption = models.CharField(max_length=200, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def photo_url(self):
+        if self.image:
+            return self.image.url
+        return self.url
 
     def __str__(self):
         return self.caption or f"Photo {self.id}"
@@ -381,8 +388,8 @@ class LibraryExercise(models.Model):
 class ProgressPhoto(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="progress_photos")
     date = models.DateField(default=timezone.now)
-    photo_before = models.URLField(help_text="URL to 'before' or current progress photo")
-    photo_after = models.URLField(blank=True, null=True, help_text="URL to 'after' photo (optional)")
+    photo_before = models.ImageField(upload_to='progress_photos/', help_text="Upload 'before' or current progress photo")
+    photo_after = models.ImageField(upload_to='progress_photos/', blank=True, null=True, help_text="Upload 'after' photo (optional)")
     weight_at_time = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     notes = models.TextField(blank=True)
 

@@ -111,7 +111,10 @@ class AnnouncementForm(forms.ModelForm):
 class GymPhotoForm(forms.ModelForm):
     class Meta:
         model = GymPhoto
-        fields = ["url", "caption"]
+        fields = ["image", "url", "caption"]
+        widgets = {
+            "image": forms.FileInput(attrs={"class": "form-control"}),
+        }
 
 class SystemSettingForm(forms.ModelForm):
     class Meta:
