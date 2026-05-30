@@ -121,5 +121,11 @@ class SystemSettingForm(forms.ModelForm):
         model = SystemSetting
         fields = ["gym_name", "contact_email", "phone", "address", "logo_url", "currency_symbol", "opening_hours"]
         widgets = {
-            "address": forms.Textarea(attrs={"rows": 3}),
+            "gym_name": forms.TextInput(attrs={"class": "form-control"}),
+            "contact_email": forms.EmailInput(attrs={"class": "form-control"}),
+            "phone": forms.TextInput(attrs={"class": "form-control"}),
+            "address": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
+            "logo_url": forms.URLInput(attrs={"class": "form-control"}),
+            "currency_symbol": forms.TextInput(attrs={"class": "form-control"}),
+            "opening_hours": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
         }
