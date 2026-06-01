@@ -1,72 +1,203 @@
 {% extends 'gym/base.html' %}
+{% load static %}
 
-{% block title %}{% if form.instance.id %}Edit Member{% else %}Add New Member{% endif %} - Gym Management{% endblock %}
+{% block title %}{% if form.instance.id %}Edit Member Profile{% else %}Register New Member{% endif %} | GYMFLOW{%
+endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/portal.css' %}">
+<style>
+    .member-form-container {
+        padding: 4rem 0;
+        min-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        width: 100%;
+        max-width: 800px;
+    }
+
+    .form-header h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 900;
+        background: linear-gradient(135deg, #fff, #94a3b8);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .back-link-premium {
+        color: #94a3b8;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .back-link-premium:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.08);
+        transform: translateX(-5px);
+    }
+
+    .membership-section {
+        background: rgba(59, 130, 246, 0.05);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-top: 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .membership-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: #3b82f6;
+    }
+
+    .section-label {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 1.5rem;
+    }
+
+    .premium-btn-submit {
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        border: none;
+        color: white;
+        padding: 1rem 2.5rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        width: 100%;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        margin-top: 2rem;
+    }
+
+    .premium-btn-submit:hover {
+        transform: scale(1.02);
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block body_class %}portal-theme{% endblock %}
 
 {% block content %}
-<a href="{% url 'member_list' %}" class="back-link">
-    <i class="fas fa-arrow-left"></i> Back to Members
-</a>
-
-<h1>{% if form.instance.id %}Edit Member{% else %}Add New Member{% endif %}</h1>
-
-<form method="post">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }}</label>
-        {{ form.full_name }}
-        {% if form.full_name.errors %}
-        <small style="color: red;">{{ form.full_name.errors }}</small>
-        {% endif %}
+<div class="member-form-container">
+    <div class="form-header fade-in-up">
+        <a href="{% url 'member_list' %}" class="back-link-premium">
+            <i class="fas fa-arrow-left"></i> Back to Member Directory
+        </a>
+        <h1>{% if form.instance.id %}Edit Member Profile{% else %}Register New Member{% endif %}</h1>
+        <p class="text-white-50">Synchronize administrative data and subscription access.</p>
     </div>
 
-    <div class="form-group">
-        <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
-        {{ form.phone }}
-        {% if form.phone.errors %}
-        <small style="color: red;">{{ form.phone.errors }}</small>
-        {% endif %}
-    </div>
+    <div class="col-lg-7 col-md-10">
+        <div class="glass-card fade-in-up" style="margin-top: 0;">
+            <form method="post" class="premium-form">
+                {% csrf_token %}
 
-    <div class="form-group">
-        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-        {{ form.email }}
-        {% if form.email.errors %}
-        <small style="color: red;">{{ form.email.errors }}</small>
-        {% endif %}
-    </div>
+                <div class="row g-4">
+                    <div class="col-md-6 form-group-premium">
+                        <label class="form-label-premium">
+                            <i class="fas fa-signature text-primary"></i> Full Name
+                        </label>
+                        {{ form.full_name }}
+                        {% if form.full_name.errors %}
+                        <div class="text-danger small mt-2">
+                            <i class="fas fa-info-circle me-1"></i> {{ form.full_name.errors|striptags }}
+                        </div>
+                        {% endif %}
+                    </div>
 
-    <div class="form-group">
-        <label for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
-        {{ form.address }}
-        {% if form.address.errors %}
-        <small style="color: red;">{{ form.address.errors }}</small>
-        {% endif %}
-    </div>
+                    <div class="col-md-6 form-group-premium">
+                        <label class="form-label-premium">
+                            <i class="fas fa-phone text-success"></i> Phone Number
+                        </label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                        <div class="text-danger small mt-2">
+                            <i class="fas fa-info-circle me-1"></i> {{ form.phone.errors|striptags }}
+                        </div>
+                        {% endif %}
+                    </div>
 
-    <div class="form-group"
-        style="padding: 1.25rem; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #f8fafc; margin: 1.5rem 0;">
-        <div
-            style="font-weight: 600; font-size: 1.1rem; color: #0f172a; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            Membership Plan <span style="color: #ef4444;">*</span>
+                    <div class="col-12 form-group-premium">
+                        <label class="form-label-premium">
+                            <i class="fas fa-envelope text-info"></i> Email Address
+                        </label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <div class="text-danger small mt-2">
+                            <i class="fas fa-info-circle me-1"></i> {{ form.email.errors|striptags }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-12 form-group-premium">
+                        <label class="form-label-premium">
+                            <i class="fas fa-map-marker-alt text-warning"></i> Residential Address
+                        </label>
+                        {{ form.address }}
+                        {% if form.address.errors %}
+                        <div class="text-danger small mt-2">
+                            <i class="fas fa-info-circle me-1"></i> {{ form.address.errors|striptags }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="membership-section shadow-sm">
+                    <div class="section-label">
+                        <i class="fas fa-shield-alt text-primary"></i> Membership Plan Access
+                    </div>
+                    <div class="form-group-premium mb-0">
+                        {{ form.plan }}
+                        {% if form.plan.help_text %}
+                        <div class="text-white-50 small mt-3 opacity-75">
+                            <i class="fas fa-lightbulb text-warning me-1"></i> {{ form.plan.help_text }}
+                        </div>
+                        {% endif %}
+                        {% if form.plan.errors %}
+                        <div class="text-danger small mt-2">
+                            <i class="fas fa-info-circle me-1"></i> {{ form.plan.errors|striptags }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <button type="submit" class="premium-btn-submit shadow-lg">
+                    <i class="fas fa-save me-2"></i>
+                    {% if form.instance.id %}Save Configuration Changes{% else %}Complete Member Registration{% endif %}
+                </button>
+            </form>
         </div>
-        {{ form.plan }}
-        {% if form.plan.help_text %}
-        <small style="display: block; margin-top: 0.35rem; color: #64748b;">{{ form.plan.help_text }}</small>
-        {% endif %}
-        {% if form.plan.errors %}
-        <small style="color: red; display: block; margin-top: 0.35rem;">{{ form.plan.errors }}</small>
-        {% endif %}
     </div>
-
-    <button type="submit" class="btn btn-success">
-        {% if form.instance.id %}Update Member{% else %}Add Member{% endif %}
-    </button>
-</form>
+</div>
 {% endblock %}
