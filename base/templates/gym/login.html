@@ -23,7 +23,7 @@
                 <p>Welcome back! Please login to your account.</p>
             </div>
 
-            <form method="post" class="login-form">
+            <form method="post" class="login-form" id="loginForm">
                 {% csrf_token %}
 
                 {% if form.non_field_errors %}
@@ -62,7 +62,11 @@
                 </div>
                 {% endfor %}
 
-                <button type="submit" class="login-btn">Login</button>
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <span class="btn-text">Login</span>
+                    <span class="btn-loader" style="display: none;"><i class="fas fa-spinner fa-spin"></i> Logging
+                        in...</span>
+                </button>
             </form>
 
             <div
@@ -90,6 +94,19 @@
                 icon.classList.add('fa-eye');
             }
         }
+
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            const btn = document.getElementById('loginBtn');
+            const text = btn.querySelector('.btn-text');
+            const loader = btn.querySelector('.btn-loader');
+
+            // Disable button and show loader
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'not-allowed';
+            text.style.display = 'none';
+            loader.style.display = 'inline-block';
+        });
     </script>
 </body>
 
