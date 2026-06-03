@@ -364,9 +364,7 @@
                 {% else %}
                 <a href="{% url 'portal_subscribe' plan.id %}" class="btn plan-btn" data-plan-name="{{ plan.name }}"
                     data-is-my-plan="false"
-                    style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; background: var(--accent-blue);">{%
-                    if plan.duration_days == 1 %}Daily{% elif plan.duration_days <= 31 %}Monthly{% elif
-                        plan.duration_days>= 360 %}Yearly{% else %}Select Plan{% endif %}</a>
+                    style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; background: var(--accent-blue);">{% if plan.duration_days == 1 %}Daily{% elif plan.duration_days <= 31 %}Monthly{% elif plan.duration_days >= 360 %}Yearly{% else %}Select Plan{% endif %}</a>
 
                 {% endif %}
                 {% else %}
