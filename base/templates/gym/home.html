@@ -353,7 +353,8 @@
                 {% else %}
                 <div
                     style="text-align: center; padding: 0.8rem; background: #d5f5e3; border-radius: 12px; color: #1e8449; font-weight: 700;">
-                    ✅ Active until {{ active_membership.end_date|date:"M d, Y" }}</div>
+                    ✅ Active until {{ active_membership.end_date|date:"M d, Y" }}
+                </div>
                 {% endif %}
                 {% else %}
                 <a href="{% url 'portal_subscribe' plan.id %}" class="btn plan-btn" data-plan-name="{{ plan.name }}"
@@ -364,10 +365,10 @@
                 {% else %}
                 <a href="{% url 'portal_subscribe' plan.id %}" class="btn plan-btn" data-plan-name="{{ plan.name }}"
                     data-is-my-plan="false"
-                    style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; background: var(--accent-blue);">{%
-                    if plan.duration_days == 1 %}Daily{% elif plan.duration_days <= 31 %}Monthly{% elif
-                        plan.duration_days>= 360 %}Yearly{% else %}Select Plan{% endif %}</a>
-
+                    style="width: 100%; padding: 1rem; border-radius: 12px; font-weight: 700; color: white; background: var(--accent-blue);">
+                    {% if plan.duration_days == 1 %}Daily{% elif plan.duration_days <= 31 %}Monthly{% elif
+                        plan.duration_days>= 360 %}Yearly{% else %}Select Plan{% endif %}
+                </a>
                 {% endif %}
                 {% else %}
                 <a href="{% url 'login' %}?next={% url 'portal_subscribe' plan.id %}" class="btn"
