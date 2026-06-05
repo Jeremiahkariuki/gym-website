@@ -16,7 +16,7 @@ from .trainers import (
     staff_or_trainer_required,
 )
 from .trainer_portal import trainer_portal_dashboard, trainer_portal_members
-from .reports import dashboard, mark_present, attendance_report
+from .reports import dashboard, mark_present, attendance_report, member_activity_list
 from .fitness import (
     diet_plan_edit,
     exercise_create,
@@ -96,7 +96,7 @@ __all__ = [
     "workout_plan_create", "workout_plan_detail", "workout_plan_delete",
     "exercise_create", "exercise_delete",
     # reports
-    "dashboard", "mark_present", "attendance_report",
+    "dashboard", "mark_present", "attendance_report", "member_activity_list",
     # trainers (admin)
     "trainer_list", "trainer_create", "trainer_detail",
     "trainer_edit", "trainer_delete", "assign_trainer",
