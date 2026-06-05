@@ -196,11 +196,21 @@ class MemberProfileForm(forms.ModelForm):
 
 @login_required
 def portal_profile_hub(request):
-    try:
-        member = request.user.member_profile
-    except Member.DoesNotExist:
-        return redirect("login")
-        
+    member = getattr(request.user, 'member_profile', None)
+    
+    # Professionally handle staff users who might not have a member profile yet
+    if not member:
+        if request.user.is_staff:
+            member = Member.objects.create(
+                user=request.user,
+                full_name=request.user.get_full_name() or request.user.username,
+                email=request.user.email
+            )
+            messages.info(request, "A member profile has been created for your administrative account.")
+        else:
+            messages.error(request, "You do not have a member profile. Please contact an administrator.")
+            return redirect("home")
+            
     if request.method == "POST":
         form = MemberProfileForm(request.POST, request.FILES, instance=member)
         if form.is_valid():
