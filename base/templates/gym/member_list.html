@@ -9,6 +9,8 @@
 <div class="member-header">
     <h1>Members ({{ members.paginator.count }})</h1>
     <div class="btn-row">
+        <a href="{% url 'member_activity_list' %}" class="export-btn"
+            style="background: #10b981; border: none; margin-right: 10px;">📈 Activity Hub</a>
         <a href="{% url 'export_members_csv' %}" class="export-btn">⬇ Export
             CSV</a>
     </div>

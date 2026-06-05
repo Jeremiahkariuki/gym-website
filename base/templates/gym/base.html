@@ -115,6 +115,9 @@
                             <a href="{% url 'dashboard' %}" class="dropdown-item-premium">
                                 <i class="fas fa-shield-alt"></i> Staff Panel
                             </a>
+                            <a href="{% url 'member_activity_list' %}" class="dropdown-item-premium">
+                                <i class="fas fa-chart-line"></i> Activity Hub
+                            </a>
                             {% endif %}
                             <div class="dropdown-divider"></div>
                             <a href="{% url 'logout' %}?next={{ request.path }}"
