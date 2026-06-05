@@ -137,4 +137,5 @@ urlpatterns = [
     path("manage/messages/", views.contact_message_list, name="contact_message_list"),
     path("manage/messages/<int:pk>/", views.contact_message_detail, name="contact_message_detail"),
     path("manage/messages/<int:pk>/delete/", views.contact_message_delete, name="contact_message_delete"),
+    path("manage/activity/", views.member_activity_list, name="member_activity_list"),
 ]

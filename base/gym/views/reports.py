@@ -121,3 +121,31 @@ def attendance_report(request):
             "period": f"Last 7 days (from {last_7_days} to {today})",
         },
     )
+@staff_or_trainer_required
+def member_activity_list(request):
+    active_branch_id = request.session.get('active_branch_id')
+    members = Member.objects.all().select_related('user', 'branch')
+    
+    if active_branch_id:
+        members = members.filter(branch_id=active_branch_id)
+        
+    activity_data = []
+    for m in members:
+        last_attn = Attendance.objects.filter(member=m).order_by('-date').first()
+        last_pay = Payment.objects.filter(member=m).order_by('-paid_on').first()
+        
+        activity_data.append({
+            'member': m,
+            'last_attendance': last_attn,
+            'last_payment': last_pay,
+            'achievement_count': m.achievements_earned.count(),
+            'class_count': m.enrolled_classes.count(),
+            'is_active': m.is_currently_active
+        })
+        
+    # Sort by last attendance date (if exists) descending
+    activity_data.sort(key=lambda x: x['last_attendance'].date if x['last_attendance'] else timezone.now().date(), reverse=True)
+    
+    return render(request, 'gym/admin/member_activity.html', {
+        'activity_data': activity_data
+    })
