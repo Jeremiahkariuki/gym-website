@@ -7,7 +7,7 @@ from django.utils import timezone
 from .trainers import Trainer
 from ..decorators import admin_required, staff_or_trainer_required
 
-from ..models import Attendance, Member, Membership, ContactMessage, Equipment, TrainerAssignment
+from ..models import Attendance, Member, Membership, ContactMessage, Equipment, TrainerAssignment, Payment
 
 
 @staff_or_trainer_required
@@ -143,8 +143,14 @@ def member_activity_list(request):
             'is_active': m.is_currently_active
         })
         
-    # Sort by last attendance date (if exists) descending
-    activity_data.sort(key=lambda x: x['last_attendance'].date if x['last_attendance'] else timezone.now().date(), reverse=True)
+    # Sort by last attendance date descending (members who never checked in go to the bottom)
+    from datetime import date
+    epoch_date = date(1970, 1, 1)
+    
+    activity_data.sort(
+        key=lambda x: x['last_attendance'].date if (x['last_attendance'] and x['last_attendance'].date) else epoch_date, 
+        reverse=True
+    )
     
     return render(request, 'gym/admin/member_activity.html', {
         'activity_data': activity_data
