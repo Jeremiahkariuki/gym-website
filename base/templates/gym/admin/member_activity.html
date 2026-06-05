@@ -91,10 +91,9 @@
                             {% if item.last_attendance %}
                             <div style="color: #fff; font-weight: 600;">{{ item.last_attendance.date|date:"d M Y" }}
                             </div>
-                            <div style="font-size: 0.7rem; color: var(--text-dim);">at {{
-                                item.last_attendance.date|time:"H:i" }}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-dim);">Checked in on this day</div>
                             {% else %}
-                            <span style="color: var(--text-dim); font-size: 0.85rem;">No check-ins detectd</span>
+                            <span style="color: var(--text-dim); font-size: 0.85rem;">No check-ins detected</span>
                             {% endif %}
                         </td>
                         <td style="padding: 1.2rem; border: none;">
