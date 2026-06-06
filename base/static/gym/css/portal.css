@@ -469,6 +469,12 @@
     border-radius: 12px !important;
 }
 
+/* Ensure dropdown options are visible on all browsers */
+.portal-theme select option {
+    background-color: #1e293b !important;
+    color: white !important;
+}
+
 .portal-theme input:focus {
     border-color: #6366f1 !important;
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15) !important;
