@@ -10,13 +10,14 @@ def is_admin(user):
 class BranchForm(forms.ModelForm):
     class Meta:
         model = Branch
-        fields = ['name', 'address', 'phone', 'email', 'manager_name', 'logo_url']
+        fields = ['name', 'address', 'phone', 'email', 'manager_name', 'logo', 'logo_url']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Branch Name'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'manager_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'logo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'logo_url': forms.URLInput(attrs={'class': 'form-control'}),
         }
 
@@ -28,7 +29,7 @@ def branch_list(request):
 @user_passes_test(is_admin)
 def branch_create(request):
     if request.method == "POST":
-        form = BranchForm(request.POST)
+        form = BranchForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect("branch_list")
@@ -40,7 +41,7 @@ def branch_create(request):
 def branch_edit(request, branch_id):
     branch = get_object_or_404(Branch, id=branch_id)
     if request.method == "POST":
-        form = BranchForm(request.POST, instance=branch)
+        form = BranchForm(request.POST, request.FILES, instance=branch)
         if form.is_valid():
             form.save()
             return redirect("branch_list")

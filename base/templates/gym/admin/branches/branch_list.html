@@ -16,7 +16,16 @@
         <div class="card h-100">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h5 class="card-title mb-0">{{ branch.name }}</h5>
+                    <div class="d-flex align-items-center">
+                        {% if branch.logo %}
+                        <img src="{{ branch.logo.url }}" alt="{{ branch.name }} logo"
+                            style="width: 40px; height: 40px; object-fit: contain; margin-right: 10px; border-radius: 5px;">
+                        {% elif branch.logo_url %}
+                        <img src="{{ branch.logo_url }}" alt="{{ branch.name }} logo"
+                            style="width: 40px; height: 40px; object-fit: contain; margin-right: 10px; border-radius: 5px;">
+                        {% endif %}
+                        <h5 class="card-title mb-0">{{ branch.name }}</h5>
+                    </div>
                     <div class="dropdown">
                         <button class="btn btn-sm btn-link text-muted" type="button" data-bs-toggle="dropdown">
                             <i class="fas fa-ellipsis-v"></i>

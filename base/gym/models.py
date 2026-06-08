@@ -10,6 +10,7 @@ class Branch(models.Model):
     phone = models.CharField(max_length=20)
     email = models.EmailField()
     manager_name = models.CharField(max_length=100)
+    logo = models.ImageField(upload_to='branch_logos/', blank=True, null=True)
     logo_url = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

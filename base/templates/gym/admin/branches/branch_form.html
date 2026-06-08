@@ -10,7 +10,7 @@
                 <h4 class="mb-0">{{ title }}</h4>
             </div>
             <div class="card-body">
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -39,9 +39,15 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Logo URL (Optional)</label>
-                        {{ form.logo_url }}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Branch Logo (Upload)</label>
+                            {{ form.logo }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Logo URL (Optional Fallback)</label>
+                            {{ form.logo_url }}
+                        </div>
                     </div>
 
                     <hr>
