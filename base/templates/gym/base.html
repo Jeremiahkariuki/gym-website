@@ -63,10 +63,18 @@
                 <div class="branch-selector">
                     <button class="branch-btn" onclick="this.nextElementSibling.classList.toggle('show')">
                         <i class="fas fa-building"></i>
-                        {% if active_branch %}{{ active_branch.name }}{% else %}Select Branch{% endif %}
+                        {% if active_branch %}{{ active_branch.name }}{% else %}{{
+                        request.session.active_branch_name|default:"Overall" }}{% endif %}
                         <i class="fas fa-chevron-down chevron-small"></i>
                     </button>
                     <div class="branch-dropdown">
+                        <a href="{% url 'set_active_branch' 0 %}?next={{ request.get_full_path }}">
+                            {% if not active_branch %}
+                            <i class="fas fa-check-circle text-success"></i>
+                            {% endif %}
+                            Overall (All Branches)
+                        </a>
+                        <div class="branch-divider"></div>
                         {% for branch in all_branches %}
                         <a href="{% url 'set_active_branch' branch.id %}?next={{ request.get_full_path }}">
                             {% if branch == active_branch %}

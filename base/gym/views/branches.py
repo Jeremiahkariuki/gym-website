@@ -59,10 +59,14 @@ def branch_delete(request, branch_id):
 
 @admin_required
 def set_active_branch(request, branch_id):
-    """Sets the active branch for the current session."""
-    branch = get_object_or_404(Branch, id=branch_id)
-    request.session['active_branch_id'] = branch.id
-    request.session['active_branch_name'] = branch.name
+    """Sets the active branch for the current session. 0 means All Branches (Overall)."""
+    if str(branch_id) == '0':
+        request.session['active_branch_id'] = None
+        request.session['active_branch_name'] = "Overall"
+    else:
+        branch = get_object_or_404(Branch, id=branch_id)
+        request.session['active_branch_id'] = branch.id
+        request.session['active_branch_name'] = branch.name
     
     # Redirect back to the previous page or dash
     next_url = request.GET.get('next', 'dashboard')
