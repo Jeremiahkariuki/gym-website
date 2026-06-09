@@ -33,13 +33,12 @@
 
     <!-- Achievements Grid -->
     {% for achievement in all_achievements %}
-    {% with is_earned=achievement.id in earned_ids %}
     <div class="col-md-3">
-        <div class="card h-100 border-0 shadow-sm text-center p-4 {% if is_earned %}bg-white{% else %}bg-light grayscale{% endif %}"
+        <div class="card h-100 border-0 shadow-sm text-center p-4 {% if achievement.id in earned_ids %}bg-white{% else %}bg-light grayscale{% endif %}"
             style="border-radius: 20px; transition: all 0.3s;">
             <div class="mb-3">
                 <span class="display-3 d-block mb-2"
-                    style="filter: {% if is_earned %}none{% else %}grayscale(100%) opacity(0.4){% endif %};">
+                    style="filter: {% if achievement.id in earned_ids %}none{% else %}grayscale(100%) opacity(0.4){% endif %};">
                     {{ achievement.icon_emoji }}
                 </span>
             </div>
@@ -47,7 +46,7 @@
             <p class="text-muted small mb-3">{{ achievement.description }}</p>
 
             <div class="mt-auto">
-                {% if is_earned %}
+                {% if achievement.id in earned_ids %}
                 <span class="badge bg-success py-2 px-3 rounded-pill">Unlocked!</span>
                 {% else %}
                 <div class="small text-muted py-1">
@@ -57,7 +56,6 @@
             </div>
         </div>
     </div>
-    {% endwith %}
     {% endfor %}
 </div>
 
