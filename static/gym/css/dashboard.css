@@ -1,186 +1,242 @@
-/* dashboard.css - Premium Dark Glassmorphism Theme */
-
-:root {
-    --accent-blue: #3498db;
-    --accent-green: #2ecc71;
-    --accent-yellow: #f1c40f;
-    --accent-red: #e74c3c;
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text-main: #e0e0e0;
-    --text-dim: rgba(255, 255, 255, 0.6);
-}
-
-body {
-    background: radial-gradient(circle at top left, #1a2a6c, #b21f1f, #fdbb2d) fixed !important; /* fallback if radial isn't enough */
-    background: radial-gradient(circle at top left, #2c3e50, #000) fixed !important;
-    color: var(--text-main) !important;
-}
-
-h1, h2, h3 {
-    color: #fff;
-    margin-bottom: 1.5rem;
-}
-
-/* ── Generic Containers ── */
-.card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    padding: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    margin-bottom: 2rem;
-    color: var(--text-main);
-    transition: transform 0.3s ease, border-color 0.3s ease;
-}
-
-.card:hover {
-    border-color: rgba(255, 255, 255, 0.2);
-}
+/* dashboard.css - Extracted from dashboard.html */
 
 /* ── Stats Grid ── */
 .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 3rem;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 0.75rem !important;
+    margin-bottom: 2rem;
 }
 
-.stat-card-admin {
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
 }
 
-.stat-label {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-dim);
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr !important;
+    }
 }
 
 .stat-value {
-    font-size: 3rem;
-    font-weight: 800;
-    line-height: 1;
+    font-size: 2rem;
+    font-weight: bold;
 }
 
-.stat-primary { color: var(--accent-blue); }
-.stat-success { color: var(--accent-green); }
-.stat-danger { color: #ff5f6d; }
+.stat-primary {
+    color: #3498db;
+}
 
-/* ── Layout ── */
+.stat-success {
+    color: #27ae60;
+}
+
+.stat-danger {
+    color: #e74c3c;
+}
+
+/* ── Two Column Layout ── */
 .two-col {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
-    margin-bottom: 2rem;
+}
+
+.two-col-mt {
+    margin-top: 2rem;
+}
+
+/* ── Date Display ── */
+.date-display {
+    font-size: 1.3rem;
 }
 
 /* ── Quick Actions ── */
 .quick-actions-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 1rem;
 }
 
 .btn-premium {
-    grid-column: 1 / -1;
-    background: linear-gradient(135deg, var(--accent-blue), #2980b9);
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
     color: white;
-    padding: 1.25rem;
-    border-radius: 16px;
-    text-decoration: none;
+    border: none;
+    transition: all 0.3s ease;
+    grid-column: 1 / -1;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    font-weight: 700;
+    gap: 10px;
+    padding: 1rem;
     font-size: 1.1rem;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    border-radius: 16px;
+    text-decoration: none;
+}
+
+/* ── Admin Stat Cards ── */
+.stat-card-admin {
+    text-align: center;
+    padding: 0.75rem !important;
+    min-width: 0 !important;
+    overflow: hidden;
+}
+
+/* ── Utility Classes ── */
+.d-flex {
+    display: flex;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.m-0 {
+    margin: 0;
+}
+
+.mb-small {
+    margin-bottom: 0.3rem;
+}
+
+.pb-1 {
+    padding-bottom: 0.5rem;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #eee;
+}
+
+.italic {
+    font-style: italic;
+}
+
+/* ── Trainer Portal Specific ── */
+.pending-card {
+    background: #fdfae6;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #f1c40f;
+}
+
+.member-mini-card {
+    border: 1px solid #eee;
+    padding: 1rem;
+    border-radius: 10px;
 }
 
 .btn-premium:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
-    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
 
 .btn-action {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    color: #475569;
     text-decoration: none;
-    color: var(--text-main);
-    font-weight: 600;
     font-size: 0.85rem;
+    font-weight: 600;
+    gap: 8px;
     transition: all 0.2s ease;
 }
 
 .btn-action i {
-    font-size: 1.5rem;
-    color: var(--accent-blue);
+    font-size: 1.25rem;
+    color: #6366f1;
 }
 
 .btn-action:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--accent-blue);
-    transform: translateY(-3px);
+    background: white;
+    border-color: #6366f1;
+    color: #6366f1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
 }
 
 .btn-action-expense {
-    color: #ff5f6d;
-}
-.btn-action-expense i { color: #ff5f6d; }
-
-/* ── Tables ── */
-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 8px;
-    margin-top: -8px;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
 }
 
-th {
-    padding: 1rem;
-    text-align: left;
-    color: var(--text-dim);
-    font-weight: 600;
+/* ── Section Header ── */
+.section-heading {
+    margin-top: 2rem;
+}
+
+/* ── Management Grid ── */
+.mgmt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.btn-announce {
+    background-color: #34495e;
+}
+
+.btn-gallery {
+    background-color: #9b59b6;
+}
+
+.btn-settings {
+    background-color: #7f8c8d;
+}
+
+/* ── Renewals List ── */
+.renewals-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.renewal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.renewal-plan {
     font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: #666;
 }
 
-td {
-    padding: 1.25rem 1rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-top: 1px solid var(--glass-border);
-    border-bottom: 1px solid var(--glass-border);
+.renewal-right {
+    text-align: right;
 }
 
-td:first-child {
-    border-left: 1px solid var(--glass-border);
-    border-radius: 12px 0 0 12px;
+.renewal-expires {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 0.9rem;
 }
 
-td:last-child {
-    border-right: 1px solid var(--glass-border);
-    border-radius: 0 12px 12px 0;
+.renewal-link {
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: #3498db;
 }
 
-tr:hover td {
-    background: rgba(255, 255, 255, 0.06);
-}
-
-/* ── Lists ── */
+/* ── Messages / Equipment List ── */
 .list-clean {
     list-style: none;
     padding: 0;
@@ -188,82 +244,100 @@ tr:hover td {
 }
 
 .list-item {
-    padding: 1rem;
-    border-bottom: 1px solid var(--glass-border);
-    transition: background 0.2s;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
 }
 
-.list-item:hover {
-    background: rgba(255, 255, 255, 0.03);
+.list-item-flex {
+    display: flex;
+    justify-content: space-between;
 }
 
 .list-link {
     text-decoration: none;
     color: inherit;
-    display: block;
 }
 
-.list-subject { color: var(--text-dim); }
-.list-meta { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
+.list-subject {
+    color: #666;
+}
+
+.list-meta {
+    font-size: 0.8rem;
+    color: #999;
+}
 
 .list-view-all {
-    display: inline-block;
-    margin-top: 1.5rem;
-    color: var(--accent-blue);
-    text-decoration: none;
-    font-weight: 600;
+    display: block;
+    margin-top: 1rem;
     font-size: 0.9rem;
 }
 
-/* ── Renewals ── */
-.renewal-item {
+.text-muted {
+    color: #666;
+}
+
+.text-muted-zero {
+    color: #666;
+    margin: 0;
+}
+
+.text-ok {
+    color: #27ae60;
+}
+
+.text-warning {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* ── Trainer Requests ── */
+.section-mt {
+    margin-top: 2rem;
+}
+
+.card-warning {
+    border-left: 4px solid #f1c40f;
+}
+
+.requests-grid {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.request-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 12px;
-    border: 1px solid var(--glass-border);
+    padding: 10px;
+    background: #fffcf0;
+    border-radius: 8px;
+    border: 1px solid #faebcc;
 }
 
-.renewal-expires {
-    color: #ff5f6d;
-    font-weight: 700;
+.request-meta {
+    font-size: 0.8rem;
+    color: #666;
 }
 
-/* ── Advanced Management Buttons ── */
-.mgmt-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 3rem;
+.request-actions {
+    display: flex;
+    gap: 6px;
 }
 
-.mgmt-grid .btn {
-    padding: 1rem;
-    border-radius: 12px;
-    font-weight: 600;
-    border: none;
-    color: white;
-    text-decoration: none;
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+}
+
+/* ── Reports Grid ── */
+.report-btn {
+    display: block;
     text-align: center;
-    transition: opacity 0.2s;
+    padding: 1rem;
 }
 
-.mgmt-grid .btn:hover { opacity: 0.9; }
-
-.btn-announce { background: #5d4157; background: linear-gradient(to right, #a8caba, #5d4157); }
-.btn-gallery { background: #4568dc; background: linear-gradient(to right, #b06ab3, #4568dc); }
-.btn-settings { background: #373331; background: linear-gradient(to right, #4b79a1, #283e51); }
-.report-btn { background: #11998e; background: linear-gradient(to right, #38ef7d, #11998e); }
-.report-btn-financial { background: #ffb347; background: linear-gradient(to right, #ffcc33, #ffb347); }
-
-/* ── Responsive ── */
-@media (max-width: 768px) {
-    .two-col {
-        grid-template-columns: 1fr;
-    }
-    .stat-value {
-        font-size: 2rem;
-    }
+.report-btn-financial {
+    background-color: #f1c40f;
+    color: #333;
 }

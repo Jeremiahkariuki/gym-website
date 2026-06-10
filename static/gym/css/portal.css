@@ -1,13 +1,13 @@
 /* portal.css - Premium Glassmorphism Theme for Member Portal */
 
 /* ── Dashboard Background & Animations ── */
-body.portal-theme {
+.portal-theme body {
     background: #0f1624 !important;
     color: #e0e6ed;
 }
 
 /* Animated gradient mesh behind content */
-body.portal-theme::before {
+.portal-theme body::before {
     content: '';
     position: fixed;
     top: 0;
@@ -73,6 +73,14 @@ body.portal-theme::before {
     bottom: 10%;
     right: -5%;
     animation: floatOrb2 18s ease-in-out infinite;
+}
+
+/* ── Reset and Base Overrides ── */
+.portal-theme form {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: none !important;
 }
 
 @keyframes floatOrb1 {
@@ -203,7 +211,7 @@ body.portal-theme::before {
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03) !important;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-radius: 20px;
@@ -211,7 +219,7 @@ body.portal-theme::before {
     text-align: center;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
 .stat-card:hover {
@@ -280,14 +288,16 @@ body.portal-theme::before {
 }
 
 .glass-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    margin-top: -2rem;
-    padding: 1.5rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    margin-top: -3rem;
+    padding: 2.5rem !important;
+    position: relative;
+    z-index: 5;
 }
 
 /* ── ID Card Banner ── */
@@ -377,14 +387,20 @@ body.portal-theme::before {
 }
 
 /* ── Navigation Tabs ── */
+.premium-nav-tabs {
+    list-style: none !important;
+    padding-left: 0 !important;
+}
+
 .premium-nav-tabs .nav-link {
     background: transparent;
     border: none;
-    color: rgba(255, 255, 255, 0.6);
-    padding: 0.5rem 1.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.6rem 1.8rem;
     border-radius: 50px;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
 }
 
 .premium-nav-tabs .nav-link.active {
@@ -428,16 +444,8 @@ body.portal-theme::before {
 }
 
 /* ── Form Styles ── */
-.premium-form {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    max-width: none !important;
-}
-
 .form-group-premium {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .form-label-premium {
@@ -455,11 +463,16 @@ body.portal-theme::before {
 .portal-theme input,
 .portal-theme select,
 .portal-theme textarea {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: white !important;
-    border-radius: 14px !important;
-    padding: 0.8rem 1rem !important;
+    border-radius: 12px !important;
+}
+
+/* Ensure dropdown options are visible on all browsers */
+.portal-theme select option {
+    background-color: #1e293b !important;
+    color: white !important;
 }
 
 .portal-theme input:focus {
