@@ -45,6 +45,14 @@
         <div class="stat-value stat-danger">{{ today_attendance }}</div>
         <div style="margin-top: auto; font-size: 0.8rem; color: var(--text-dim);">Members checked in today</div>
     </div>
+    <div class="card stat-card-admin" style="border-bottom: 4px solid #10b981;">
+        <span class="stat-label">Revenue Index</span>
+        <div class="stat-value" style="color: #10b981;">{{ total_income|floatformat:0 }}</div>
+        <div style="margin-top: auto; font-size: 0.8rem; color: var(--text-dim);">
+            <i class="fas fa-arrow-up" style="font-size: 0.7rem; margin-right: 4px;"></i>
+            {{ monthly_income|floatformat:0 }} this month
+        </div>
+    </div>
 </div>
 
 <div class="two-col">

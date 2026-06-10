@@ -60,6 +60,17 @@ def dashboard(request):
     if active_branch_id:
         pending_assignments = pending_assignments.filter(member__branch_id=active_branch_id)
 
+    # Calculate income
+    payments_qs = Payment.objects.all()
+    if active_branch_id:
+        payments_qs = payments_qs.filter(branch_id=active_branch_id)
+    
+    total_income = payments_qs.aggregate(total=db_models.Sum("amount"))["total"] or 0
+    monthly_income = (
+        payments_qs.filter(date__year=today.year, date__month=today.month)
+        .aggregate(total=db_models.Sum("amount"))["total"] or 0
+    )
+
     return render(
         request,
         "gym/dashboard.html",
@@ -75,6 +86,8 @@ def dashboard(request):
             "recent_messages": recent_messages,
             "maintenance_required": maintenance_required,
             "pending_assignments": pending_assignments,
+            "total_income": total_income,
+            "monthly_income": monthly_income,
         },
     )
 
