@@ -2,30 +2,65 @@
 
 {% block title %}{% if form.instance.id %}Edit Expense{% else %}Record Expense{% endif %} - Gym Management{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/expenses.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="card" style="max-width: 600px; margin: 0 auto;">
-    <h2>{% if form.instance.id %}Edit Expense{% else %}Record New Expense{% endif %}</h2>
-    <form method="post" class="auth-form" style="margin-top: 1rem;">
-        {% csrf_token %}
-        <div class="form-group" style="margin-bottom: 1rem;">
-            {{ form.date.label_tag }}
-            {{ form.date }}
+<div class="container expense-page">
+    <div class="expense-form-container">
+        <div class="glass-card-premium fade-in-up">
+            <div class="form-header">
+                <i class="fas fa-receipt"></i>
+                <h2>{% if form.instance.id %}Refine Expense{% else %}Record New Expense{% endif %}</h2>
+                <p>System secure. Recording financial transaction for your audit trail.</p>
+            </div>
+
+            <form method="post" class="premium-form">
+                {% csrf_token %}
+
+                <div class="form-group-premium">
+                    <label class="form-label-premium"><i class="fas fa-calendar-day"></i> Transaction Date</label>
+                    {{ form.date }}
+                    {% if form.date.errors %}
+                    <div class="text-danger small mt-1">{{ form.date.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group-premium">
+                    <label class="form-label-premium"><i class="fas fa-tag"></i> Expense Category</label>
+                    {{ form.category }}
+                    {% if form.category.errors %}
+                    <div class="text-danger small mt-1">{{ form.category.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group-premium">
+                    <label class="form-label-premium"><i class="fas fa-dollar-sign"></i> Amount (Total)</label>
+                    {{ form.amount }}
+                    {% if form.amount.errors %}
+                    <div class="text-danger small mt-1">{{ form.amount.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group-premium">
+                    <label class="form-label-premium"><i class="fas fa-comment-alt"></i> Description & Reference</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                    <div class="text-danger small mt-1">{{ form.description.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="pt-3">
+                    <button type="submit" class="btn-save-expense">
+                        <i class="fas fa-check-circle"></i> Save Transaction Recording
+                    </button>
+                    <a href="{% url 'expense_list' %}" class="btn-cancel-expense">
+                        Cancel and Return to Registry
+                    </a>
+                </div>
+            </form>
         </div>
-        <div class="form-group" style="margin-bottom: 1rem;">
-            {{ form.category.label_tag }}
-            {{ form.category }}
-        </div>
-        <div class="form-group" style="margin-bottom: 1rem;">
-            {{ form.amount.label_tag }}
-            {{ form.amount }}
-        </div>
-        <div class="form-group" style="margin-bottom: 1.5rem;">
-            {{ form.description.label_tag }}
-            {{ form.description }}
-        </div>
-        <button type="submit" class="btn btn-success" style="width: 100%;">Save Expense</button>
-        <a href="{% url 'expense_list' %}" class="btn"
-            style="display: block; text-align: center; margin-top: 1rem;">Cancel</a>
-    </form>
+    </div>
 </div>
 {% endblock %}
