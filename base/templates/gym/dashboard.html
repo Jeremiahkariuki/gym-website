@@ -33,7 +33,13 @@
     <div class="card stat-card-admin">
         <span class="stat-label">Total Members</span>
         <div class="stat-value stat-primary">{{ total_members }}</div>
-        <div style="margin-top: auto; font-size: 0.8rem; color: var(--text-dim);">Active across all plans</div>
+        <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8rem; color: var(--text-dim);">Active across all plans</span>
+            <a href="{% url 'member_list' %}"
+                style="font-size: 0.75rem; color: var(--accent-blue); text-decoration: none; font-weight: 700;">
+                View List <i class="fas fa-chevron-right" style="font-size: 0.65rem;"></i>
+            </a>
+        </div>
     </div>
     <div class="card stat-card-admin">
         <span class="stat-label">Acquisitions Today</span>
@@ -85,7 +91,7 @@
             </a>
             <a href="{% url 'member_list' %}" class="btn-action">
                 <i class="fas fa-users"></i>
-                <span>Directory</span>
+                <span>Member List</span>
             </a>
             <a href="{% url 'admin_class_list' %}" class="btn-action">
                 <i class="fas fa-calendar-alt"></i>
