@@ -50,6 +50,13 @@ nav a.active {
     justify-content: space-between;
 }
 
+.nav-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
 /* ── Typography ── */
 h1 {
     color: #2c3e50;

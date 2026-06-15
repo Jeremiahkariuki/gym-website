@@ -64,8 +64,7 @@
                 <div class="branch-selector">
                     <button class="branch-btn" onclick="this.nextElementSibling.classList.toggle('show')">
                         <i class="fas fa-building"></i>
-                        {% if active_branch %}{{ active_branch.name }}{% else %}{{
-                        request.session.active_branch_name|default:"Overall" }}{% endif %}
+                        {% if active_branch %}{{ active_branch.name }}{% else %}{{ request.session.active_branch_name|default:"Overall" }}{% endif %}
                         <i class="fas fa-chevron-down chevron-small"></i>
                     </button>
                     <div class="branch-dropdown">
