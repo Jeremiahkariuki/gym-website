@@ -166,6 +166,52 @@ textarea:focus {
     box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
 }
 
+/* ── Password Toggle ── */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.password-toggle:hover {
+    color: #3498db;
+    background: rgba(52, 152, 219, 0.1);
+}
+
+input[type="password"] {
+    padding-right: 45px !important;
+}
+
+/* Dark mode variations for glassmorphism pages */
+.portal-theme .password-toggle,
+.login-body .password-toggle {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.portal-theme .password-toggle:hover,
+.login-body .password-toggle:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
 /* ── Cards ── */
 .card {
     background: white;
@@ -750,8 +796,48 @@ textarea:focus {
 }
 
 /* ── Button row ── */
-.btn-row {
+
+/* ── Password Visibility Toggle ── */
+.input-wrapper {
+    position: relative;
     display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #94a3b8;
+    transition: all 0.3s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.password-toggle:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #475569;
+}
+
+/* Glassmorphism adaptation for login/register pages */
+.login-body .password-toggle {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.login-body .password-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Ensure input padding doesn't overlap with icon */
+input[type="password"] {
+    padding-right: 45px !important;
 }

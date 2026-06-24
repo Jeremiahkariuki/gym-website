@@ -24,7 +24,13 @@
                     <div style="display: grid; gap: 1rem; margin-top: 0.5rem;">
                         {{ form.username }}
                         {{ form.email }}
-                        {{ form.password }}
+                        <div class="input-wrapper">
+                            {{ form.password }}
+                            <span class="password-toggle"
+                                onclick="togglePasswordVisibility('{{ form.password.id_for_label }}', this)">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
 

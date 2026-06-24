@@ -170,33 +170,6 @@ body.login-body {
     border-bottom: 1px solid white;
 }
 
-/* Password Toggle */
-.password-toggle {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.5);
-    transition: all 0.3s ease;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-}
-
-.password-toggle:hover {
-    color: white;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.login-form input[type="password"],
-.login-form input[type="text"] {
-    padding-right: 45px !important;
-}
 
 /* Tooltip Styles */
 .help-text-tooltip {
