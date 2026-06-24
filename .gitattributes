@@ -1,0 +1,7 @@
+# Linguistic tagging for GitHub
+# This ensures that HTML templates and static files don't dominate the language statistics.
+
+base/templates/**/*.html linguist-documentation=false linguist-vendored=true
+static/**/* linguist-documentation=false linguist-vendored=true
+staticfiles/**/* linguist-documentation=false linguist-vendored=true
+media/**/* linguist-documentation=false linguist-vendored=true
