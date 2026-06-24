@@ -78,7 +78,77 @@
                 icon.classList.add('fa-eye');
             }
         }
+
+        // Dynamic Password Validation
+        document.addEventListener('DOMContentLoaded', function () {
+            const passwordField = document.querySelector('input[type="password"][name*="password"]');
+            if (!passwordField) return;
+
+            // Create requirements UI
+            const requirementsHTML = `
+                <div id="password-validation-box" class="password-validation-box" style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                    <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-bottom: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Security Requirements</p>
+                    <div class="req-item" id="req-length" style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: rgba(255,255,255,0.4); margin-bottom: 0.4rem; transition: all 0.3s ease;">
+                        <i class="fas fa-circle" style="font-size: 0.5rem;"></i> Min 8 characters
+                    </div>
+                    <div class="req-item" id="req-upper" style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: rgba(255,255,255,0.4); margin-bottom: 0.4rem; transition: all 0.3s ease;">
+                        <i class="fas fa-circle" style="font-size: 0.5rem;"></i> One uppercase letter
+                    </div>
+                    <div class="req-item" id="req-number" style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: rgba(255,255,255,0.4); margin-bottom: 0.4rem; transition: all 0.3s ease;">
+                        <i class="fas fa-circle" style="font-size: 0.5rem;"></i> One number
+                    </div>
+                    <div class="req-item" id="req-special" style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: rgba(255,255,255,0.4); transition: all 0.3s ease;">
+                        <i class="fas fa-circle" style="font-size: 0.5rem;"></i> One special character
+                    </div>
+                </div>
+            `;
+
+            // Insert after the password field's parent form-group
+            const formGroup = passwordField.closest('.form-group');
+            formGroup.insertAdjacentHTML('afterend', requirementsHTML);
+
+            const validationBox = document.getElementById('password-validation-box');
+            const reqs = {
+                length: document.getElementById('req-length'),
+                upper: document.getElementById('req-upper'),
+                number: document.getElementById('req-number'),
+                special: document.getElementById('req-special')
+            };
+
+            passwordField.addEventListener('focus', () => {
+                validationBox.style.display = 'block';
+            });
+
+            passwordField.addEventListener('input', function () {
+                const val = this.value;
+
+                // Length check
+                updateReq(reqs.length, val.length >= 8);
+
+                // Upper check
+                updateReq(reqs.upper, /[A-Z]/.test(val));
+
+                // Number check
+                updateReq(reqs.number, /[0-9]/.test(val));
+
+                // Special check
+                updateReq(reqs.special, /[^A-Za-z0-9]/.test(val));
+            });
+
+            function updateReq(el, met) {
+                if (met) {
+                    el.style.color = '#2ecc71';
+                    el.querySelector('i').className = 'fas fa-check-circle';
+                    el.querySelector('i').style.color = '#2ecc71';
+                } else {
+                    el.style.color = 'rgba(255,255,255,0.4)';
+                    el.querySelector('i').className = 'fas fa-circle';
+                    el.querySelector('i').style.color = 'rgba(255,255,255,0.2)';
+                }
+            }
+        });
     </script>
+
 </body>
 
 </html>
