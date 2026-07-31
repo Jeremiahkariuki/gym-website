@@ -1,0 +1,510 @@
+/* portal.css - Premium Glassmorphism Theme for Member Portal */
+
+/* ── Dashboard Background & Animations ── */
+body.portal-theme {
+    background: #0f1624 !important;
+    color: #e0e6ed;
+}
+
+/* Animated gradient mesh behind content */
+.portal-theme body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 85% 70%, rgba(139, 92, 246, 0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16, 185, 129, 0.06) 0%, transparent 60%);
+    z-index: -2;
+    animation: meshShift 20s ease-in-out infinite alternate;
+}
+
+@keyframes meshShift {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.portal-page {
+    margin-top: -2rem;
+    padding-top: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Floating orbs for depth */
+.portal-page::before,
+.portal-page::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.portal-page::before {
+    width: 400px;
+    height: 400px;
+    background: rgba(59, 130, 246, 0.08);
+    top: 10%;
+    left: -5%;
+    animation: floatOrb1 15s ease-in-out infinite;
+}
+
+.portal-page::after {
+    width: 350px;
+    height: 350px;
+    background: rgba(168, 85, 247, 0.07);
+    bottom: 10%;
+    right: -5%;
+    animation: floatOrb2 18s ease-in-out infinite;
+}
+
+/* ── Reset and Base Overrides ── */
+.portal-theme form {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: none !important;
+}
+
+@keyframes floatOrb1 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(40px, 30px) scale(1.1);
+    }
+}
+
+@keyframes floatOrb2 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(-30px, -40px) scale(1.15);
+    }
+}
+
+/* ── Hero Sections ── */
+.portal-hero {
+    background: linear-gradient(135deg, #1a1f35 0%, #0d3b66 40%, #1b6b93 70%, #3da5d9 100%);
+    color: white;
+    padding: 3rem 2.5rem;
+    border-radius: 24px;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.portal-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 60%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.portal-hero h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    color: white !important;
+}
+
+.portal-hero p {
+    opacity: 0.75;
+    margin: 0.5rem 0 0;
+    font-size: 0.95rem;
+    color: white !important;
+}
+
+.portal-hero-badge {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 1rem 1.8rem;
+    border-radius: 16px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.portal-hero-badge:hover {
+    transform: scale(1.02);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.portal-hero-badge .plan-label {
+    font-size: 0.7rem;
+    opacity: 0.65;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+}
+
+/* ── Profile Hub Hero ── */
+.profile-hero-section {
+    padding: 2rem 2rem;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border-radius: 24px;
+    margin-bottom: 0;
+    color: white;
+}
+
+.profile-img-container {
+    width: 100px;
+    height: 100px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #6366f1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+/* ── Stat Cards (Glass) ── */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding: 1.8rem;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.stat-icon {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #f0f4f8;
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+/* ── Action Cards ── */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+.action-card {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 1.5rem 1rem;
+    border-radius: 18px;
+    text-align: center;
+    text-decoration: none;
+    color: #e0e6ed;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Content Cards (Glass) ── */
+.portal-card {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 2rem;
+}
+
+.portal-card-body {
+    padding: 1.5rem;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    margin-top: -3rem;
+    padding: 2.5rem !important;
+    position: relative;
+    z-index: 5;
+}
+
+/* ── ID Card Banner ── */
+.id-card-banner {
+    background: linear-gradient(135deg, #4338ca, #6d28d9, #7c3aed);
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 12px 40px rgba(109, 40, 217, 0.3);
+    margin-bottom: 2.5rem;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── ID Card View ── */
+.id-card-view {
+    max-width: 400px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.id-card-premium {
+    padding: 2rem;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #1e293b, #334155);
+    color: white;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.id-card-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.id-card-label {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.qr-container {
+    background: white;
+    padding: 1.25rem;
+    border-radius: 16px;
+    margin: 1.5rem auto;
+    width: 210px;
+    height: 210px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.id-card-footer {
+    text-align: left;
+    margin-top: 1.5rem;
+}
+
+.id-card-footer h3 {
+    margin: 0;
+    color: white;
+}
+
+.id-card-footer p {
+    margin: 0;
+    opacity: 0.6;
+    font-size: 0.9rem;
+}
+
+/* ── Tables & Lists ── */
+.class-row,
+.payment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ── Navigation Tabs ── */
+.premium-nav-tabs {
+    list-style: none !important;
+    padding-left: 0 !important;
+}
+
+.premium-nav-tabs .nav-link {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.6rem 1.8rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+.premium-nav-tabs .nav-link.active {
+    background: #6366f1 !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* ── Badges ── */
+.status-badge-premium {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.class-badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 20px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.class-badge-join {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.class-badge-leave {
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* ── Form Styles ── */
+.form-group-premium {
+    margin-bottom: 1.5rem;
+}
+
+.form-label-premium {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.portal-theme input,
+.portal-theme select,
+.portal-theme textarea {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    border-radius: 12px !important;
+}
+
+/* Ensure dropdown options are visible on all browsers */
+.portal-theme select option {
+    background-color: #1e293b !important;
+    color: white !important;
+}
+
+.portal-theme input:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15) !important;
+}
+
+/* ── Utils ── */
+.fade-in-up {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.portal-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .portal-grid {
+        grid-template-columns: 1fr;
+    }
+}

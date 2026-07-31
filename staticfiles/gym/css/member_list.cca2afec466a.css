@@ -1,0 +1,137 @@
+/* member_list.css - extracted styles from member_list.html */
+
+/* Header container */
+.member-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Export button */
+.export-btn {
+    background-color: #27ae60;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Back to dashboard button */
+.back-dashboard {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    color: #2c3e50;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border: 1px solid #e0e6ed;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+/* Search form */
+.search-form {
+    margin: 1.2rem 0;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.search-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+.status-select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+.search-btn {
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.clear-btn {
+    padding: 8px 12px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Table */
+.member-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.member-table th, .member-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+.member-table th {
+    background-color: #ecf0f1;
+    font-weight: 600;
+}
+.member-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Action buttons container */
+.actions {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    justify-content: flex-start;
+    align-items: center;
+}
+.action-btn {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+}
+.action-view { background-color: var(--primary-bg, #3498db); }
+.action-checkin { background-color: #27ae60; }
+.action-edit { background-color: #f39c12; }
+.action-delete { background-color: #e74c3c; }
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 1.5rem;
+}
+.pagination-btn {
+    padding: 6px 14px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+.pagination-btn.success { background-color: #27ae60; }

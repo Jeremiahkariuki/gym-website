@@ -1,0 +1,171 @@
+/* expenses.css - Premium Glassmorphism for Expense Tracking */
+
+.expense-page {
+    position: relative;
+    z-index: 1;
+    padding-top: 2rem;
+}
+
+.expense-form-container {
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.glass-card-premium {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    padding: 3rem !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-card-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3498db, #8e44ad);
+    opacity: 0.8;
+}
+
+.form-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.form-header i {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #3498db, #9b59b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.form-header h2 {
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: white;
+    margin: 0;
+}
+
+.form-header p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* ── Premium Form Controls ── */
+.form-group-premium {
+    margin-bottom: 1.8rem;
+}
+
+.form-label-premium {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+}
+
+.form-label-premium i {
+    color: #3498db;
+    font-size: 0.85rem;
+}
+
+.expense-form-container input,
+.expense-form-container select,
+.expense-form-container textarea {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    border-radius: 14px !important;
+    padding: 0.8rem 1.2rem !important;
+    font-weight: 500;
+    transition: all 0.3s ease !important;
+    width: 100%;
+}
+
+.expense-form-container input:focus,
+.expense-form-container select:focus,
+.expense-form-container textarea:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: #3498db !important;
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15) !important;
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.premium-input {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    border-radius: 14px !important;
+    padding: 0.8rem 1.2rem !important;
+    font-weight: 500;
+    transition: all 0.3s ease !important;
+    width: 100%;
+}
+
+.premium-input:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: #3498db !important;
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15) !important;
+    transform: translateY(-1px);
+}
+
+/* ── Buttons ── */
+.btn-save-expense {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border: none;
+    color: white;
+    padding: 1rem;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(52, 152, 219, 0.2);
+}
+
+.btn-save-expense:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(52, 152, 219, 0.3);
+    filter: brightness(1.1);
+}
+
+.btn-cancel-expense {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+}
+
+.btn-cancel-expense:hover {
+    color: white;
+}
+
+/* ── Select Customization ── */
+select.premium-input option {
+    background-color: #1e293b !important;
+    color: white !important;
+}
