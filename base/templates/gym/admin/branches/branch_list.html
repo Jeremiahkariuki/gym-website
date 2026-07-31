@@ -1,67 +1,220 @@
 {% extends 'gym/base.html' %}
+{% load static %}
 
-{% block title %}Manage Branches - {{ block.super }}{% endblock %}
+{% block title %}Manage Branches | GYMFLOW Admin{% endblock %}
+{% block body_class %}dashboard-theme{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'gym/css/dashboard.css' %}?v=9.0">
+<style>
+    .branch-card {
+        background: #111827 !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 20px;
+        padding: 1.5rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .branch-card:hover {
+        transform: translateY(-4px);
+        background: #1e293b !important;
+        border-color: rgba(56, 189, 248, 0.3) !important;
+        box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.15);
+    }
+
+    .branch-card-active {
+        border-top: 4px solid var(--neon-emerald) !important;
+    }
+
+    .branch-card-inactive {
+        border-top: 4px solid var(--neon-blue) !important;
+    }
+
+    .branch-logo-box {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        background: rgba(56, 189, 248, 0.15);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--neon-blue);
+        flex-shrink: 0;
+    }
+
+    .branch-logo-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    .info-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.88rem;
+        color: #94a3b8;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-row i {
+        width: 18px;
+        color: var(--neon-blue);
+    }
+
+    .info-row strong {
+        color: #ffffff;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Gym Branches</h1>
-    <a href="{% url 'branch_create' %}" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Add New Branch
-    </a>
+<!-- Executive Hero Banner -->
+<div class="dashboard-hero">
+    <div>
+        <div class="hero-welcome-tag">
+            <span class="pulse-dot"></span>
+            Facility Network & Scope Manager
+        </div>
+        <h1 class="hero-title">Gym Locations & Branches 🏢</h1>
+        <p class="hero-subtitle">
+            Configure physical gym locations, view branch managers, and toggle operating scope.
+        </p>
+    </div>
+    <div class="hero-quick-stats">
+        <div class="hero-stat-pill">
+            <span class="pill-label">Total Locations</span>
+            <span class="pill-val" style="color: var(--neon-blue);">
+                <i class="fas fa-building me-1"></i>{{ branches|length }}
+            </span>
+        </div>
+        <div class="hero-stat-pill">
+            <span class="pill-label">Active Scope</span>
+            <span class="pill-val" style="color: var(--neon-emerald);">
+                {% firstof active_branch.name "Overall (All Branches)" %}
+            </span>
+        </div>
+        <a href="{% url 'branch_create' %}" class="action-card-btn action-emerald" style="padding: 0.9rem 1.4rem; height: fit-content;">
+            <i class="fas fa-plus"></i> Add New Branch
+        </a>
+    </div>
 </div>
 
+<!-- Branch Grid -->
 <div class="row">
     {% for branch in branches %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <div class="d-flex align-items-center">
-                        {% if branch.logo %}
-                        <img src="{{ branch.logo.url }}" alt="{{ branch.name }} logo"
-                            style="width: 40px; height: 40px; object-fit: contain; margin-right: 10px; border-radius: 5px;">
-                        {% elif branch.logo_url %}
-                        <img src="{{ branch.logo_url }}" alt="{{ branch.name }} logo"
-                            style="width: 40px; height: 40px; object-fit: contain; margin-right: 10px; border-radius: 5px;">
-                        {% endif %}
-                        <h5 class="card-title mb-0">{{ branch.name }}</h5>
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="branch-card h-100 {% if branch == active_branch %}branch-card-active{% else %}branch-card-inactive{% endif %}">
+            <div>
+                <!-- Top Row: Logo, Name, Active Badge, Dropdown -->
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="branch-logo-box">
+                            {% if branch.logo %}
+                                <img src="{{ branch.logo.url }}" alt="{{ branch.name }}">
+                            {% elif branch.logo_url %}
+                                <img src="{{ branch.logo_url }}" alt="{{ branch.name }}">
+                            {% else %}
+                                <i class="fas fa-building"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h4 class="mb-1 fw-bold text-white">{{ branch.name }}</h4>
+                            {% if branch == active_branch %}
+                                <span class="badge-neon badge-emerald">
+                                    <i class="fas fa-check-circle me-1"></i> Active Scope
+                                </span>
+                            {% else %}
+                                <span class="badge-neon badge-amber">Location #{{ branch.id }}</span>
+                            {% endif %}
+                        </div>
                     </div>
                     <div class="dropdown">
-                        <button class="btn btn-sm btn-link text-muted" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-ellipsis-v"></i>
+                        <button class="btn btn-sm text-white-50 p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fs-5"></i>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{% url 'branch_edit' branch.id %}">Edit</a></li>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg" style="background: #1e293b; border-color: rgba(255,255,255,0.1);">
                             <li>
-                                <hr class="dropdown-divider">
+                                <a class="dropdown-item text-white" href="{% url 'branch_edit' branch.id %}">
+                                    <i class="fas fa-edit me-2 text-info"></i> Edit Details
+                                </a>
                             </li>
-                            <li><a class="dropdown-item text-danger"
-                                    href="{% url 'branch_delete' branch.id %}">Delete</a></li>
+                            <li><hr class="dropdown-divider bg-secondary"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="{% url 'branch_delete' branch.id %}">
+                                    <i class="fas fa-trash-alt me-2"></i> Remove Location
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
-                <p class="text-muted small mb-3"><i class="fas fa-map-marker-alt"></i> {{ branch.address }}</p>
 
-                <div class="mb-3">
-                    <p class="mb-1"><strong>Manager:</strong> {{ branch.manager_name }}</p>
-                    <p class="mb-1"><strong>Phone:</strong> {{ branch.phone }}</p>
+                <!-- Info List -->
+                <div class="my-3 p-3 rounded-3" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="info-row">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ branch.address|default:"No address specified" }}</span>
+                    </div>
+                    <div class="info-row">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Manager: <strong>{{ branch.manager_name|default:"Unassigned" }}</strong></span>
+                    </div>
+                    <div class="info-row">
+                        <i class="fas fa-phone"></i>
+                        <span>{{ branch.phone|default:"N/A" }}</span>
+                    </div>
+                    {% if branch.email %}
+                    <div class="info-row">
+                        <i class="fas fa-envelope"></i>
+                        <span>{{ branch.email }}</span>
+                    </div>
+                    {% endif %}
                 </div>
 
-                <div class="d-grid gap-2">
-                    <a href="{% url 'set_active_branch' branch.id %}?next={{ request.get_full_path }}"
-                        class="btn btn-outline-primary btn-sm">
-                        Switch to this Branch
-                    </a>
+                <!-- Branch Stats Pill -->
+                <div class="d-flex justify-content-between text-muted fs-7 mb-3 px-1">
+                    <span><i class="fas fa-users text-info me-1"></i> <strong>{{ branch.members.count }}</strong> Members</span>
+                    <span><i class="fas fa-dumbbell text-success me-1"></i> <strong>{{ branch.trainers.count }}</strong> Trainers</span>
                 </div>
             </div>
-            <div class="card-footer bg-transparent border-top-0">
-                <small class="text-muted">Created: {{ branch.created_at|date:"M d, Y" }}</small>
+
+            <!-- Action Buttons Footer -->
+            <div>
+                {% if branch == active_branch %}
+                    <button class="btn w-100 fw-bold py-2" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);" disabled>
+                        <i class="fas fa-check-double me-1"></i> Currently Active Location
+                    </button>
+                {% else %}
+                    <a href="{% url 'set_active_branch' branch.id %}?next={{ request.get_full_path }}" 
+                       class="btn w-100 fw-bold py-2" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); text-decoration: none;">
+                        <i class="fas fa-sync-alt me-1"></i> Switch Operating Scope
+                    </a>
+                {% endif %}
+                <div class="text-center mt-2">
+                    <small style="color: #64748b; font-size: 0.75rem;">Created: {{ branch.created_at|date:"M d, Y" }}</small>
+                </div>
             </div>
         </div>
     </div>
     {% empty %}
     <div class="col-12 text-center py-5">
-        <p class="lead text-muted">No branches found. Start by adding your primary location!</p>
+        <div class="empty-state-box">
+            <i class="fas fa-building" style="font-size: 3.5rem;"></i>
+            <h4 class="text-white mt-3">No Gym Branches Found</h4>
+            <p style="color: #94a3b8;">Start by registering your primary fitness location.</p>
+            <a href="{% url 'branch_create' %}" class="action-card-btn action-emerald mt-3 d-inline-flex">
+                <i class="fas fa-plus me-2"></i> Register First Branch
+            </a>
+        </div>
     </div>
     {% endfor %}
 </div>
