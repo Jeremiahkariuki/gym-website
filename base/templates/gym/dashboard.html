@@ -4,278 +4,513 @@
 {% block title %}Dashboard | GYMFLOW Admin{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'gym/css/dashboard.css' %}?v=1.2">
-<style>
-    .section-title-premium {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-top: 3rem;
-        margin-bottom: 2rem;
-        font-weight: 800;
-        letter-spacing: -0.5px;
-    }
-
-    .section-title-premium i {
-        color: var(--accent-blue);
-        font-size: 1.2rem;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'gym/css/dashboard.css' %}?v=2.0">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 {% endblock %}
 
 {% block content %}
-<div style="margin-top: 2rem; margin-bottom: 4rem;">
-    <h1 style="font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem;">📊 Admin Overview</h1>
-    <p style="color: var(--text-dim);">Welcome back. Here is what's happening at GYMFLOW today.</p>
-</div>
-
-<div class="stats-grid">
-    <div class="card stat-card-admin">
-        <span class="stat-label">Total Members</span>
-        <div class="stat-value stat-primary">{{ total_members }}</div>
-        <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 0.8rem; color: var(--text-dim);">Active across all plans</span>
-            <a href="{% url 'member_list' %}"
-                style="font-size: 0.75rem; color: var(--accent-blue); text-decoration: none; font-weight: 700;">
-                View List <i class="fas fa-chevron-right" style="font-size: 0.65rem;"></i>
-            </a>
-        </div>
-    </div>
-    <div class="card stat-card-admin">
-        <span class="stat-label">Acquisitions Today</span>
-        <div class="stat-value stat-success">{{ members_joined_today }}</div>
-        <div style="margin-top: auto; font-size: 0.8rem; color: var(--text-dim);">New growth since midnight</div>
-    </div>
-    <div class="card stat-card-admin" style="border-bottom: 4px solid var(--accent-red);">
-        <span class="stat-label">Daily Attendance</span>
-        <div class="stat-value stat-danger">{{ today_attendance }}</div>
-        <div style="margin-top: auto; font-size: 0.8rem; color: var(--text-dim);">Members checked in today</div>
-    </div>
-    <div class="card stat-card-admin" style="border-bottom: 4px solid #10b981;">
-        <span class="stat-label">Revenue Index</span>
-        <div class="stat-value" style="color: #10b981;">{{ total_income|floatformat:0 }}</div>
-        <div style="margin-top: auto; font-size: 0.8rem; color: var(--text-dim);">
-            <i class="fas fa-arrow-up" style="font-size: 0.7rem; margin-right: 4px;"></i>
-            {{ monthly_income|floatformat:0 }} this month
-        </div>
-    </div>
-</div>
-
-<div class="two-col">
-    <div class="card">
-        <h3 class="section-title-premium" style="margin-top: 0;"><i class="fas fa-clock"></i> Today's Schedule</h3>
-        <div class="date-display" style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">
-            {{ today|date:"l" }}
-        </div>
-        <div style="color: var(--accent-blue); font-weight: 600; font-size: 1.1rem;">
-            {{ today|date:"F d, Y" }}
-        </div>
-        <hr style="margin: 2rem 0; opacity: 0.1;">
-        <div
-            style="display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px;">
-            <div
-                style="width: 40px; height: 40px; background: rgba(52, 152, 219, 0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-sun" style="color: var(--accent-blue);"></i>
-            </div>
-            <div>
-                <div style="font-size: 0.8rem; color: var(--text-dim);">Operational Status</div>
-                <div style="font-weight: 600;">System Online & Syncing</div>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <h3 class="section-title-premium" style="margin-top: 0;"><i class="fas fa-bolt"></i> Global Operations</h3>
-        <div class="quick-actions-grid">
-            <a href="{% url 'qr_scanner' %}" class="btn-premium">
-                <i class="fas fa-qrcode"></i> Launch Check-in Scanner
-            </a>
-            <a href="{% url 'member_list' %}" class="btn-action">
-                <i class="fas fa-users"></i>
-                <span>Member List</span>
-            </a>
-            <a href="{% url 'admin_class_list' %}" class="btn-action">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Schedules</span>
-            </a>
-            <a href="{% url 'equipment_list' %}" class="btn-action">
-                <i class="fas fa-tools"></i>
-                <span>Inventory</span>
-            </a>
-            <a href="{% url 'plan_list' %}" class="btn-action">
-                <i class="fas fa-tags"></i>
-                <span>Plan Mgmt</span>
-            </a>
-            <a href="{% url 'member_activity_list' %}" class="btn-action"
-                style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.2);">
-                <i class="fas fa-chart-line" style="color: #10b981;"></i>
-                <span>Activity Hub</span>
-            </a>
-            <a href="{% url 'expense_create' %}" class="btn-action btn-action-expense"
-                style="grid-column: 1 / -1; flex-direction: row; justify-content: center; padding: 0.8rem;">
-                <i class="fas fa-plus-circle"></i>
-                <span>Record New Financial Expense</span>
-            </a>
-        </div>
-    </div>
-</div>
-
-<h2 class="section-title-premium"><i class="fas fa-layer-group"></i> Ecosystem Management</h2>
-<div class="mgmt-grid">
-    <a href="{% url 'admin_announcement_list' %}" class="btn btn-announce"><i class="fas fa-bullhorn"
-            style="margin-right: 8px;"></i> Broadcasts</a>
-    <a href="{% url 'admin_gallery' %}" class="btn btn-gallery"><i class="fas fa-images" style="margin-right: 8px;"></i>
-        Visual Assets</a>
-    <a href="{% url 'system_settings' %}" class="btn btn-settings"><i class="fas fa-sliders-h"
-            style="margin-right: 8px;"></i> Global Config</a>
-</div>
-
-<div class="two-col">
+<!-- Executive Hero Banner -->
+<div class="dashboard-hero">
     <div>
-        <h2 class="section-title-premium"><i class="fas fa-hourglass-start"></i> Critical Renewals</h2>
-        <div class="card">
+        <div class="hero-welcome-tag">
+            <span class="pulse-dot"></span>
+            System Status: Operational & Live
+        </div>
+        <h1 class="hero-title">Welcome Back, Admin 👋</h1>
+        <p class="hero-subtitle">
+            Here is your live facility performance, attendance velocity, and intelligence metrics for 
+            <strong>{{ today|date:"l, F d, Y" }}</strong>.
+        </p>
+    </div>
+    <div class="hero-quick-stats">
+        <div class="hero-stat-pill">
+            <span class="pill-label">Active Scope</span>
+            <span class="pill-val">
+                <i class="fas fa-building" style="color: var(--neon-blue); font-size: 0.9rem; margin-right: 6px;"></i>
+                {% if active_branch_id %}Branch #{{ active_branch_id }}{% else %}All Branches{% endif %}
+            </span>
+        </div>
+        <div class="hero-stat-pill">
+            <span class="pill-label">Check-ins Today</span>
+            <span class="pill-val" style="color: var(--neon-emerald);">
+                <i class="fas fa-user-check" style="margin-right: 6px;"></i>{{ today_attendance }}
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Key Performance Indicators (KPI) Stat Cards -->
+<div class="stats-grid">
+    <!-- Card 1: Total Members -->
+    <div class="metric-card metric-card-accent-blue">
+        <div class="metric-header">
+            <span class="metric-title">Total Members</span>
+            <div class="metric-icon-box icon-blue">
+                <i class="fas fa-users"></i>
+            </div>
+        </div>
+        <div class="metric-body">
+            <div class="metric-value">{{ total_members }}</div>
+        </div>
+        <div class="metric-footer">
+            <span><i class="fas fa-check-circle" style="color: var(--neon-emerald); margin-right: 4px;"></i> {{ active_members_count }} Active Plans</span>
+            <a href="{% url 'member_list' %}" style="color: var(--neon-blue); font-weight: 700; text-decoration: none;">
+                View Directory →
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 2: Today's Attendance -->
+    <div class="metric-card metric-card-accent-emerald">
+        <div class="metric-header">
+            <span class="metric-title">Today's Check-ins</span>
+            <div class="metric-icon-box icon-emerald">
+                <i class="fas fa-qrcode"></i>
+            </div>
+        </div>
+        <div class="metric-body">
+            <div class="metric-value">{{ today_attendance }}</div>
+        </div>
+        <div class="metric-footer">
+            <span class="trend-badge trend-up">
+                <i class="fas fa-user-plus"></i> +{{ members_joined_today }} Joined Today
+            </span>
+            <a href="{% url 'attendance_report' %}" style="color: var(--neon-emerald); font-weight: 700; text-decoration: none;">
+                Audit →
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 3: Monthly Revenue -->
+    <div class="metric-card metric-card-accent-amber">
+        <div class="metric-header">
+            <span class="metric-title">Monthly Revenue</span>
+            <div class="metric-icon-box icon-amber">
+                <i class="fas fa-wallet"></i>
+            </div>
+        </div>
+        <div class="metric-body">
+            <div class="metric-value">${{ monthly_income|floatformat:0 }}</div>
+        </div>
+        <div class="metric-footer">
+            <span>Net Profit: <strong style="color: {% if net_monthly_profit >= 0 %}var(--neon-emerald){% else %}var(--neon-rose){% endif %};">${{ net_monthly_profit|floatformat:0 }}</strong></span>
+            <a href="{% url 'revenue_report' %}" style="color: var(--neon-amber); font-weight: 700; text-decoration: none;">
+                Financials →
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 4: Action Alerts -->
+    <div class="metric-card metric-card-accent-rose">
+        <div class="metric-header">
+            <span class="metric-title">Pending Action Items</span>
+            <div class="metric-icon-box icon-rose">
+                <i class="fas fa-bell"></i>
+            </div>
+        </div>
+        <div class="metric-body">
+            <div class="metric-value">{{ expiring_soon_count|add:pending_assignments_count|add:maintenance_count }}</div>
+        </div>
+        <div class="metric-footer">
+            <span>{{ expiring_soon_count }} Expiring &bull; {{ pending_assignments_count }} Requests</span>
+            <span class="trend-badge trend-down">Requires Action</span>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Action Operations Bar -->
+<div class="dashboard-section-heading" style="margin-top: 1rem;">
+    <h3 class="section-title-text"><i class="fas fa-bolt"></i> Global Operations Command</h3>
+</div>
+<div class="quick-actions-bar">
+    <a href="{% url 'qr_scanner' %}" class="action-card-btn action-primary">
+        <i class="fas fa-qrcode"></i> Launch Check-in Scanner
+    </a>
+    <a href="{% url 'register' %}" class="action-card-btn action-emerald">
+        <i class="fas fa-user-plus"></i> Register Member
+    </a>
+    <a href="{% url 'expense_create' %}" class="action-card-btn">
+        <i class="fas fa-plus-circle" style="color: var(--neon-rose);"></i> Financial Expense
+    </a>
+    <a href="{% url 'admin_class_list' %}" class="action-card-btn">
+        <i class="fas fa-calendar-alt" style="color: var(--neon-blue);"></i> Schedules
+    </a>
+    <a href="{% url 'equipment_list' %}" class="action-card-btn">
+        <i class="fas fa-tools" style="color: var(--neon-amber);"></i> Inventory
+    </a>
+    <a href="{% url 'admin_announcement_list' %}" class="action-card-btn">
+        <i class="fas fa-bullhorn" style="color: var(--neon-purple);"></i> Broadcasts
+    </a>
+    <a href="{% url 'system_settings' %}" class="action-card-btn">
+        <i class="fas fa-sliders-h" style="color: var(--text-secondary);"></i> Settings
+    </a>
+</div>
+
+<!-- Visual Analytics Hub (Interactive Charts) -->
+<div class="dashboard-section-heading">
+    <h3 class="section-title-text"><i class="fas fa-chart-line"></i> Visual Intelligence & Performance Charts</h3>
+</div>
+
+<div class="charts-grid">
+    <!-- Chart 1: Financial Performance (6 Months) -->
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <div class="chart-card-title">
+                <i class="fas fa-chart-area"></i> Revenue vs Expenses Trend (Last 6 Months)
+            </div>
+            <span class="badge-neon badge-emerald">Real-time DB Sync</span>
+        </div>
+        <div class="chart-container-wrapper">
+            <canvas id="financialChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart 2: Plan Distribution -->
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <div class="chart-card-title">
+                <i class="fas fa-chart-pie"></i> Plan Distribution
+            </div>
+            <span class="badge-neon badge-amber">Active Plans</span>
+        </div>
+        <div class="chart-container-wrapper">
+            <canvas id="planChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="charts-grid" style="grid-template-columns: 1fr;">
+    <!-- Chart 3: 7-Day Attendance Trend -->
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <div class="chart-card-title">
+                <i class="fas fa-chart-bar"></i> 7-Day Attendance Check-in Volume
+            </div>
+            <span class="badge-neon badge-emerald">Daily Peak Patterns</span>
+        </div>
+        <div class="chart-container-wrapper" style="height: 220px;">
+            <canvas id="attendanceChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Operational Feeds Grid -->
+<div class="two-col-grid">
+    <!-- Left Column: Critical Renewals & Inquiries -->
+    <div>
+        <!-- Renewals -->
+        <div class="dashboard-section-heading" style="margin-top: 0;">
+            <h3 class="section-title-text"><i class="fas fa-hourglass-half"></i> Critical Renewals (Next 7 Days)</h3>
+        </div>
+        <div class="dashboard-card">
             {% if expiring_soon %}
-            <div class="renewals-list">
+            <div class="renewals-feed">
                 {% for membership in expiring_soon %}
-                <div class="renewal-item">
-                    <div>
-                        <div style="font-weight: 700;">{{ membership.member.full_name }}</div>
-                        <div style="font-size: 0.8rem; color: var(--text-dim);">{{ membership.plan.name }}</div>
+                <div class="renewal-row">
+                    <div class="renewal-meta">
+                        <div class="member-avatar-chip">
+                            {{ membership.member.full_name|slice:":1"|upper }}
+                        </div>
+                        <div class="renewal-info">
+                            <div class="name">{{ membership.member.full_name }}</div>
+                            <div class="plan-tag">Plan: <strong>{{ membership.plan.name }}</strong></div>
+                        </div>
                     </div>
                     <div style="text-align: right;">
-                        <div class="renewal-expires">Exp: {{ membership.end_date|date:"d M" }}</div>
-                        <a href="{% url 'member_detail' membership.member.id %}" class="list-view-all"
-                            style="margin-top: 4px; font-size: 0.75rem;">Profile →</a>
+                        <span class="expire-pill">Exp: {{ membership.end_date|date:"d M" }}</span>
+                        <div style="margin-top: 6px;">
+                            <a href="{% url 'member_detail' membership.member.id %}" style="color: var(--neon-blue); font-size: 0.8rem; font-weight: 700; text-decoration: none;">
+                                View Profile →
+                            </a>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
             {% else %}
-            <p style="color: var(--text-dim); text-align: center; padding: 2rem 0;">No memberships expiring in the next
-                7 days.</p>
-            {% endif %}
-        </div>
-    </div>
-    <div>
-        <h2 class="section-title-premium"><i class="fas fa-envelope-open-text"></i> Communication Peak</h2>
-        <div class="card">
-            {% if recent_messages %}
-            <div class="list-clean">
-                {% for msg in recent_messages %}
-                <div class="list-item">
-                    <a href="{% url 'contact_message_detail' msg.id %}" class="list-link">
-                        <div style="font-weight: 700; color: #fff;">{{ msg.name }}</div>
-                        <div class="list-subject">{{ msg.subject|truncatechars:40 }}</div>
-                        <div class="list-meta">
-                            <i class="far fa-clock" style="margin-right: 4px;"></i>
-                            {{ msg.created_at|timesince }} ago
-                        </div>
-                    </a>
-                </div>
-                {% endfor %}
+            <div class="empty-state-box">
+                <i class="fas fa-check-circle" style="color: var(--neon-emerald);"></i>
+                <p>All member subscriptions are in good standing for the next 7 days.</p>
             </div>
-            <a href="{% url 'contact_message_list' %}" class="list-view-all">Archive Processing →</a>
-            {% else %}
-            <p style="color: var(--text-dim); text-align: center; padding: 2rem 0;">No unread intelligence.</p>
             {% endif %}
         </div>
-    </div>
-</div>
 
-<div class="two-col">
-    <div>
-        <h2 class="section-title-premium"><i class="fas fa-wrench"></i> Infrastructure Health</h2>
-        <div class="card">
+        <!-- Infrastructure & Maintenance Alerts -->
+        <div class="dashboard-section-heading">
+            <h3 class="section-title-text"><i class="fas fa-wrench"></i> Equipment & Maintenance Health</h3>
+        </div>
+        <div class="dashboard-card">
             {% if maintenance_required %}
-            <div class="list-clean">
+            <div class="renewals-feed">
                 {% for item in maintenance_required %}
-                <div class="list-item" style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-weight: 600;">{{ item.name }}</span>
-                    <span
-                        style="color: var(--accent-red); font-size: 0.8rem; font-weight: 700; background: rgba(231, 76, 60, 0.1); padding: 4px 10px; border-radius: 50px;">SERVICE
-                        REQUIRED</span>
+                <div class="renewal-row" style="border-left: 3px solid var(--neon-rose);">
+                    <div>
+                        <div style="font-weight: 700; color: #ffffff;">{{ item.name }}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Category: {{ item.category|default:"Equipment" }}</div>
+                    </div>
+                    <span class="badge-neon badge-rose">Service Required</span>
                 </div>
                 {% endfor %}
             </div>
-            <a href="{% url 'equipment_list' %}" class="list-view-all">Asset Registry →</a>
             {% else %}
-            <div style="text-align: center; padding: 1.5rem 0;">
-                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🛡️</div>
-                <div style="color: var(--accent-green); font-weight: 700;">Infrastructure Optimal</div>
-                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">All systems reporting green.
-                </p>
+            <div class="empty-state-box">
+                <i class="fas fa-shield-halved" style="color: var(--neon-emerald);"></i>
+                <p>Infrastructure Optimal — All gym equipment reporting active status.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Recent Contact Messages -->
+        <div class="dashboard-section-heading">
+            <h3 class="section-title-text"><i class="fas fa-envelope-open-text"></i> Customer Inquiries</h3>
+        </div>
+        <div class="dashboard-card">
+            {% if recent_messages %}
+            <div class="renewals-feed">
+                {% for msg in recent_messages %}
+                <div class="renewal-row">
+                    <div>
+                        <div style="font-weight: 700; color: #ffffff;">{{ msg.name }}</div>
+                        <div style="font-size: 0.82rem; color: var(--text-secondary);">{{ msg.subject|truncatechars:35 }}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">{{ msg.created_at|timesince }} ago</span>
+                        <div>
+                            <a href="{% url 'contact_message_detail' msg.id %}" style="color: var(--neon-blue); font-size: 0.8rem; font-weight: 700; text-decoration: none;">
+                                Read →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state-box">
+                <i class="fas fa-inbox"></i>
+                <p>No new customer messages or inquiries.</p>
             </div>
             {% endif %}
         </div>
     </div>
+
+    <!-- Right Column: Today's Facility Check-ins & Pending Requests -->
     <div>
-        <h2 class="section-title-premium"><i class="fas fa-handshake"></i> Field Intelligence</h2>
-        <div class="card">
+        <!-- Facility Attendance Feed -->
+        <div class="dashboard-section-heading" style="margin-top: 0;">
+            <h3 class="section-title-text"><i class="fas fa-users-rays"></i> Today's Live Facility Check-ins</h3>
+        </div>
+        <div class="dashboard-card" style="padding: 0; overflow: hidden;">
+            {% if present_today %}
+            <table class="table-glass">
+                <thead>
+                    <tr>
+                        <th>Member</th>
+                        <th>Contact</th>
+                        <th>Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in present_today %}
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="member-avatar-chip" style="width: 32px; height: 32px; font-size: 0.85rem;">
+                                    {{ a.member.full_name|slice:":1"|upper }}
+                                </div>
+                                <span style="font-weight: 700; color: #ffffff;">{{ a.member.full_name }}</span>
+                            </div>
+                        </td>
+                        <td style="color: var(--text-secondary);">{{ a.member.phone|default:"N/A" }}</td>
+                        <td>
+                            <span class="badge-neon badge-emerald">
+                                <i class="far fa-clock" style="margin-right: 4px;"></i>{{ a.date|time:"H:i"|default:"Checked-in" }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'member_detail' a.member.id %}" style="color: var(--neon-blue); font-weight: 700; text-decoration: none; font-size: 0.82rem;">
+                                Profile
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state-box">
+                <i class="fas fa-user-clock"></i>
+                <p>No member check-ins recorded yet today.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Pending Field Intelligence Requests -->
+        <div class="dashboard-section-heading">
+            <h3 class="section-title-text"><i class="fas fa-handshake"></i> Trainer Assignment Requests</h3>
+        </div>
+        <div class="dashboard-card">
             {% if pending_assignments %}
-            <div class="list-clean">
+            <div class="renewals-feed">
                 {% for assignment in pending_assignments %}
-                <div class="list-item">
-                    <div style="margin-bottom: 1rem;">
-                        <span style="font-weight: 700;">{{ assignment.member.full_name }}</span>
-                        <span style="color: var(--text-dim); margin: 0 8px;">aims for</span>
-                        <span style="font-weight: 700; color: var(--accent-blue);">
-                            {{ assignment.trainer.full_name }}
-                        </span>
+                <div class="renewal-row" style="border-left: 3px solid var(--neon-amber);">
+                    <div>
+                        <div style="font-weight: 700; color: #ffffff;">{{ assignment.member.full_name }}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">
+                            Requested: <strong style="color: var(--neon-blue);">{{ assignment.trainer.full_name }}</strong>
+                        </div>
                     </div>
                     <div style="display: flex; gap: 8px;">
-                        <a href="{% url 'trainer_assignment_action' assignment.id 'accept' %}"
-                            class="btn btn-success btn-sm"
-                            style="background: var(--accent-green); border: none; border-radius: 8px; font-weight: 700;">Approve</a>
-                        <a href="{% url 'member_detail' assignment.member.id %}" class="btn btn-sm"
-                            style="background: rgba(255,255,255,0.1); color: #fff; border: none; border-radius: 8px;">Analysis</a>
+                        <a href="{% url 'trainer_assignment_action' assignment.id 'accept' %}" 
+                           class="badge-neon badge-emerald" style="text-decoration: none;">
+                            Approve
+                        </a>
+                        <a href="{% url 'member_detail' assignment.member.id %}" 
+                           class="badge-neon badge-amber" style="text-decoration: none;">
+                            View
+                        </a>
                     </div>
                 </div>
                 {% endfor %}
             </div>
             {% else %}
-            <p style="color: var(--text-dim); text-align: center; padding: 2rem 0;">No active requests from the field.
-            </p>
+            <div class="empty-state-box">
+                <i class="fas fa-clipboard-check"></i>
+                <p>No pending trainer assignment requests.</p>
+            </div>
             {% endif %}
+        </div>
+
+        <!-- Quick Intelligence Reports Hub -->
+        <div class="dashboard-section-heading">
+            <h3 class="section-title-text"><i class="fas fa-file-invoice-dollar"></i> Intelligence Reports Hub</h3>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
+            <a href="{% url 'attendance_report' %}" class="action-card-btn" style="flex-direction: column; text-align: center; justify-content: center; padding: 1.3rem;">
+                <i class="fas fa-user-check" style="color: var(--neon-blue);"></i>
+                <span>Attendance Audit</span>
+            </a>
+            <a href="{% url 'member_activity_list' %}" class="action-card-btn" style="flex-direction: column; text-align: center; justify-content: center; padding: 1.3rem;">
+                <i class="fas fa-chart-line" style="color: var(--neon-emerald);"></i>
+                <span>Activity Hub</span>
+            </a>
+            <a href="{% url 'revenue_report' %}" class="action-card-btn" style="flex-direction: column; text-align: center; justify-content: center; padding: 1.3rem;">
+                <i class="fas fa-vault" style="color: var(--neon-amber);"></i>
+                <span>Revenue P&L</span>
+            </a>
         </div>
     </div>
 </div>
 
-<h2 class="section-title-premium"><i class="fas fa-chart-pie"></i> Intelligence Reports</h2>
-<div class="mgmt-grid">
-    <a href="{% url 'attendance_report' %}" class="btn report-btn"><i class="fas fa-users-viewfinder"
-            style="margin-right: 8px;"></i> Operations Audit</a>
-    <a href="{% url 'member_activity_list' %}" class="btn report-btn"
-        style="background: linear-gradient(135deg, #10b981, #059669);"><i class="fas fa-chart-line"
-            style="margin-right: 8px;"></i> Member Activity Hub</a>
-    <a href="{% url 'revenue_report' %}" class="btn report-btn report-btn-financial"><i class="fas fa-vault"
-            style="margin-right: 8px;"></i> Financial Integrity P&L</a>
-</div>
+<!-- Chart.js Script Integrations -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Shared chart formatting defaults
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.font.family = 'system-ui, -apple-system, sans-serif';
 
-<h2 class="section-title-premium"><i class="fas fa-users-rays"></i> Active Personnel Today</h2>
-{% if present_today %}
-<div class="card" style="padding: 0; overflow: hidden;">
-    <table>
-        <thead>
-            <tr>
-                <th>Member Profile</th>
-                <th>Contact Index</th>
-                <th>Check-in Signature</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for a in present_today %}
-            <tr>
-                <td><span style="font-weight: 700;">{{ a.member.full_name }}</span></td>
-                <td><span style="color: var(--text-dim);">{{ a.member.phone }}</span></td>
-                <td><span style="color: var(--accent-green); font-weight: 700;">{{ a.date|time:"H:i" }}</span></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-{% else %}
-<div class="card" style="text-align: center; padding: 3rem 0;">
-    <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;">👥</div>
-    <p style="color: var(--text-dim);">No active signatures detected in the facility today.</p>
-</div>
-{% endif %}
+    // 1. Financial Performance Chart (6 Months)
+    const finCtx = document.getElementById('financialChart').getContext('2d');
+    const incomeGradient = finCtx.createLinearGradient(0, 0, 0, 250);
+    incomeGradient.addColorStop(0, 'rgba(56, 189, 248, 0.4)');
+    incomeGradient.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
+
+    const expenseGradient = finCtx.createLinearGradient(0, 0, 0, 250);
+    expenseGradient.addColorStop(0, 'rgba(244, 63, 94, 0.3)');
+    expenseGradient.addColorStop(1, 'rgba(244, 63, 94, 0.0)');
+
+    new Chart(finCtx, {
+        type: 'line',
+        data: {
+            labels: {{ monthly_labels_json|safe }},
+            datasets: [
+                {
+                    label: 'Revenue ($)',
+                    data: {{ monthly_income_json|safe }},
+                    borderColor: '#38bdf8',
+                    backgroundColor: incomeGradient,
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                },
+                {
+                    label: 'Expenses ($)',
+                    data: {{ monthly_expense_json|safe }},
+                    borderColor: '#f43f5e',
+                    backgroundColor: expenseGradient,
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } }
+            },
+            scales: {
+                x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+                y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, beginAtZero: true }
+            }
+        }
+    });
+
+    // 2. Membership Plan Distribution Chart
+    const planCtx = document.getElementById('planChart').getContext('2d');
+    new Chart(planCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ plan_labels_json|safe }},
+            datasets: [{
+                data: {{ plan_counts_json|safe }},
+                backgroundColor: [
+                    '#38bdf8', '#10b981', '#f59e0b', '#a855f7', '#f43f5e', '#6366f1'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15 } }
+            },
+            cutout: '70%'
+        }
+    });
+
+    // 3. 7-Day Attendance Volume Chart
+    const attCtx = document.getElementById('attendanceChart').getContext('2d');
+    new Chart(attCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ attendance_days_json|safe }},
+            datasets: [{
+                label: 'Check-ins',
+                data: {{ attendance_counts_json|safe }},
+                backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                hoverBackgroundColor: '#10b981',
+                borderRadius: 8,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: { grid: { display: false } },
+                y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
+});
+</script>
 {% endblock %}
