@@ -59,19 +59,39 @@ def portal_notifications_optin(request):
 
 @login_required
 def portal_class_toggle(request, class_id):
+    from django.http import JsonResponse
     try:
         member = request.user.member_profile
     except Member.DoesNotExist:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'error': 'Member profile required'}, status=400)
         return redirect("login")
         
     gym_class = get_object_or_404(GymClass, id=class_id)
     if gym_class.members.filter(id=member.id).exists():
         gym_class.members.remove(member)
-        messages.info(request, f"You have left the {gym_class.name} class.")
+        enrolled = False
+        msg = f"You have left the {gym_class.name} class."
+        messages.info(request, msg)
     else:
         gym_class.members.add(member)
-        messages.success(request, f"You have successfully joined the {gym_class.name} class!")
+        enrolled = True
+        msg = f"You have successfully joined the {gym_class.name} class!"
+        messages.success(request, msg)
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({
+            'success': True,
+            'enrolled': enrolled,
+            'members_count': gym_class.members.count(),
+            'message': msg
+        })
+
+    next_url = request.POST.get('next') or request.GET.get('next')
+    if next_url:
+        return redirect(next_url)
     return redirect("portal_dashboard")
+
 
 @login_required
 def portal_workout(request):

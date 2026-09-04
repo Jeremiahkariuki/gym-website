@@ -9,7 +9,9 @@ urlpatterns = [
     
     # Public Pages
     path("classes/", views.class_schedule_view, name="class_schedule"),
+    path("api/classes/events/", views.class_events_api, name="class_events_api"),
     path("contact/", views.contact_view, name="contact"),
+
     
     # Members
     path("members/", views.member_list, name="member_list"),

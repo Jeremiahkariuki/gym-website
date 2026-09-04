@@ -2,7 +2,8 @@
 # view so that urls.py (which does `from . import views`) works unchanged.
 
 from .auth import LoginForm, CustomLoginView, RegistrationForm, logout_view, register_view, login_redirect_view, staff_create
-from .public import home_view, class_schedule_view, contact_view
+from .public import home_view, class_schedule_view, contact_view, class_events_api
+
 from .portal import (
     portal_dashboard, portal_diet, portal_payments, portal_workout, 
     portal_class_toggle, portal_id_card, portal_notifications_optin,
@@ -104,7 +105,8 @@ __all__ = [
     # trainer portal
     "trainer_portal_dashboard", "trainer_portal_members",
     # public
-    "home_view", "class_schedule_view", "contact_view",
+    "home_view", "class_schedule_view", "contact_view", "class_events_api",
+
     # admin expansion
     "gym_class_list", "gym_class_create", "gym_class_edit", "gym_class_delete",
     "equipment_list", "equipment_create", "equipment_edit", "equipment_delete",

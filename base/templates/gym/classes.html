@@ -1,122 +1,464 @@
 {% extends "gym/base.html" %}
-{% block title %}Class Schedule | GYMFLOW{% endblock %}
+{% block title %}Interactive Class Schedule | GYMFLOW{% endblock %}
 
 {% block extra_css %}
+<!-- FullCalendar 6 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
 <style>
-    .schedule-header {
-        background: linear-gradient(135deg, #2c3e50, #2980b9);
+    .schedule-header-glass {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(139, 92, 246, 0.9));
         color: white;
-        padding: 4rem 1rem;
+        padding: 3.5rem 1.5rem;
         text-align: center;
         border-radius: 24px;
-        margin-bottom: 3rem;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.25);
+        backdrop-filter: blur(10px);
     }
 
+    .view-toggle-bar {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .view-toggle-btn {
+        padding: 0.6rem 1.5rem;
+        border-radius: 100px;
+        border: 1px solid var(--border-card);
+        background: var(--bg-card);
+        color: var(--text-main);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .view-toggle-btn.active {
+        background: var(--accent-blue);
+        color: white;
+        border-color: var(--accent-blue);
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+    }
+
+    /* FullCalendar Glassmorphic Container */
+    #calendar-container {
+        padding: 1.5rem;
+        border-radius: 24px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--glass-shadow);
+        backdrop-filter: blur(16px);
+        margin-bottom: 4rem;
+    }
+
+    .fc {
+        font-family: inherit;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--text-main);
+    }
+
+    .fc .fc-button-primary {
+        background-color: var(--accent-blue);
+        border-color: var(--accent-blue);
+        border-radius: 10px;
+        font-weight: 600;
+        text-transform: capitalize;
+
+    .fc .fc-button-primary:hover {
+        background-color: #2563eb;
+        border-color: #2563eb;
+    }
+
+    .fc-theme-standard td, .fc-theme-standard th {
+        border-color: var(--border-card);
+    }
+
+    .fc .fc-col-header-cell-cushion {
+        color: var(--text-main);
+        font-weight: 700;
+        padding: 0.75rem 0;
+    }
+
+    .fc-event {
+        cursor: pointer;
+        border-radius: 8px;
+        padding: 4px 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .fc-event:hover {
+        transform: scale(1.03);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Standard Grid fallback */
     .schedule-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2rem;
-        margin-bottom: 5rem;
+        gap: 1.5rem;
+        margin-bottom: 4rem;
     }
 
     .day-column {
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        background: var(--glass-bg);
+        border-radius: 20px;
+        box-shadow: var(--glass-shadow);
         padding: 1.5rem;
-        border: 1px solid #eee;
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(12px);
     }
 
     .day-name {
-        font-size: 1.25rem;
+        font-size: 1.2rem;
         font-weight: 800;
-        color: #2c3e50;
-        border-bottom: 2px solid #3498db;
+        color: var(--text-main);
+        border-bottom: 3px solid var(--accent-blue);
         padding-bottom: 0.5rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
         text-transform: uppercase;
-        letter-spacing: 1px;
     }
 
     .class-item {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         padding: 1rem;
-        background: #f8f9fa;
-        border-radius: 12px;
-        border-left: 4px solid #3498db;
-        transition: transform 0.2s ease;
+        background: var(--bg-card);
+        border-radius: 14px;
+        border-left: 4px solid var(--accent-blue);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: 1px solid var(--border-card);
     }
 
     .class-item:hover {
-        transform: scale(1.02);
-        background: #fff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        border-left-color: var(--accent-green);
     }
 
     .class-time {
         font-size: 0.85rem;
         font-weight: 700;
-        color: #3498db;
+        color: var(--accent-blue);
         margin-bottom: 0.25rem;
         display: block;
     }
 
     .class-name {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         font-weight: 700;
-        color: #2c3e50;
+        color: var(--text-main);
         margin-bottom: 0.25rem;
         display: block;
     }
 
     .class-trainer {
         font-size: 0.85rem;
-        color: #666;
+        color: var(--text-muted);
         display: flex;
         align-items: center;
         gap: 0.4rem;
     }
 
-    .empty-msg {
-        color: #aaa;
-        font-style: italic;
-        font-size: 0.9rem;
+    /* Custom Glass Modal Styling */
+    .glass-modal-content {
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        color: var(--text-main);
+        box-shadow: var(--glass-shadow);
+    }
+
+    .glass-modal-header {
+        border-bottom: 1px solid var(--border-card);
+        padding: 1.5rem 2rem;
+    }
+
+    .glass-modal-body {
+        padding: 2rem;
+    }
+
+    .glass-modal-footer {
+        border-top: 1px solid var(--border-card);
+        padding: 1.25rem 2rem;
+    }
+
+    .modal-badge {
+        padding: 0.35rem 0.85rem;
+        border-radius: 100px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .modal-badge-enrolled {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .modal-badge-open {
+        background: rgba(59, 130, 246, 0.15);
+        color: #3b82f6;
+        border: 1px solid rgba(59, 130, 246, 0.3);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="schedule-header">
-    <h1 style="font-size: 3rem; font-weight: 900; margin-bottom: 1rem;">WEEKLY SCHEDULE</h1>
-    <p style="opacity: 0.9; max-width: 600px; margin: 0 auto;">Join our high-energy group classes led by expert
-        instructors. From beginner to elite, we have a session for you.</p>
+<div class="schedule-header-glass">
+    <h1 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 0.75rem; color: #fff;">CLASS SCHEDULE</h1>
+    <p style="opacity: 0.95; max-width: 650px; margin: 0 auto; font-size: 1.05rem;">
+        Explore our live fitness sessions. Click any class in the calendar to view instructor details and book your spot.
+    </p>
 </div>
 
-<div class="schedule-grid">
-    {% for day, classes in classes_by_day.items %}
-    <div class="day-column">
-        <h2 class="day-name">{{ day }}</h2>
-        {% if classes %}
-        {% for c in classes %}
-        <div class="class-item">
-            <span class="class-time">{{ c.start_time|time:"H:i" }} - {{ c.end_time|time:"H:i" }}</span>
-            <span class="class-name">{{ c.name }}</span>
-            {% if c.trainer %}
-            <span class="class-trainer">👤 {{ c.trainer.full_name }}</span>
+<!-- View Toggle Switcher -->
+<div class="view-toggle-bar">
+    <button class="view-toggle-btn active" id="btnViewCalendar" onclick="switchView('calendar')">
+        <i class="fa-solid fa-calendar-days"></i> Interactive Calendar
+    </button>
+    <button class="view-toggle-btn" id="btnViewGrid" onclick="switchView('grid')">
+        <i class="fa-solid fa-table-cells"></i> Weekly Grid
+    </button>
+</div>
+
+<!-- Interactive Calendar Container -->
+<div id="calendar-view">
+    <div id="calendar-container">
+        <div id="calendar"></div>
+    </div>
+</div>
+
+<!-- Weekly Grid Container (Hidden by default or toggled) -->
+<div id="grid-view" style="display: none;">
+    <div class="schedule-grid">
+        {% for day, classes in classes_by_day.items %}
+        <div class="day-column">
+            <h2 class="day-name">{{ day }}</h2>
+            {% if classes %}
+            {% for c in classes %}
+            <div class="class-item" onclick="openClassModalFromData('{{ c.id }}', '{{ c.name|escapejs }}', '{{ c.trainer.full_name|default:"Expert Trainer"|escapejs }}', '{{ c.start_time|time:"H:i" }} - {{ c.end_time|time:"H:i" }}', '{{ c.description|default:"High intensity group workout session."|escapejs }}', {% if user.member_profile in c.members.all %}true{% else %}false{% endif %}, {{ c.members.count }})">
+                <span class="class-time"><i class="fa-regular fa-clock"></i> {{ c.start_time|time:"H:i" }} - {{ c.end_time|time:"H:i" }}</span>
+                <span class="class-name">{{ c.name }}</span>
+                {% if c.trainer %}
+                <span class="class-trainer"><i class="fa-solid fa-user-ninja"></i> {{ c.trainer.full_name }}</span>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <p style="color: var(--text-muted); font-style: italic; font-size: 0.9rem;">No classes scheduled.</p>
             {% endif %}
         </div>
         {% endfor %}
-        {% else %}
-        <p class="empty-msg">No classes scheduled.</p>
-        {% endif %}
     </div>
-    {% endfor %}
 </div>
 
-<div style="background: #f8f9fa; padding: 3rem; border-radius: 20px; text-align: center; margin-bottom: 5rem;">
-    <h3>Interested in a private session?</h3>
-    <p style="color: #666; margin-bottom: 1.5rem;">Our personal trainers are available throughout the week for 1-on-1
-        coaching.</p>
-    <a href="{% url 'contact' %}" class="btn" style="background: #2c3e50; padding: 0.6rem 2rem;">Inquire Now</a>
+<!-- Glassmorphic Class Booking Modal -->
+<div class="modal fade" id="classBookingModal" tabindex="-1" aria-labelledby="classBookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-modal-content">
+            <div class="modal-header glass-modal-header d-flex align-items-center justify-content-between">
+                <div>
+                    <h5 class="modal-title font-weight-bold" id="modalClassName" style="font-size: 1.4rem; font-weight: 800;">Class Details</h5>
+                    <span id="modalEnrollmentBadge" class="modal-badge modal-badge-open">Open Class</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body glass-modal-body">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div style="width: 48px; height: 48px; border-radius: 14px; background: rgba(59, 130, 246, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-blue); font-size: 1.25rem;">
+                        <i class="fa-solid fa-dumbbell"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">INSTRUCTOR</div>
+                        <div id="modalTrainerName" style="font-size: 1.1rem; font-weight: 700;">Expert Trainer</div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <div style="background: rgba(0,0,0,0.03); padding: 0.85rem 1rem; border-radius: 12px; border: 1px solid var(--border-card);">
+                            <span style="font-size: 0.75rem; color: var(--text-muted); display: block; font-weight: 600;">SCHEDULED TIME</span>
+                            <span id="modalClassTime" style="font-weight: 700; font-size: 0.95rem;">-</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div style="background: rgba(0,0,0,0.03); padding: 0.85rem 1rem; border-radius: 12px; border: 1px solid var(--border-card);">
+                            <span style="font-size: 0.75rem; color: var(--text-muted); display: block; font-weight: 600;">ENROLLED MEMBERS</span>
+                            <span id="modalMembersCount" style="font-weight: 700; font-size: 0.95rem;">0 enrolled</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.4rem;">DESCRIPTION</label>
+                    <p id="modalClassDescription" style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main); margin: 0;">
+                        No description provided.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer glass-modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 10px; font-weight: 600;">Close</button>
+                {% if user.is_authenticated %}
+                <button type="button" class="btn btn-primary" id="modalBookingBtn" style="border-radius: 10px; font-weight: 700; padding: 0.6rem 1.5rem;" onclick="handleModalBookingToggle()">
+                    Join Class
+                </button>
+                {% else %}
+                <a href="{% url 'login' %}?next={% url 'class_schedule' %}" class="btn btn-primary" style="border-radius: 10px; font-weight: 700;">
+                    Login to Book
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Private Coaching Banner -->
+<div style="background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 3rem 2rem; border-radius: 24px; text-align: center; margin-bottom: 5rem; box-shadow: var(--glass-shadow); backdrop-filter: blur(12px);">
+    <h3 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem;">Interested in Private 1-on-1 Coaching?</h3>
+    <p style="color: var(--text-muted); max-width: 550px; margin: 0 auto 1.75rem;">Our certified personal trainers are available throughout the week for custom 1-on-1 strength and nutrition guidance.</p>
+    <a href="{% url 'contact' %}" class="btn" style="background: var(--accent-blue); color: white; font-weight: 700; padding: 0.75rem 2.2rem; border-radius: 100px; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);">
+        Inquire for Coaching
+    </a>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let calendar;
+    let activeModalClassId = null;
+    let activeModalEnrolled = false;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar');
+
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridWeek,dayGridMonth,listWeek'
+            },
+            slotMinTime: '06:00:00',
+            slotMaxTime: '22:00:00',
+            allDaySlot: false,
+            events: '{% url "class_events_api" %}',
+            eventClick: function(info) {
+                const props = info.event.extendedProps;
+                openClassModalFromData(
+                    props.class_id,
+                    info.event.title,
+                    props.trainer,
+                    info.event.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + ' - ' + info.event.end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                    props.description,
+                    props.is_enrolled,
+                    props.members_count
+                );
+            }
+        });
+
+        calendar.render();
+    });
+
+    function switchView(viewType) {
+        const calView = document.getElementById('calendar-view');
+        const gridView = document.getElementById('grid-view');
+        const btnCal = document.getElementById('btnViewCalendar');
+        const btnGrid = document.getElementById('btnViewGrid');
+
+        if (viewType === 'calendar') {
+            calView.style.display = 'block';
+            gridView.style.display = 'none';
+            btnCal.classList.add('active');
+            btnGrid.classList.remove('active');
+            if (calendar) calendar.render();
+        } else {
+            calView.style.display = 'none';
+            gridView.style.display = 'block';
+            btnCal.classList.remove('active');
+            btnGrid.classList.add('active');
+        }
+    }
+
+    function openClassModalFromData(id, name, trainer, time, description, isEnrolled, membersCount) {
+        activeModalClassId = id;
+        activeModalEnrolled = isEnrolled;
+
+        document.getElementById('modalClassName').innerText = name;
+        document.getElementById('modalTrainerName').innerText = trainer;
+        document.getElementById('modalClassTime').innerText = time;
+        document.getElementById('modalClassDescription').innerText = description;
+        document.getElementById('modalMembersCount').innerText = membersCount + ' member' + (membersCount === 1 ? '' : 's') + ' enrolled';
+
+        const badge = document.getElementById('modalEnrollmentBadge');
+        const btn = document.getElementById('modalBookingBtn');
+
+        if (isEnrolled) {
+            badge.innerText = 'Enrolled ✓';
+            badge.className = 'modal-badge modal-badge-enrolled';
+            if (btn) {
+                btn.innerText = 'Cancel Booking';
+                btn.className = 'btn btn-danger';
+            }
+        } else {
+            badge.innerText = 'Open Class';
+            badge.className = 'modal-badge modal-badge-open';
+            if (btn) {
+                btn.innerText = 'Join Class';
+                btn.className = 'btn btn-success';
+            }
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('classBookingModal'));
+        modal.show();
+    }
+
+    function handleModalBookingToggle() {
+        if (!activeModalClassId) return;
+
+        const toggleUrl = `/portal/class/toggle/${activeModalClassId}/`;
+        
+        fetch(toggleUrl, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Refresh calendar events
+                if (calendar) calendar.refetchEvents();
+
+                // Close modal
+                const modalEl = document.getElementById('classBookingModal');
+                const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                if (modalInstance) modalInstance.hide();
+
+                // Reload page if needed to update messages or standard grid
+                window.location.reload();
+            } else {
+                alert(data.error || 'Failed to update booking status.');
+            }
+        })
+        .catch(err => {
+            // Fallback navigation
+            window.location.href = toggleUrl + '?next=' + encodeURIComponent(window.location.pathname);
+        });
+    }
+</script>
 {% endblock %}

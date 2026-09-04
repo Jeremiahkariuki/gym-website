@@ -67,3 +67,56 @@ def contact_view(request):
             messages.error(request, "Please fill in all required fields.")
             
     return render(request, "gym/contact.html")
+
+
+def class_events_api(request):
+    """
+    Returns JSON array of scheduled gym classes for calendar visualization.
+    Generates dynamic events for current & upcoming week based on recurring days.
+    """
+    from django.http import JsonResponse
+    import datetime
+
+    member = None
+    enrolled_ids = set()
+    if request.user.is_authenticated:
+        member = getattr(request.user, 'member_profile', None)
+        if member:
+            enrolled_ids = set(member.enrolled_classes.values_list('id', flat=True))
+
+    classes = GymClass.objects.select_related("trainer__user", "branch").prefetch_related("members").all()
+
+    today = timezone.now().date()
+    # Find start of current week (Monday)
+    start_of_week = today - datetime.timedelta(days=today.weekday())
+
+    events = []
+
+    # Generate recurring events for 6 weeks (-2 to +3 weeks)
+    for week_offset in range(-2, 4):
+        week_start = start_of_week + datetime.timedelta(weeks=week_offset)
+        for c in classes:
+            class_date = week_start + datetime.timedelta(days=c.day)
+            start_iso = f"{class_date.isoformat()}T{c.start_time.strftime('%H:%M:%S')}"
+            end_iso = f"{class_date.isoformat()}T{c.end_time.strftime('%H:%M:%S')}"
+
+            is_enrolled = c.id in enrolled_ids
+            members_count = c.members.count()
+
+            events.append({
+                "id": f"{c.id}-{class_date.isoformat()}",
+                "class_id": c.id,
+                "title": c.name,
+                "start": start_iso,
+                "end": end_iso,
+                "trainer": c.trainer.full_name if c.trainer else "Expert Trainer",
+                "description": c.description or "High intensity training session.",
+                "branch": c.branch.name if c.branch else "Main Branch",
+                "is_enrolled": is_enrolled,
+                "members_count": members_count,
+                "backgroundColor": "#10b981" if is_enrolled else "#3b82f6",
+                "borderColor": "#059669" if is_enrolled else "#2563eb",
+            })
+
+    return JsonResponse(events, safe=False)
+
